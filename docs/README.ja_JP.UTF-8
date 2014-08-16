@@ -1,0 +1,21 @@
+・これは何？
+サバゲ・ペイントボール、あるいは雪合戦等で、Battlefield(R)シリーズの"ラッシュ"ルールで遊ぶための、Arduinoを使用した、"M-COM"のフリー実装です。
+
+・必要なもの
+Arduinoと、Arduino IDE(http://www.arduino.cc/)、Arduino用電源(モバイルバッテリーで大丈夫でしょう)
+
+大音量のブザー
+LED赤色灯
+押ボタン
+それらを駆動させるためのリレー・電源
+
+
+
+・使い方
+0:(お好みで)グローバルな定数、特にENGAGE_TIME、WAIT_TIME、WARN_TIME、それからDISENGAGE_TIMEを変更します。
+1:freemcom.inoをarduinoに焼きます
+2:SW_PIN(2番ピン)を押ボタンに接続します。
+3:リレーを使用して、BUZZER_PIN(3番ピン)を大音量ブザーに接続します。
+4:リレーを使用して、LED_PIN(13番ピン)を赤色灯に接続します。
+
+#回路図はそのうち作ります。
