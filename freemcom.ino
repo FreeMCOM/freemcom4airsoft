@@ -27,8 +27,8 @@ Copyright 2014 Kiyohito AOKI (sambar.fgfs@gmail.com)
 	const int LED_CYCLE_NORM =500;			//LED点滅(通常)
 
 	const int SW_PIN =  2;	 			//プッシュスイッチを接続するピン(起動・解除用。入力)
-	const int BUZZER_PIN = 3 ;			//ブザーを接続するピン(出力)
-	const int LED_PIN =  13;			//LEDを接続するピン(出力)
+	const int BUZZER_PIN = 4;			//ブザーを接続するピン(出力)
+	const int LED_PIN =  5;			//LEDを接続するピン(出力)
 
 	int mcom_mode = 0 ;	 //mcomの作動状態。 0で待機中、1でブザー断続中、2でブザー連続、3で破壊済み
 
