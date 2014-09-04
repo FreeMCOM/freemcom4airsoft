@@ -24,7 +24,7 @@ Copyright 2014 Kiyohito AOKI (sambar.fgfs@gmail.com)
 
 
 	const int LED_CYCLE_FRICK = 250;			//LED点滅(高速)
-	const int LED_CYCLE_NORM =500;			//LED点滅(通常)
+	const int LED_CYCLE_NORM = 500;			//LED点滅(通常)
 
 	const int SW_PIN =  2;	 			//プッシュスイッチを接続するピン(起動・解除用。入力)
 	const int BUZZER_PIN = 4;			//ブザーを接続するピン(出力)
@@ -42,11 +42,28 @@ void setup( ) {
 	  }
 
 
+void mcom_disengage() {
+	int cnt = 0  ; 					//カウンタ
 
+	//200msで2回点滅
+	for (cnt = 0; cnt <= 2; cnt++ ){
+		digitalWrite(BUZZER_PIN, HIGH);	//解除音を鳴らす
+		digitalWrite(LED_PIN,LOW);
+		delay(100);
+		digitalWrite(LED_PIN,HIGH);
+		digitalWrite(BUZZER_PIN, LOW);
+		delay(100);
+		}
 
-int mcom_running(unsigned long boot_time){	//boot_time : mcomを起動した時間
+	mcom_mode = 0;
+	digitalWrite(BUZZER_PIN, LOW);		//ブザ停止
+	digitalWrite( LED_PIN, LOW );	//LED消灯
+	return ;
+
+}
+
+int mcom_running(unsigned long boot_time){	//長断続音モード。　boot_time : mcomを起動した時間
 	//mcomカウントダウン
-        int cnt =0  ; 					//カウンタ
 	unsigned long push_time;		//ボタン押下開始した時間
 	unsigned long release_time;		//ボタンを離した時間
 	mcom_mode=1;
@@ -73,6 +90,7 @@ int mcom_running(unsigned long boot_time){	//boot_time : mcomを起動した時�
 				digitalWrite(BUZZER_PIN, LOW);	   
 				digitalWrite(LED_PIN,HIGH);
 				delay(LED_CYCLE_NORM);
+
 				//LEDオフ、ブザーオン
 				digitalWrite(LED_PIN,LOW);
 				digitalWrite(BUZZER_PIN, HIGH);
@@ -80,18 +98,7 @@ int mcom_running(unsigned long boot_time){	//boot_time : mcomを起動した時�
 
 
 				if (release_time - push_time >= DISENGAGE_TIME ){
-					//200msで2回点滅
-					for (cnt = 0; cnt <= 2; cnt++ ){
-						digitalWrite(BUZZER_PIN, HIGH);	//解除音を鳴らす
-						digitalWrite(LED_PIN,LOW);
-						delay(100);
-						digitalWrite(LED_PIN,HIGH);
-						digitalWrite(BUZZER_PIN, LOW);
- 						delay(100);
-					}
-					mcom_mode = 0;
-					digitalWrite(BUZZER_PIN, LOW);		//ブザ停止
-					digitalWrite( LED_PIN, LOW );	//LED消灯
+					mcom_disengage();
 					return mcom_mode;
 					}
 
@@ -103,9 +110,8 @@ int mcom_running(unsigned long boot_time){	//boot_time : mcomを起動した時�
 	return mcom_mode;
 }
 
-int mcom_warn(unsigned long boot_time){	//boot_time : mcomが連続音モードになった時間
+int mcom_warn(unsigned long boot_time){	//単断続音モード。 boot_time : mcomが連続音モードになった時間
 	//mcomカウントダウン
-        int cnt =0  ; 					//カウンタ
 	unsigned long push_time;		//ボタン押下開始した時間
 	unsigned long release_time;		//ボタンを離した時間
 	mcom_mode=2;
@@ -113,10 +119,13 @@ int mcom_warn(unsigned long boot_time){	//boot_time : mcomが連続音モード�
 
 	while(millis() <  boot_time + WAIT_TIME){
 
-		//LEDオン、ブザーオン
-		digitalWrite(BUZZER_PIN, HIGH);
+		//LEDオン、ブザーオフ
+		digitalWrite(BUZZER_PIN, LOW);
 		digitalWrite(LED_PIN,HIGH);
 		delay(LED_CYCLE_FRICK);
+
+		//LEDオフ、ブザーオン
+		digitalWrite(BUZZER_PIN, HIGH);
 		digitalWrite(LED_PIN,LOW);
 		delay(LED_CYCLE_FRICK);
 
@@ -125,26 +134,19 @@ int mcom_warn(unsigned long boot_time){	//boot_time : mcomが連続音モード�
 
 			while (digitalRead(SW_PIN) != LOW ){
 				release_time = millis();
-				//LEDオン、ブザーオン
-				digitalWrite(BUZZER_PIN, HIGH); 
+
+				//LEDオン、ブザーオフ
+				digitalWrite(BUZZER_PIN, LOW);
 				digitalWrite(LED_PIN,HIGH);
 				delay(LED_CYCLE_FRICK);
+
+				//LEDオフ、ブザーオン
+				digitalWrite(BUZZER_PIN, HIGH);
 				digitalWrite(LED_PIN,LOW);
 				delay(LED_CYCLE_FRICK);
 
 				if (release_time - push_time >= DISENGAGE_TIME ){
-					//200msで2回点滅
-					for (cnt = 0; cnt <= 2; cnt++ ){
-						digitalWrite(BUZZER_PIN, HIGH);	//解除音を鳴らす
-						digitalWrite(LED_PIN,LOW);
-						delay(100);
-						digitalWrite(LED_PIN,HIGH);
-						digitalWrite(BUZZER_PIN, LOW);
- 						delay(100);
-					}
-					mcom_mode = 0;
-					digitalWrite(BUZZER_PIN, LOW);		//ブザ停止
-					digitalWrite( LED_PIN, LOW );	//LED消灯
+					mcom_disengage();
 					return mcom_mode;
 					}
 
@@ -155,7 +157,6 @@ int mcom_warn(unsigned long boot_time){	//boot_time : mcomが連続音モード�
 	mcom_mode=3;
 	return mcom_mode;
 }
-
 
 
 void loop( ) {
@@ -188,11 +189,14 @@ void loop( ) {
 	}
 
 	if( mcom_mode == 3){
+		digitalWrite(LED_PIN, HIGH);
+		digitalWrite(BUZZER_PIN, HIGH);
+		delay(5000);
 
-frozen:		//無限ループ用
-	digitalWrite(BUZZER_PIN, LOW);		//ブザ停止
-	digitalWrite(LED_PIN, HIGH);
-	goto frozen;	
+		frozen:		//無限ループ用
+			digitalWrite(BUZZER_PIN, LOW);		//ブザ停止
+			digitalWrite(LED_PIN, HIGH);
+		goto frozen;	
 
 	}
 
