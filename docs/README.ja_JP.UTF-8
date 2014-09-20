@@ -21,10 +21,7 @@ LED赤色灯
 5:Arudino UNOの場合リセットピンをGNDに落とすとリセットされるので、押ボタンスイッチを介してGNDに落とせるようにする。このスイッチはケース内等、容易に押せない場所に設置してください。
 
 
-Fritzing形式の回路図を同梱しています。
-回路概略はdocs/freemcom_comvept.fzzです。
-より現実的な、リレーを使用した回路図はfreemcom.fzzです。
-#プリント基板のデータは未作成。
+Fritzing形式の回路図はfreemcom.fzz , png形式の回路図はfreemcom_circuit.pngです。
 
 
 ・ゲームでの使い方
