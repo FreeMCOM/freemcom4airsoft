@@ -18,8 +18,8 @@ Copyright 2014 Kiyohito AOKI (sambar.fgfs@gmail.com)
 
 //グローバル定数&変数定義
 	const unsigned long ENGAGE_TIME = 5000 ;			//タイマー起動のSW長押し時間(ミリ秒)
-	const unsigned long WAIT_TIME = 20000 ;			//タイマー起動後ブザー断続で警告音鳴らす時間(ミリ秒)
-	const unsigned long WARN_TIME = 10000 ;				//ブザーを連続して鳴らす時間(ミリ秒)
+	const unsigned long STAGE1_TIME = 20000 ;			//タイマー起動後ブザー断続(低速)で警告音鳴らす時間(ミリ秒)
+	const unsigned long STAGE2_TIME = 10000 ;				//ブザー断続(早く)で鳴らす時間(ミリ秒)
 	const unsigned long DISENGAGE_TIME = 5000 ;		//タイマー解除のSW長押し時間(ミリ秒)
 
 
@@ -62,14 +62,14 @@ void mcom_disengage() {
 
 }
 
-int mcom_running(unsigned long boot_time){	//長断続音モード。　boot_time : mcomを起動した時間
+int mcom_stage1(unsigned long boot_time){	//長断続音モード。　boot_time : mcomを起動した時間
 	//mcomカウントダウン
 	unsigned long push_time;		//ボタン押下開始した時間
 	unsigned long release_time;		//ボタンを離した時間
 	mcom_mode=1;
 	unsigned long led_cycle_time = 0 ;			//LEDサイクルを開始した時間
 
-	while(millis() <  boot_time + WAIT_TIME){
+	while(millis() <  boot_time + STAGE1_TIME){
 
 		//LEDオン、ブザーオフ
 		digitalWrite(BUZZER_PIN, LOW);	   
@@ -106,18 +106,18 @@ int mcom_running(unsigned long boot_time){	//長断続音モード。　boot_tim
 
 		}
 	}
-	mcom_mode=1;
+	//mcom_mode=1; (Are we needless this line?)
 	return mcom_mode;
 }
 
-int mcom_warn(unsigned long boot_time){	//単断続音モード。 boot_time : mcomが連続音モードになった時間
+int mcom_stage2(unsigned long boot_time){	//短断続音モード。 boot_time : mcomが短断続音モードになった時間
 	//mcomカウントダウン
 	unsigned long push_time;		//ボタン押下開始した時間
 	unsigned long release_time;		//ボタンを離した時間
 	mcom_mode=2;
 	unsigned long led_cycle_time = 0 ;			//LEDサイクルを開始した時間
 
-	while(millis() <  boot_time + WAIT_TIME){
+	while(millis() <  boot_time + STAGE2_TIME){
 
 		//LEDオン、ブザーオフ
 		digitalWrite(BUZZER_PIN, LOW);
@@ -170,19 +170,19 @@ void loop( ) {
 		while (digitalRead(SW_PIN) != LOW ){
 			release_time = millis();
 			if (release_time - push_time >= ENGAGE_TIME ){
-				if ( mcom_running( millis() )  == 0 ){
+				if ( mcom_stage1( millis() )  == 0 ){
 					push_time = 0 ;
 					release_time = 0 ;
-  					delay(2000);
+  					delay(2000); //長押ししすぎ防止
 				}
 			}
 		}
 
 		if( mcom_mode == 1){
-			if (mcom_warn( millis() ) == 0 ){
+			if (mcom_stage2( millis() ) == 0 ){
 				push_time = 0 ;
 				release_time = 0 ;
-  				delay(2000);
+  				delay(2000); ; //長押ししすぎ防止
 			}
 		}
 
