@@ -19,7 +19,7 @@ Copyright 2014 Kiyohito AOKI (sambar.fgfs@gmail.com)
 //グローバル定数&変数定義
 	const unsigned long ENGAGE_TIME = 5000 ;			//タイマー起動のSW長押し時間(ミリ秒)
 	const unsigned long STAGE1_TIME = 20000 ;			//タイマー起動後ブザー断続(低速)で警告音鳴らす時間(ミリ秒)
-	const unsigned long STAGE2_TIME = 10000 ;				//ブザー断続(早く)で鳴らす時間(ミリ秒)
+	const unsigned long STAGE2_TIME = 10000 ;			//ブザー断続(早く)で鳴らす時間(ミリ秒)
 	const unsigned long DISENGAGE_TIME = 5000 ;		//タイマー解除のSW長押し時間(ミリ秒)
 
 
@@ -84,7 +84,7 @@ int mcom_stage1(unsigned long boot_time){	//長断続音モード。　boot_time
 		if (digitalRead(SW_PIN) == HIGH){
 			push_time = millis();
 
-			while (digitalRead(SW_PIN) != LOW ){
+			while (digitalRead(SW_PIN) == HIGH){
 				release_time = millis();
 				//LEDオン、ブザーオフ
 				digitalWrite(BUZZER_PIN, LOW);	   
@@ -96,12 +96,10 @@ int mcom_stage1(unsigned long boot_time){	//長断続音モード。　boot_time
 				digitalWrite(BUZZER_PIN, HIGH);
 				delay(LED_CYCLE_NORM);
 
-
 				if (release_time - push_time >= DISENGAGE_TIME ){
 					mcom_disengage();
 					return mcom_mode;
-					}
-
+				}
 			  }
 
 		}
@@ -132,7 +130,7 @@ int mcom_stage2(unsigned long boot_time){	//短断続音モード。 boot_time :
 		if (digitalRead(SW_PIN) == HIGH){
 			push_time = millis();
 
-			while (digitalRead(SW_PIN) != LOW ){
+			while (digitalRead(SW_PIN) ==HIGH ){
 				release_time = millis();
 
 				//LEDオン、ブザーオフ
@@ -149,9 +147,7 @@ int mcom_stage2(unsigned long boot_time){	//短断続音モード。 boot_time :
 					mcom_disengage();
 					return mcom_mode;
 					}
-
 			  }
-
 		}
 	}
 	mcom_mode=3;
@@ -167,7 +163,7 @@ void loop( ) {
 	
 	if (digitalRead(SW_PIN) == HIGH){
 		push_time = millis();
-		while (digitalRead(SW_PIN) != LOW ){
+		while (digitalRead(SW_PIN) ==HIGH ){
 			release_time = millis();
 			if (release_time - push_time >= ENGAGE_TIME ){
 				if ( mcom_stage1( millis() )  == 0 ){
