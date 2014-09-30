@@ -58,19 +58,13 @@ void mcom_disengage() {
 	mcom_mode = 0;
 	digitalWrite(BUZZER_PIN, LOW);		//ブザ停止
 	digitalWrite( LED_PIN, LOW );	//LED消灯
+	delay(2000); //長押ししすぎ防止
+
 	return ;
 
 }
 
-int mcom_stage1(unsigned long boot_time){	//長断続音モード。　boot_time : mcomを起動した時間
-	//mcomカウントダウン
-	unsigned long push_time;		//ボタン押下開始した時間
-	unsigned long release_time;		//ボタンを離した時間
-	mcom_mode=1;
-	unsigned long led_cycle_time = 0 ;			//LEDサイクルを開始した時間
-
-	while(millis() <  boot_time + STAGE1_TIME){
-
+void stage1_blink(){
 		//LEDオン、ブザーオフ
 		digitalWrite(BUZZER_PIN, LOW);	   
 		digitalWrite(LED_PIN,HIGH);
@@ -80,43 +74,10 @@ int mcom_stage1(unsigned long boot_time){	//長断続音モード。　boot_time
 		digitalWrite(LED_PIN,LOW);
 		digitalWrite(BUZZER_PIN, HIGH);
 		delay(LED_CYCLE_NORM);
-
-		if (digitalRead(SW_PIN) == HIGH){
-			push_time = millis();
-
-			while (digitalRead(SW_PIN) == HIGH){
-				release_time = millis();
-				//LEDオン、ブザーオフ
-				digitalWrite(BUZZER_PIN, LOW);	   
-				digitalWrite(LED_PIN,HIGH);
-				delay(LED_CYCLE_NORM);
-
-				//LEDオフ、ブザーオン
-				digitalWrite(LED_PIN,LOW);
-				digitalWrite(BUZZER_PIN, HIGH);
-				delay(LED_CYCLE_NORM);
-
-				if (release_time - push_time >= DISENGAGE_TIME ){
-					mcom_disengage();
-					return mcom_mode;
-				}
-			  }
-
-		}
-	}
-	//mcom_mode=1; (Are we needless this line?)
-	return mcom_mode;
 }
 
-int mcom_stage2(unsigned long boot_time){	//短断続音モード。 boot_time : mcomが短断続音モードになった時間
-	//mcomカウントダウン
-	unsigned long push_time;		//ボタン押下開始した時間
-	unsigned long release_time;		//ボタンを離した時間
-	mcom_mode=2;
-	unsigned long led_cycle_time = 0 ;			//LEDサイクルを開始した時間
 
-	while(millis() <  boot_time + STAGE2_TIME){
-
+void stage2_blink(){
 		//LEDオン、ブザーオフ
 		digitalWrite(BUZZER_PIN, LOW);
 		digitalWrite(LED_PIN,HIGH);
@@ -126,65 +87,72 @@ int mcom_stage2(unsigned long boot_time){	//短断続音モード。 boot_time :
 		digitalWrite(BUZZER_PIN, HIGH);
 		digitalWrite(LED_PIN,LOW);
 		delay(LED_CYCLE_FRICK);
+}
+
+
+
+void mcom_stage1(unsigned long boot_time){	//長断続音モード。　boot_time : mcomを起動した時間
+	//mcomカウントダウン
+	unsigned long push_time;		//ボタン押下開始した時間
+	unsigned long release_time;		//ボタンを離した時間
+	mcom_mode=1;
+
+	while(millis() <  boot_time + STAGE1_TIME){
+		stage1_blink();
+
+		if (digitalRead(SW_PIN) == HIGH){
+			push_time = millis();
+
+			while (digitalRead(SW_PIN) == HIGH){
+				release_time = millis();
+				stage1_blink();
+
+				if (release_time - push_time >= DISENGAGE_TIME ){
+					mcom_disengage();
+					return ;
+				} 
+//				if (millis() <= (boot_time + STAGE1_TIME) ){
+//						goto rtb1;
+//				}
+			}
+		}
+	}
+rtb1:
+	return ;
+}
+
+void mcom_stage2(unsigned long boot_time){	//短断続音モード。 boot_time : mcomが短断続音モードになった時間
+	//mcomカウントダウン
+	unsigned long push_time;		//ボタン押下開始した時間
+	unsigned long release_time;		//ボタンを離した時間
+
+	while(millis() <  boot_time + STAGE2_TIME){
+		stage2_blink();
 
 		if (digitalRead(SW_PIN) == HIGH){
 			push_time = millis();
 
 			while (digitalRead(SW_PIN) ==HIGH ){
 				release_time = millis();
-
-				//LEDオン、ブザーオフ
-				digitalWrite(BUZZER_PIN, LOW);
-				digitalWrite(LED_PIN,HIGH);
-				delay(LED_CYCLE_FRICK);
-
-				//LEDオフ、ブザーオン
-				digitalWrite(BUZZER_PIN, HIGH);
-				digitalWrite(LED_PIN,LOW);
-				delay(LED_CYCLE_FRICK);
+				stage2_blink();
 
 				if (release_time - push_time >= DISENGAGE_TIME ){
 					mcom_disengage();
-					return mcom_mode;
-					}
+					return ;
+				}
+//				if (millis() <= (boot_time + STAGE2_TIME)) {
+//						goto rtb2;
+//				}
 			  }
 		}
 	}
-	mcom_mode=3;
-	return mcom_mode;
+rtb2:
+	mcom_mode=2;
+	return ;
 }
 
-
-void loop( ) {
-
-	unsigned long push_time ;		//ボタン押下開始した時間
-	unsigned long release_time ;		//ボタンを離した時間
-
-	
-	if (digitalRead(SW_PIN) == HIGH){
-		push_time = millis();
-		while (digitalRead(SW_PIN) ==HIGH ){
-			release_time = millis();
-			if (release_time - push_time >= ENGAGE_TIME ){
-				if ( mcom_stage1( millis() )  == 0 ){
-					push_time = 0 ;
-					release_time = 0 ;
-  					delay(2000); //長押ししすぎ防止
-				}
-			}
-		}
-
-		if( mcom_mode == 1){
-			if (mcom_stage2( millis() ) == 0 ){
-				push_time = 0 ;
-				release_time = 0 ;
-  				delay(2000); ; //長押ししすぎ防止
-			}
-		}
-
-	}
-
-	if( mcom_mode == 3){
+void mcom_stage3(){
+                mcom_mode =3;
 		digitalWrite(LED_PIN, HIGH);
 		digitalWrite(BUZZER_PIN, HIGH);
 		delay(5000);
@@ -193,7 +161,35 @@ void loop( ) {
 			digitalWrite(BUZZER_PIN, LOW);		//ブザ停止
 			digitalWrite(LED_PIN, HIGH);
 		goto frozen;	
+}
 
-	}
 
+void loop( ) {
+
+	unsigned long push_time = 0 ;		//ボタン押下開始した時間
+	unsigned long release_time = 0 ;		//ボタンを離した時間
+
+	if (digitalRead(SW_PIN) == HIGH){
+		push_time = millis();
+		while (digitalRead(SW_PIN) ==HIGH ){
+			release_time = millis();
+			if (release_time - push_time >= ENGAGE_TIME ){
+				mcom_stage1( millis() );
+			}
+			if (digitalRead(SW_PIN) == LOW) {
+				push_time = 0;
+				release_time = 0;
+			}
+		}
+
+		if(mcom_mode == 1){
+			push_time = 0;
+			release_time = 0;			
+			mcom_stage2 (millis() );
+		}
+
+		if (mcom_mode == 2){
+			mcom_stage3();
+		}
+	} 
 }
