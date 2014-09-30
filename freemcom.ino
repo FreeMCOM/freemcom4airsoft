@@ -126,6 +126,8 @@ void mcom_stage2(unsigned long boot_time){	//短断続音モード。 boot_time 
 	unsigned long push_time;		//ボタン押下開始した時間
 	unsigned long release_time;		//ボタンを離した時間
 
+  	mcom_mode=2;
+
 	while(millis() <  boot_time + STAGE2_TIME){
 		stage2_blink();
 
@@ -147,7 +149,6 @@ void mcom_stage2(unsigned long boot_time){	//短断続音モード。 boot_time 
 		}
 	}
 rtb2:
-	mcom_mode=2;
 	return ;
 }
 
