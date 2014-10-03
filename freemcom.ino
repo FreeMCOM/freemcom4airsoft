@@ -17,10 +17,10 @@ Copyright 2014 Kiyohito AOKI (sambar.fgfs@gmail.com)
 */
 
 //グローバル定数&変数定義
-	const unsigned long ENGAGE_TIME = 5000 ;			//タイマー起動のSW長押し時間(ミリ秒)
-	const unsigned long STAGE1_TIME = 20000 ;			//タイマー起動後ブザー断続(低速)で警告音鳴らす時間(ミリ秒)
-	const unsigned long STAGE2_TIME = 10000 ;			//ブザー断続(早く)で鳴らす時間(ミリ秒)
-	const unsigned long DISENGAGE_TIME = 5000 ;		//タイマー解除のSW長押し時間(ミリ秒)
+	const long ENGAGE_TIME = 5000 ;			//タイマー起動のSW長押し時間(ミリ秒)
+	const long STAGE1_TIME = 20000 ;			//タイマー起動後ブザー断続(低速)で警告音鳴らす時間(ミリ秒)
+	const long STAGE2_TIME = 10000 ;			//ブザー断続(早く)で鳴らす時間(ミリ秒)
+	const long DISENGAGE_TIME = 5000 ;		//タイマー解除のSW長押し時間(ミリ秒)
 
 
 	const int LED_CYCLE_FRICK = 250;			//LED点滅(高速)
@@ -91,13 +91,16 @@ void stage2_blink(){
 
 
 
-void mcom_stage1(unsigned long boot_time){	//長断続音モード。　boot_time : mcomを起動した時間
+long mcom_stage1(long boot_time){	//長断続音モード。　boot_time : mcomを起動した時間。
 	//mcomカウントダウン
-	unsigned long push_time;		//ボタン押下開始した時間
-	unsigned long release_time;		//ボタンを離した時間
+	long push_time;		//ボタン押下開始した時間
+	long release_time;		//ボタンを離した時間
+	long pushing_time;		//release-time - push_time
+
+
 	mcom_mode=1;
 
-	while(millis() <  boot_time + STAGE1_TIME){
+	while(millis() <=  boot_time + STAGE1_TIME){
 		stage1_blink();
 
 		if (digitalRead(SW_PIN) == HIGH){
@@ -109,26 +112,26 @@ void mcom_stage1(unsigned long boot_time){	//長断続音モード。　boot_tim
 
 				if (release_time - push_time >= DISENGAGE_TIME ){
 					mcom_disengage();
-					return ;
+					return 0 ;
 				} 
-//				if (millis() <= (boot_time + STAGE1_TIME) ){
-//						goto rtb1;
-//				}
+				if (millis() >= boot_time + STAGE1_TIME ){
+					pushing_time = release_time - push_time ; //押していた時間を返す
+					return(pushing_time);
+				}
 			}
 		}
 	}
-rtb1:
-	return ;
+	return 0 ;
 }
 
-void mcom_stage2(unsigned long boot_time){	//短断続音モード。 boot_time : mcomが短断続音モードになった時間
+void mcom_stage2(long boot_time , long pushing_time){	//短断続音モード。 boot_time : mcomが短断続音モードになった時間
 	//mcomカウントダウン
-	unsigned long push_time;		//ボタン押下開始した時間
-	unsigned long release_time;		//ボタンを離した時間
+	long push_time;		//ボタン押下開始した時間
+	long release_time;		//ボタンを離した時間
 
   	mcom_mode=2;
 
-	while(millis() <  boot_time + STAGE2_TIME){
+	while(millis() <=  boot_time + STAGE2_TIME ){
 		stage2_blink();
 
 		if (digitalRead(SW_PIN) == HIGH){
@@ -138,17 +141,16 @@ void mcom_stage2(unsigned long boot_time){	//短断続音モード。 boot_time 
 				release_time = millis();
 				stage2_blink();
 
-				if (release_time - push_time >= DISENGAGE_TIME ){
+				if (release_time - push_time >= DISENGAGE_TIME - pushing_time ){
 					mcom_disengage();
 					return ;
 				}
-//				if (millis() <= (boot_time + STAGE2_TIME)) {
-//						goto rtb2;
-//				}
+				if (millis() >= (boot_time + STAGE2_TIME)) {
+						return;
+				}
 			  }
 		}
 	}
-rtb2:
 	return ;
 }
 
@@ -167,26 +169,33 @@ void mcom_stage3(){
 
 void loop( ) {
 
-	unsigned long push_time = 0 ;		//ボタン押下開始した時間
-	unsigned long release_time = 0 ;		//ボタンを離した時間
+	long push_time = 0 ;		//ボタン押下開始した時間
+	long release_time = 0 ;		//ボタンを離した時間
+
+	long pushing_time ;				//ボタンを押していた時間
 
 	if (digitalRead(SW_PIN) == HIGH){
 		push_time = millis();
 		while (digitalRead(SW_PIN) ==HIGH ){
 			release_time = millis();
 			if (release_time - push_time >= ENGAGE_TIME ){
-				mcom_stage1( millis() );
-			}
-			if (digitalRead(SW_PIN) == LOW) {
+				pushing_time = mcom_stage1( millis() );
+			} else if (digitalRead(SW_PIN) == LOW) {
 				push_time = 0;
 				release_time = 0;
+				pushing_time = 0;
 			}
+
+                        if (mcom_mode == 1){
+                                break;
+                        }
 		}
 
 		if(mcom_mode == 1){
 			push_time = 0;
 			release_time = 0;			
-			mcom_stage2 (millis() );
+			mcom_stage2 (millis() , pushing_time );
+			pushing_time = 0;
 		}
 
 		if (mcom_mode == 2){
