@@ -20,7 +20,12 @@ Copyright 2014 Kiyohito AOKI (sambar.fgfs@gmail.com)
 	const long MIN_ENGAGE_TIME = 1 ;			//タイマー起動のSW長押し時間下限(秒)
 	const long MIN_STAGE1_TIME= 5 ;			//タイマー起動後ブザー断続(低速)で警告音鳴らす時間下限(秒)
 	const long MIN_STAGE2_TIME = 2 ;			//ブザー断続(早く)で鳴らす時間下限(秒)
-	const long MAX_DISENGAGE_TIME = 30 ;		//タイマー解除のSW長押し時間上限(秒)
+	const long MAX_DISENGAGE_TIME = 10 ;		//タイマー解除のSW長押し時間上限(秒)
+
+	const long STEP_ENGAGE_TIME = 1;		//タイマー解除毎に、タイマー起動のSW長押し時間を何秒減らすかを指定
+	const long STEP_STAGE1_TIME = 2;			//タイマー解除毎にステージ1の時間を何秒短くするか
+	const long STEP_STAGE2_TIME = 1;			//タイマー解除毎にステージ2の時間を何秒短くするか
+	const long STEP_DISENGAGE_TIME = 2;		//タイマー解除毎に、タイマー解除のSW長押し時間を何秒長くするか
 
 
 	long ENGAGE_TIME = 5 ;			//タイマー起動のSW長押し時間(秒)
@@ -64,23 +69,26 @@ void mcom_disengage() {
 	mcom_mode = 0;
 	digitalWrite(BUZZER_PIN, LOW);		//ブザ停止
 	digitalWrite( LED_PIN, LOW );	//LED消灯
+
 	delay(2000); //長押ししすぎ防止
 
 	if (ENGAGE_TIME >	MIN_ENGAGE_TIME){
-		--ENGAGE_TIME ;	//起動に必要な長押し時間を1秒短くする
+		ENGAGE_TIME -= STEP_ENGAGE_TIME ;	//起動に必要な長押し時間をSTEP_ENGAGE_TIME秒短くする
 	}
 
 	if (STAGE1_TIME > MIN_STAGE1_TIME){
-		STAGE1_TIME -= 5 ;	//stage1の時間を5秒短くする
+		STAGE1_TIME -= STEP_STAGE1_TIME ;		//stage1の時間をSTEP_STAGE1_TIME秒短くする
 	}
 
 	if (STAGE2_TIME > MIN_STAGE2_TIME){
-		STAGE2_TIME -= 2;		//stage2の時間を2秒短くする
+		STAGE2_TIME -= STEP_STAGE2_TIME;		//stage2の時間をSTEP_STAGE2_TIME秒短くする
 	}
 
 	if (DISENGAGE_TIME < MAX_DISENGAGE_TIME){
-		DISENGAGE_TIME += 5 ;		//解除に必要な長押し時間を5秒長くする
+		DISENGAGE_TIME += STEP_DISENGAGE_TIME;		//解除に必要な長押し時間をSTEP_DISENGAGE_TIME秒長くする
 	}
+
+
 
 
 	return ;
