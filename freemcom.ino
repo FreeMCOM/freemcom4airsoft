@@ -16,7 +16,6 @@ Copyright 2014 Kiyohito AOKI (sambar.fgfs@gmail.com)
 
 */
 
-#include "freemcom.h"
 
 //グローバル定数&変数定義
 	const long MIN_ENGAGE_TIME = 1 ;			//タイマー起動のSW長押し時間下限(秒)
