@@ -30,8 +30,9 @@ Copyright 2014 Kiyohito AOKI (sambar.fgfs@gmail.com)
 
 
 	struct LED_CYCLE{
-		const int FRICK = 250;			//LED点滅(高速)
 		const int NORM = 500;			//LED点滅(通常)
+		const int FRICK = NORM/2;			//LED点滅(高速)
+
 	}LED_CYCLE;
 
 
@@ -42,19 +43,19 @@ Copyright 2014 Kiyohito AOKI (sambar.fgfs@gmail.com)
 	} PIN ;
 
 
-
 void setup( ) {
 	pinMode(PIN.SW, INPUT);
 	pinMode(PIN.BUZZER, OUTPUT);
 	pinMode(PIN.LED, OUTPUT);
 
- Serial.begin(9600) ;      // パソコンとシリアル通信の準備を行う(デバッグ用)
+	Serial.begin(9600) ;					//シリアル通信の準備を行う
 
 	  }
 
 
 void mcom_disengage( int &mcom_mode) {
 	int cnt = 0  ; 					//カウンタ
+	mcom_mode = 0;
 
 	//200msで2回点滅
 	for (cnt = 0; cnt <= 2; cnt++ ){
@@ -66,7 +67,7 @@ void mcom_disengage( int &mcom_mode) {
 		delay(100);
 		}
 
-	mcom_mode = 0;
+
 	digitalWrite(PIN.BUZZER, LOW);		//ブザ停止
 	digitalWrite( PIN.LED, LOW );	//LED消灯
 
@@ -118,65 +119,96 @@ void stage2_blink(){
 }
 
 
+void send_data(int &mcom_mode, boolean button_pushing, long left, long disengage){
+//	引数
+//		mcom_mode		;		//mcomの状態。0=待機中、 1=ステージ1(低速で点滅) , 2=ステージ2(早い点滅) , 3=破壊済み(無限ループになり解除不能になる)
+//		button_pushing	;		//ボタン押下中か否か			
+//		left				;		//残り時間
+//		disengage		;		//解除までの残り時間
+
+	Serial.print (mcom_mode);
+	Serial.print (",");
+
+	Serial.print (button_pushing);
+	Serial.print (",");
+
+	Serial.print (left);
+	Serial.print (",");
+
+	Serial.print (disengage);
+	Serial.print (",\n");
+
+}
+
 
 long mcom_stage1(int &mcom_mode , long boot_time ){	//長断続音モード。　boot_time : mcomを起動した時間。 &mcom_mode :mcomの状態(参照)
 	//mcomカウントダウン
-	long push_time;		//ボタン押下開始した時間
-	long release_time;		//ボタンを離した時間
-	long pushing_time;		//release-time - push_time
+	long push_time ;								//ボタン押下開始した時間
+	long release_time ;								//ボタンを離した時間
+	long pushing_time = release_time - push_time ;		//release_time - push_time
 
 	mcom_mode=1;
-	Serial.print("mcom_mode =  ") ;Serial.print(mcom_mode) ;Serial.print("\n") ;				// mcomの状態を管理用PCに送信(デバッグ用)
 
 	while(millis() <=  boot_time + STAGE1.TIME * 1000){
-		stage1_blink();
-		Serial.print("LEFT ");Serial.print( (boot_time + STAGE1.TIME * 1000) - millis() );Serial.print(" ms\n");	//残り時間を管理用PCに送信(デバッグ用)
+		if (digitalRead(PIN.SW) == LOW) {
+			push_time = 0 ;
+			release_time =0 ;
+			pushing_time = release_time - push_time ;
 
-		if (digitalRead(PIN.SW) == HIGH){
+			send_data( mcom_mode, false , ((STAGE1.TIME + STAGE2.TIME) * 1000 + boot_time - millis() ) , DISENGAGE.TIME * 1000 - pushing_time );
+
+		}else {
 			push_time = millis();
 
 			while (digitalRead(PIN.SW) == HIGH){
 				release_time = millis();
-				stage1_blink();
+				pushing_time = release_time - push_time ; //押していた時間を返す
 
-				Serial.print("LEFT ");Serial.print( (boot_time + STAGE1.TIME * 1000) - millis() );Serial.print(" ms\n");	//残り時間を管理用PCに送信(デバッグ用)
-				Serial.print("pressing = ") ;Serial.print(release_time - push_time) ;Serial.print(" ms \n") ;		// 長押し時間を管理用PCに送信(デバッグ用)
+				send_data( mcom_mode, true , ((STAGE1.TIME + STAGE2.TIME) * 1000 + boot_time - millis() ) , DISENGAGE.TIME*1000 - pushing_time   );
+
+				stage1_blink();
 
 				if (release_time - push_time >= DISENGAGE.TIME * 1000 ){
 					mcom_disengage( mcom_mode );
 					return 0 ;
 				} 
 				if (millis() >= boot_time + STAGE1.TIME * 1000 ){
-					pushing_time = release_time - push_time ; //押していた時間を返す
 					return(pushing_time);
 				}
 			}
 		}
+		stage1_blink();
 	}
 	return 0 ;
 }
 
 void mcom_stage2(int &mcom_mode ,long boot_time , long pushing_time ){	//短断続音モード。 boot_time : mcomが短断続音モードになった時間  &mcom_mode :mcomの状態(参照)
 	//mcomカウントダウン
-	long push_time;		//ボタン押下開始した時間
-	long release_time;		//ボタンを離した時間
+	long push_time ;							//ボタン押下開始した時間
+	long release_time  ;							//ボタンを離した時間
 
   	mcom_mode=2;
-	Serial.print("mcom_mode =  ") ;Serial.print(mcom_mode) ;Serial.print("\n") ;				// mcomの状態を管理用PCに送信(デバッグ用)
+
 
 	while(millis() <=  boot_time + STAGE2.TIME * 1000 ){
-		stage2_blink();
-		Serial.print("LEFT ");Serial.print( (boot_time + STAGE2.TIME * 1000) - millis() );Serial.print(" ms\n");	//残り時間を管理用PCに送信(デバッグ用)
+		if (digitalRead(PIN.SW) == LOW) {
+			push_time = 0 ;
+			release_time =0 ;
+			pushing_time = 0 ;
 
-		if (digitalRead(PIN.SW) == HIGH){
+			send_data( mcom_mode, false , (STAGE2.TIME * 1000 + boot_time - millis() ) , (DISENGAGE.TIME * 1000) );
+			stage2_blink();		//データ送信サイクルをステージ1に合わせるためのウエイトを兼ねる
+
+		} else {
 			push_time = millis();
 
 			while (digitalRead(PIN.SW) ==HIGH ){
 				release_time = millis();
-				stage2_blink();
 
-				Serial.print("LEFT ");Serial.print( (boot_time + STAGE2.TIME * 1000) - millis() );Serial.print(" ms\n");	//残り時間を管理用PCに送信(デバッグ用)
-				Serial.print("pressing = ") ;Serial.print(release_time - push_time) ;Serial.print(" ms \n") ;		// 長押し時間を管理用PCに送信(デバッグ用)
+				send_data( mcom_mode, true , ((STAGE2.TIME) * 1000 + boot_time - millis() ) , (DISENGAGE.TIME*1000 - pushing_time -(release_time-push_time) )  );
+
+				stage2_blink();
+				stage2_blink();		//2つめの方はデータ送信サイクルをステージ1に合わせるためのウエイトを兼ねる
 
 				if (release_time - push_time >= DISENGAGE.TIME * 1000 - pushing_time ){
 					mcom_disengage( mcom_mode );
@@ -187,6 +219,8 @@ void mcom_stage2(int &mcom_mode ,long boot_time , long pushing_time ){	//短断�
 				}
 			  }
 		}
+		stage2_blink();
+		stage2_blink();		//2つめの方はデータ送信サイクルをステージ1に合わせるためのウエイトを兼ねる
 	}
 	return ;
 }
@@ -227,7 +261,9 @@ void loop( ) {
 		pushing_time = 0;
 	}
 
-	Serial.print("mcom_mode =  ") ;Serial.print(mcom_mode) ;Serial.print("\n") ;				// mcomの状態を管理用PCに送信(デバッグ用)
+
+	send_data( mcom_mode, false , 0 , 0 );
+	delay (500);
 
 	if (digitalRead(PIN.SW) == HIGH){
 
@@ -235,7 +271,9 @@ void loop( ) {
 		while (digitalRead(PIN.SW) ==HIGH ){
 			release_time = millis();
 
-			Serial.print("pressing = ") ;Serial.print(release_time - push_time) ;Serial.print(" ms \n") ;		// 長押し時間を管理用PCに送信(デバッグ用)
+			send_data( mcom_mode, true , 0 , (ENGAGE.TIME *1000 - (release_time -push_time) ) );
+
+			delay (500);
 
 			if (release_time - push_time >= ENGAGE.TIME * 1000 ){
 				pushing_time = mcom_stage1( mcom_mode , millis() );
