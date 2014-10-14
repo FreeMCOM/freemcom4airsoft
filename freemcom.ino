@@ -23,10 +23,10 @@ Copyright 2014 Kiyohito AOKI (sambar.fgfs@gmail.com)
 		long TIME  ;					//各ステージの動作時間or起動・解除での長押し時間
 	}  ;
 
-	struct TIMER STAGE1 = {5, 2, 20} ;		//ステージ1のLIMIT, STEP, TIMEのデフォルト値
-	struct TIMER STAGE2 = {2, 1, 10} ;		//ステージ2のLIMIT, STEP, TIMEのデフォルト値
-	struct TIMER ENGAGE = {1, 1, 5};		//MCOM起動のLIMIT, STEP, TIMEのデフォルト値
-	struct TIMER DISENGAGE = {10, 1, 5};	//MCOM解除のLIMIT, STEP, TIMEのデフォルト値
+	struct TIMER STAGE1 = {5, 2, 20} ;		//ステージ1のLIMIT, STEP, TIME
+	struct TIMER STAGE2 = {2, 1, 10} ;		//ステージ2のLIMIT, STEP, TIME
+	struct TIMER ENGAGE = {1, 1, 5};		//MCOM起動のLIMIT, STEP, TIME
+	struct TIMER DISENGAGE = {10, 1, 5};	//MCOM解除のLIMIT, STEP, TIME
 
 	struct LED_CYCLE{
 		const int NORM = 500;			//LED点滅(通常)
@@ -247,18 +247,6 @@ void mcom_stage3(int &mcom_mode){
 		frozen:		//無限ループ用
 			send_data( mcom_mode, false , 0 , 0);	
 			delay(500);
-/*
-				if (Serial.read() == 1){
-
-					STAGE1 = STAGE1_default ;		//ステージ1のLIMIT, STEP, TIME
-					STAGE2 = STAGE2_default ;		//ステージ2のLIMIT, STEP, TIME
-					ENGAGE = ENGAGE_default;		//MCOM起動のLIMIT, STEP, TIME
-					DISENGAGE = DISENGAGE_default ;	//MCOM解除のLIMIT, STEP, TIME
-
-					return;
-
-				}
-*/
 		goto frozen;	
 }
 
