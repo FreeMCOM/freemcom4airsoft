@@ -23,11 +23,10 @@ Copyright 2014 Kiyohito AOKI (sambar.fgfs@gmail.com)
 		long TIME  ;					//各ステージの動作時間or起動・解除での長押し時間
 	}  ;
 
-	struct TIMER STAGE1 = {5, 2, 20} ;		//ステージ1のLIMIT, STEP, TIME
-	struct TIMER STAGE2 = {2, 1, 10} ;		//ステージ2のLIMIT, STEP, TIME
-	struct TIMER ENGAGE = {1, 1, 5};		//MCOM起動のLIMIT, STEP, TIME
-	struct TIMER DISENGAGE = {10, 1, 5};	//MCOM解除のLIMIT, STEP, TIME
-
+	struct TIMER STAGE1 = {5, 2, 20} ;		//ステージ1のLIMIT, STEP, TIMEのデフォルト値
+	struct TIMER STAGE2 = {2, 1, 10} ;		//ステージ2のLIMIT, STEP, TIMEのデフォルト値
+	struct TIMER ENGAGE = {1, 1, 5};		//MCOM起動のLIMIT, STEP, TIMEのデフォルト値
+	struct TIMER DISENGAGE = {10, 1, 5};	//MCOM解除のLIMIT, STEP, TIMEのデフォルト値
 
 	struct LED_CYCLE{
 		const int NORM = 500;			//LED点滅(通常)
@@ -54,25 +53,23 @@ void setup( ) {
 
 
 void mcom_disengage( int &mcom_mode) {
-	int cnt = 0  ; 					//カウンタ
+	int cnt_frick = 0  ; 					//点滅カウンタ
+	int cnt_disable_button = 0 ;			//送信タイミング維持したままの長押し過剰対策用カウンタ
 	mcom_mode = 0;
 
+
 	//200msで2回点滅
-	for (cnt = 0; cnt <= 2; cnt++ ){
+	for (cnt_frick = 0; cnt_frick <= 2; cnt_frick++ ){
 		digitalWrite(PIN.BUZZER, HIGH);	//解除音を鳴らす
 		digitalWrite(PIN.LED,LOW);
 		delay(100);
 		digitalWrite(PIN.LED,HIGH);
 		digitalWrite(PIN.BUZZER, LOW);
 		delay(100);
-		}
-
+	}
 
 	digitalWrite(PIN.BUZZER, LOW);		//ブザ停止
 	digitalWrite( PIN.LED, LOW );	//LED消灯
-
-	delay(2000); //長押ししすぎ防止
-
 
 	if (ENGAGE.TIME >	ENGAGE.LIMIT){
 		ENGAGE.TIME -= ENGAGE.STEP ;	//起動に必要な長押し時間をENGAGE.STEP秒短くする
@@ -90,15 +87,25 @@ void mcom_disengage( int &mcom_mode) {
 		DISENGAGE.TIME += DISENGAGE.STEP;		//解除に必要な長押し時間をDISENGAGE.STEP秒長くする
 	}
 
+
+	for (cnt_disable_button =0; cnt_disable_button <=3; cnt_disable_button++) {
+		send_data( mcom_mode, true , 0 , (ENGAGE.TIME *1000 ) );
+		delay(500); //過剰な長押し対策兼送出タイミング調整で1.5秒間はデータ送信「しか」しない
+	}
+
+
 	return ;
 }
 
-void stage1_blink(){
-		//LEDオン、ブザーオフ
+void stage1_blink1(){
+		//LEDオン、ブザーオフ。シリアル送出サイクルを0.5秒に統一するため、点灯と点滅を分割。
 		digitalWrite(PIN.BUZZER, LOW);	   
 		digitalWrite(PIN.LED,HIGH);
 		delay(LED_CYCLE.NORM);
+}
 
+
+void stage1_blink2(){
 		//LEDオフ、ブザーオン
 		digitalWrite(PIN.LED,LOW);
 		digitalWrite(PIN.BUZZER, HIGH);
@@ -136,7 +143,7 @@ void send_data(int &mcom_mode, boolean button_pushing, long left, long disengage
 	Serial.print (",");
 
 	Serial.print (disengage);
-	Serial.print (",\n");
+	Serial.print ("\n");
 
 }
 
@@ -155,18 +162,25 @@ long mcom_stage1(int &mcom_mode , long boot_time ){	//長断続音モード。�
 			release_time =0 ;
 			pushing_time = release_time - push_time ;
 
-			send_data( mcom_mode, false , ((STAGE1.TIME + STAGE2.TIME) * 1000 + boot_time - millis() ) , DISENGAGE.TIME * 1000 - pushing_time );
+			send_data( mcom_mode, false , ((STAGE1.TIME + STAGE2.TIME) * 1000 + boot_time - millis() ) , DISENGAGE.TIME * 1000 );
+			stage1_blink1();
+			send_data( mcom_mode, false , ((STAGE1.TIME + STAGE2.TIME) * 1000 + boot_time - millis() ) , DISENGAGE.TIME * 1000 );
+			stage1_blink2();
 
 		}else {
 			push_time = millis();
 
 			while (digitalRead(PIN.SW) == HIGH){
-				release_time = millis();
-				pushing_time = release_time - push_time ; //押していた時間を返す
 
+  				release_time = millis();
+				pushing_time = release_time - push_time ; //押していた時間を計算
 				send_data( mcom_mode, true , ((STAGE1.TIME + STAGE2.TIME) * 1000 + boot_time - millis() ) , DISENGAGE.TIME*1000 - pushing_time   );
+				stage1_blink1();
 
-				stage1_blink();
+				release_time = millis();
+				pushing_time = release_time - push_time ; //押していた時間を再計算
+				send_data( mcom_mode, true , ((STAGE1.TIME + STAGE2.TIME) * 1000 + boot_time - millis() ) , DISENGAGE.TIME * 1000 - pushing_time );
+				stage1_blink2();
 
 				if (release_time - push_time >= DISENGAGE.TIME * 1000 ){
 					mcom_disengage( mcom_mode );
@@ -177,7 +191,6 @@ long mcom_stage1(int &mcom_mode , long boot_time ){	//長断続音モード。�
 				}
 			}
 		}
-		stage1_blink();
 	}
 	return 0 ;
 }
@@ -197,7 +210,6 @@ void mcom_stage2(int &mcom_mode ,long boot_time , long pushing_time ){	//短断�
 			pushing_time = 0 ;
 
 			send_data( mcom_mode, false , (STAGE2.TIME * 1000 + boot_time - millis() ) , (DISENGAGE.TIME * 1000) );
-			stage2_blink();		//データ送信サイクルをステージ1に合わせるためのウエイトを兼ねる
 
 		} else {
 			push_time = millis();
@@ -208,7 +220,6 @@ void mcom_stage2(int &mcom_mode ,long boot_time , long pushing_time ){	//短断�
 				send_data( mcom_mode, true , ((STAGE2.TIME) * 1000 + boot_time - millis() ) , (DISENGAGE.TIME*1000 - pushing_time -(release_time-push_time) )  );
 
 				stage2_blink();
-				stage2_blink();		//2つめの方はデータ送信サイクルをステージ1に合わせるためのウエイトを兼ねる
 
 				if (release_time - push_time >= DISENGAGE.TIME * 1000 - pushing_time ){
 					mcom_disengage( mcom_mode );
@@ -220,7 +231,6 @@ void mcom_stage2(int &mcom_mode ,long boot_time , long pushing_time ){	//短断�
 			  }
 		}
 		stage2_blink();
-		stage2_blink();		//2つめの方はデータ送信サイクルをステージ1に合わせるためのウエイトを兼ねる
 	}
 	return ;
 }
@@ -231,17 +241,30 @@ void mcom_stage3(int &mcom_mode){
 		digitalWrite(PIN.BUZZER, HIGH);
 		delay(5000);
 
-		frozen:		//無限ループ用
-			digitalWrite(PIN.BUZZER, LOW);		//ブザ停止
-			digitalWrite(PIN.LED, HIGH);
-//ココらへんに「シリアル入力があればリセット」を追加したい
+		digitalWrite(PIN.BUZZER, LOW);		//ブザ停止
+		digitalWrite(PIN.LED, HIGH);
 
+		frozen:		//無限ループ用
+			send_data( mcom_mode, false , 0 , 0);	
+			delay(500);
+/*
+				if (Serial.read() == 1){
+
+					STAGE1 = STAGE1_default ;		//ステージ1のLIMIT, STEP, TIME
+					STAGE2 = STAGE2_default ;		//ステージ2のLIMIT, STEP, TIME
+					ENGAGE = ENGAGE_default;		//MCOM起動のLIMIT, STEP, TIME
+					DISENGAGE = DISENGAGE_default ;	//MCOM解除のLIMIT, STEP, TIME
+
+					return;
+
+				}
+*/
 		goto frozen;	
 }
 
 
 void loop( ) {
-
+	
   
 	long push_time	 ;		//ボタン押下開始した時間
 	long release_time 	 ;		//ボタンを離した時間
@@ -262,7 +285,7 @@ void loop( ) {
 	}
 
 
-	send_data( mcom_mode, false , 0 , 0 );
+	send_data( mcom_mode, false , 0 , ENGAGE.TIME * 1000 );
 	delay (500);
 
 	if (digitalRead(PIN.SW) == HIGH){
