@@ -129,7 +129,7 @@ void stage2_blink(){
 void send_data(int &mcom_mode, boolean button_pushing, long left, long disengage){
 //	引数
 //		mcom_mode		;		//mcomの状態。0=待機中、 1=ステージ1(低速で点滅) , 2=ステージ2(早い点滅) , 3=破壊済み(無限ループになり解除不能になる)
-//		button_pushing	;		//ボタン押下中か否か			
+//		button_pushing	;		//ボタン押下中か否か
 //		left				;		//残り時間
 //		disengage		;		//解除までの残り時間
 
