@@ -5,45 +5,45 @@ import time
 import serial
 from struct import *
 
-#Arduinoのリセット待ち
-time.sleep(2)
 
-#シリアルポート、ボーレート、タイムアウトを指定
-port = serial.Serial ("/dev/ttyACM0", 9600, timeout=10)
-
-
-def checkdata(indata):
-
-	while len(indata) != 4:		#要素数不足の場合、要素数が合うまでやり直す
-		# inputdataをコンマ毎に切り分ける
-		indata = indata.strip("\n")	#末尾改行を削除
-		indata = indata.split(",")
-
-	return indata
+time.sleep(2)		#Arduinoの起動待ち
+port = serial.Serial ("/dev/ttyACM0", 9600, timeout=10)	#シリアルポート、ボーレート、タイムアウトを指定
 
 
 
-while port.readline() != "3,0,0,0\n":
-	indata = checkdata(port.readline() )
+class Mcom:
+	def __init__(self):
+		pass 
 
-	mcom_mode = indata[0]		# mcom_mode	;	mcomの状態。0=待機中、 1=ステージ1, 2=ステージ2 , 3=破壊済み
-	button_pushing = indata[1]	# button_pushing	;	ボタン押下中か否か
-	left = indata[2]				# left	;	破壊までの残り時間
-	disengage = indata[3]		# disengage	;	起動・解除までの残り時間
+	def reset(self):
+		port.close()				#ポートを一旦閉じる
+		port = serial.Serial ("/dev/ttyACM0", 9600, timeout=10)	#再度開ける
+		return
 
-	print mcom_mode
-	print disengage
+	def checkdata(self):
+		indata = ''
+		port.flushInput()			#使用済みのデータを破棄
+		while len(indata) != 4:			#要素数不足の場合、要素数が合うまでやり直す
+			indata = port.readline()
+			indata = indata.strip("\n")	#末尾改行を削除
+			indata = indata.split(",")		# inputdataをコンマ毎に切り分ける
+		return indata
 
-#使用済みのデータを破棄
-	port.flushInput()
+	def getdata(self):
+		indata = self.checkdata()
+		self.mcom_mode = indata[0]		# mcom_mode	;	mcomの状態。0=待機中、 1=ステージ1, 2=ステージ2 , 3=破壊済み
+		self.button_pushing = indata[1]	# button_pushing	;	ボタン押下中か否か
+		self.left = indata[2]				# left	;	破壊までの残り時間
+		self.disengage = indata[3]			# disengage	;	起動・解除までの残り時間
+		return
 
 
-	
-else:
-	print "M-COM was destruct."
-	time.sleep(10)
-	port.close()				#ポートを一旦閉じる
 
-port = serial.Serial ("/dev/ttyACM0", 9600, timeout=10)		#再度シリアル接続を開始する
-print port.readline()
-exit
+g = Mcom()
+
+while port.readline() != "3,0,0,0":
+	g.getdata()
+	print g.mcom_mode
+#	print g.button_pushing
+#	print g.left
+#	print g.disengage
