@@ -135,7 +135,6 @@ class MainWindow(wx.Frame):
         self.label_4.SetLabel("")
         self.label_5.SetLabel("")
         self.label_6.SetLabel("")
-        self.timer.Stop()
 
 
         # end wxGlade
