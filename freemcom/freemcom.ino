@@ -59,7 +59,7 @@ void mcom_disengage( int &mcom_mode) {
 
 
 	//200msで2回点滅
-	for (cnt_frick = 0; cnt_frick == 2; cnt_frick++ ){
+	for (cnt_frick = 0; cnt_frick <= 2; cnt_frick++ ){
 		digitalWrite(PIN.BUZZER, HIGH);	//解除音を鳴らす
 		digitalWrite(PIN.LED,LOW);
 		delay(100);
@@ -241,7 +241,8 @@ void mcom_stage3(int &mcom_mode){
         mcom_mode =3;
 	digitalWrite(PIN.LED, HIGH);
 	digitalWrite(PIN.BUZZER, HIGH);
-	for (cnt = 0; cnt == 10; cnt++){
+
+	for (cnt = 0; cnt <= 10; cnt++){
 		send_data( mcom_mode, false , 0 , 0);
 		delay(500);
 	}
