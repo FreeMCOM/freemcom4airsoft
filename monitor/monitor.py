@@ -128,7 +128,7 @@ class MainWindow(wx.Frame):
         self.label_6.SetLabel(u"秒")
 
     def mode3(self):
-        self.label_1.SetLabel("破壊済み")
+        self.label_1.SetLabel(u"破壊済み")
         self.label_2.SetLabel("")
         self.label_3.SetLabel("")
 
