@@ -6,11 +6,6 @@ import serial
 from struct import *
 
 
-time.sleep(2)		#Arduinoの起動待ち
-
-
-
-
 class Mcom:
 	def __init__(self, port):
 		self.mcom_mode = ""
