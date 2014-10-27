@@ -69,7 +69,7 @@
                         <option>0</option>
                         <object class="wxStaticText" name="label_4" base="EditStaticText">
                             <attribute>1</attribute>
-                            <label>爆発まで</label>
+                            <label>破壊まで</label>
                             <font>
                                 <size>24</size>
                                 <family>default</family>
