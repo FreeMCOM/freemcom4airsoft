@@ -13,13 +13,16 @@ if len(sys.argv) == 1 :
     port = port_default
 else:
     port = sys.argv[1]
-    if os.path.exists(port) == False :			#当該ポートが存在するか否かチェック
-        print (u"ポート %s が見つかりません。\n" ) % (port)
-        print (u"使用法 :")
-        print (u" %s  <ポート名> ")  % (sys.argv[0])
-        print (u"通常、ポート名はWindowsの場合はCOMx, Linuxの場合は/dev/ttyACMx のようになります。 ")
-        print (u"デフォルトでは %s が使用されます。") % (port_default) 
-        exit()
+
+if os.path.exists(port) == False :			#当該ポートが存在するか否かチェック
+    print (u"ポート %s が見つかりません。\n" ) % (port)
+    print (u"使用法 :")
+    print (u" %s  <ポート名> ")  % (sys.argv[0])
+    print (u"通常、ポート名はWindowsの場合はCOMx, Linuxの場合は/dev/ttyACMx のようになります。 ")
+    print (u"デフォルトでは %s が使用されます。\n") % (port_default)
+    print (u"エンターキーを押してください・・・")
+    raw_input()
+    exit()
 
 print (u"ポート %s を使用します") % (port)
 
