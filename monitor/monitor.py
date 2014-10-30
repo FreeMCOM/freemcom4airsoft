@@ -17,7 +17,7 @@ from mcom import  *					#mcomのクラス定義ファイルをインポート
 
 
 def PortNotFound():					#ポートが見つからない時の処理サブルーチン
-    print (u"ポート %s が見つかりません。\n" ) % (port)
+    print (u"%s が見つかりません。\n" ) % (portname)
     print (u"使用法 :")
     print (u" %s  <ポート名> ")  % (sys.argv[0])
     print (u"通常、ポート名はWindowsの場合はCOMx, Linuxの場合は/dev/ttyACMx のようになります。 ")
@@ -43,15 +43,16 @@ if sys.platform == "win32" :
     port = int(port)	 						#int型に変換
     port -= 1								#番号を1引く
     portname = "COM" + str(port +1)				#文字列操作して表示用の名前にする
-#    if serial.Serial.readable(port) == False	:			#当該ポートが存在するかチェック
-#        PortNotFound()
-
 else:
     portname = port
-    if os.path.exists(str(port) ) == False :			#当該ポート(正確には、デバイスファイル)が存在するか否かチェック
-        PortNotFound()
 
-print (u"ポート %s を使用します") % (portname)
+
+try:										#当該ポート(正確には、デバイスファイル)が存在するか否かチェック
+    mcom = Mcom(port)
+    print (u" %s を使用します") % (portname)
+except serial.serialutil.SerialException :
+    PortNotFound()
+
 
 
 
@@ -178,7 +179,7 @@ class MainWindow(wx.Frame):
 if __name__ == "__main__":
     gettext.install("app") # replace with the appropriate catalog name
 
-    mcom = Mcom(port)	#Mcomのインスタンス生成
+#    mcom = Mcom(port)					#Mcomのインスタンス生成
     app = wx.PySimpleApp(0)
     wx.InitAllImageHandlers()
     frame_1 = MainWindow(None, wx.ID_ANY, "")
