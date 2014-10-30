@@ -16,8 +16,7 @@ from mcom import  *					#mcomのクラス定義ファイルをインポート
 
 
 
-def PortNotFound():					#ポートが見つからない時の処理サブルーチン
-    print (u"%s が見つかりません。\n" ) % (portname)
+def HowToUse():					#ポートが見つからない時の処理サブルーチン
     print (u"使用法 :")
     print (u" %s  <ポート名> ")  % (sys.argv[0])
     print (u"通常、ポート名はWindowsの場合はCOMx, Linuxの場合は/dev/ttyACMx のようになります。 ")
@@ -31,6 +30,15 @@ def PortNotFound():					#ポートが見つからない時の処理サブルー�
 ####シリアルポートの指定
 if len(sys.argv) == 1 :
     port = port_default
+elif sys.argv[1] == "help" :
+    HowToUse()
+elif sys.argv[1] == "--help" :
+    HowToUse()
+elif sys.argv[1] == "-h" :
+    HowToUse()
+elif sys.argv[1] == "/?" :
+    HowToUse()
+
 else:
     port = sys.argv[1]
 
@@ -51,7 +59,8 @@ try:										#当該ポート(正確には、デバイスファイル)が存在
     mcom = Mcom(port)
     print (u" %s を使用します") % (portname)
 except serial.serialutil.SerialException :
-    PortNotFound()
+    print (u"%s が見つかりません。\n" ) % (portname)
+    HowToUse()
 
 
 
