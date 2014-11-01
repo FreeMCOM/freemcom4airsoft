@@ -69,9 +69,8 @@ void reset(int &mcom_mode){
 
 	mcom_mode = 0;
 
-	digitalWrite(PIN.BUZZER, LOW);
 	digitalWrite(PIN.LED,HIGH);
-	delay (1000);
+	delay (100);
 
 	digitalWrite(PIN.BUZZER, LOW);		//ブザ停止
 	digitalWrite(PIN.LED, LOW);

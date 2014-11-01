@@ -34,9 +34,11 @@ class Mcom:
 		self.port = serial.Serial (port, 9600, timeout=10)
 
 	def reset(self, port):
-		self.port.close()						#ポートを一旦閉じる
-		time.sleep(2)							#Arduinoの起動待ち
-		self.port = serial.Serial (port, 9600, timeout=10)	#再度開ける
+#		self.port.close()						#ポートを一旦閉じる
+#		time.sleep(2)							#Arduinoの起動待ち
+#		self.port = serial.Serial (port, 9600, timeout=10)	#再度開ける
+		self.port.write ("RESET\n")
+
 		return
 
 	def checkdata(self):
