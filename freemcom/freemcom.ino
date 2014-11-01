@@ -21,12 +21,18 @@ Copyright 2014 Kiyohito AOKI (sambar.fgfs@gmail.com)
 		const long LIMIT ;				//各ステージの最低時間・長押し時間の上限or下限
 		const long STEP ;				//1回のMCOM解除時に、どれだけTIMEを加減するか
 		long TIME  ;					//各ステージの動作時間or起動・解除での長押し時間
-	}  ;
+	}  ; 
 
-	struct TIMER STAGE1 = {5, 2, 20} ;		//ステージ1のLIMIT, STEP, TIME
-	struct TIMER STAGE2 = {2, 1, 10} ;		//ステージ2のLIMIT, STEP, TIME
-	struct TIMER ENGAGE = {1, 1, 5};		//MCOM起動のLIMIT, STEP, TIME
-	struct TIMER DISENGAGE = {10, 1, 5};	//MCOM解除のLIMIT, STEP, TIME
+	struct TIMER STAGE1_DEFAULT = {5, 2, 20} ;		//ステージ1のLIMIT, STEP, TIME
+	struct TIMER STAGE2_DEFAULT = {2, 1, 10} ;		//ステージ2のLIMIT, STEP, TIME
+	struct TIMER ENGAGE_DEFAULT = {1, 1, 5};		//MCOM起動のLIMIT, STEP, TIME
+	struct TIMER DISENGAGE_DEFAULT = {10, 1, 5};	//MCOM解除のLIMIT, STEP, TIME
+
+	struct TIMER STAGE1 = STAGE1_DEFAULT;
+	struct TIMER STAGE2 = STAGE2_DEFAULT;
+	struct TIMER ENGAGE = ENGAGE_DEFAULT;
+	struct TIMER DISENGAGE = DISENGAGE_DEFAULT;
+
 
 	struct LED_CYCLE{
 		const int NORM = 500;			//LED点滅(通常)
@@ -42,15 +48,38 @@ Copyright 2014 Kiyohito AOKI (sambar.fgfs@gmail.com)
 	} PIN ;
 
 
+
+
 void setup( ) {
 	pinMode(PIN.SW, INPUT);
 	pinMode(PIN.BUZZER, OUTPUT);
 	pinMode(PIN.LED, OUTPUT);
 
 	Serial.begin(9600) ;					//シリアル通信の準備を行う
-
+	Serial.flush();
 	  }
 
+
+
+void reset(int &mcom_mode){
+	STAGE1.TIME = STAGE1_DEFAULT.TIME ;
+	STAGE2.TIME = STAGE2_DEFAULT.TIME ;
+	ENGAGE.TIME = ENGAGE_DEFAULT.TIME ;
+	DISENGAGE.TIME = DISENGAGE_DEFAULT.TIME ;
+
+	mcom_mode = 0;
+
+	digitalWrite(PIN.BUZZER, LOW);
+	digitalWrite(PIN.LED,HIGH);
+	delay (1000);
+
+	digitalWrite(PIN.BUZZER, LOW);		//ブザ停止
+	digitalWrite(PIN.LED, LOW);
+
+	Serial.flush();
+	return;
+
+}
 
 void mcom_disengage( int &mcom_mode) {
 	int cnt_frick = 0  ; 					//点滅カウンタ
@@ -162,10 +191,15 @@ long mcom_stage1(int &mcom_mode , long boot_time ){	//長断続音モード。�
 			release_time =0 ;
 			pushing_time = release_time - push_time ;
 
+			if (Serial.read() != -1 ){			//シリアル入力が空でなければリセット
+				reset (mcom_mode);
+				return 0;
+			}
 			send_data( mcom_mode, false , ((STAGE1.TIME + STAGE2.TIME) * 1000 + boot_time - millis() ) , DISENGAGE.TIME * 1000 );
 			stage1_blink1();
 			send_data( mcom_mode, false , ((STAGE1.TIME + STAGE2.TIME) * 1000 + boot_time - millis() ) , DISENGAGE.TIME * 1000 );
 			stage1_blink2();
+
 
 		}else {
 			push_time = millis();
@@ -209,7 +243,12 @@ void mcom_stage2(int &mcom_mode ,long boot_time , long pushing_time ){	//短断�
 			release_time =0 ;
 			pushing_time = 0 ;
 
+			if (Serial.read() != -1 ){			//シリアル入力が空でなければリセット
+				reset (mcom_mode);
+				return;
+			}
 			send_data( mcom_mode, false , (STAGE2.TIME * 1000 + boot_time - millis() ) , (DISENGAGE.TIME * 1000) );
+			stage2_blink();
 
 		} else {
 			push_time = millis();
@@ -217,8 +256,7 @@ void mcom_stage2(int &mcom_mode ,long boot_time , long pushing_time ){	//短断�
 			while (digitalRead(PIN.SW) ==HIGH ){
 				release_time = millis();
 
-				send_data( mcom_mode, true , ((STAGE2.TIME) * 1000 + boot_time - millis() ) , (DISENGAGE.TIME*1000 - pushing_time -(release_time-push_time) )  );
-
+				send_data( mcom_mode, true , (STAGE2.TIME * 1000 + boot_time - millis() ) , (DISENGAGE.TIME*1000 - pushing_time -(release_time-push_time) )  );
 				stage2_blink();
 
 				if (release_time - push_time >= DISENGAGE.TIME * 1000 - pushing_time ){
@@ -230,7 +268,6 @@ void mcom_stage2(int &mcom_mode ,long boot_time , long pushing_time ){	//短断�
 				}
 			  }
 		}
-		stage2_blink();
 	}
 	return ;
 }
@@ -245,6 +282,10 @@ void mcom_stage3(int &mcom_mode){
 	for (cnt = 0; cnt <= 10; cnt++){
 		send_data( mcom_mode, false , 0 , 0);
 		delay(500);
+		if (Serial.read() != -1 ){
+			reset (mcom_mode);
+			return;
+		}
 	}
 
 	digitalWrite(PIN.BUZZER, LOW);		//ブザ停止
@@ -253,6 +294,11 @@ void mcom_stage3(int &mcom_mode){
 	frozen:		//無限ループ用
 		send_data( mcom_mode, false , 0 , 0);	
 		delay(500);
+
+		if (Serial.read() != -1 ){
+			reset (mcom_mode);
+			return;
+		}
 	goto frozen;	
 }
 
@@ -280,6 +326,10 @@ void loop( ) {
 
 
 	send_data( mcom_mode, false , 0 , ENGAGE.TIME * 1000 );
+	if (Serial.read() != -1 ){			//シリアル入力が空でなければリセット
+		reset (mcom_mode);
+	}
+
 	delay (500);
 
 	if (digitalRead(PIN.SW) == HIGH){
