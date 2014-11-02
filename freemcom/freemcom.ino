@@ -62,6 +62,7 @@ void setup( ) {
 
 
 void reset(int &mcom_mode){
+	Serial.flush();
 	STAGE1.TIME = STAGE1_DEFAULT.TIME ;
 	STAGE2.TIME = STAGE2_DEFAULT.TIME ;
 	ENGAGE.TIME = ENGAGE_DEFAULT.TIME ;
@@ -75,7 +76,6 @@ void reset(int &mcom_mode){
 	digitalWrite(PIN.BUZZER, LOW);		//ブザ停止
 	digitalWrite(PIN.LED, LOW);
 
-	Serial.flush();
 	return;
 
 }
