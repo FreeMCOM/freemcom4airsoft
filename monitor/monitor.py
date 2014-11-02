@@ -73,7 +73,7 @@ else:
 
 
 try:										#当該ポート(正確には、デバイスファイル)が存在するか否かチェック
-    mcom = Mcom(port)
+    mcom = Mcom(port)						#Mcomのインスタンス生成
     print (u" %s を使用します") % (portname)
 except serial.serialutil.SerialException :
     print (u"%s が見つかりません。\n" ) % (portname)
@@ -140,6 +140,14 @@ class MainWindow(wx.Frame):
 
     def reset_button(self, event):  # wxGlade: MainWindow.<event_handler>
         mcom.reset(port)
+        time.sleep(2)
+        self.label_1.SetLabel(u"起動まで")
+        self.label_2.SetLabel(mcom.disengage)
+        self.label_3.SetLabel(u"秒長押し")
+
+        self.label_4.SetLabel(u"")
+        self.label_5.SetLabel(u"")
+        self.label_6.SetLabel(u"")
 
     def exit_button(self, event):  # wxGlade: MainWindow.<event_handler>
         exit()
@@ -205,7 +213,6 @@ class MainWindow(wx.Frame):
 if __name__ == "__main__":
     gettext.install("app") # replace with the appropriate catalog name
 
-#    mcom = Mcom(port)					#Mcomのインスタンス生成
     app = wx.PySimpleApp(0)
     wx.InitAllImageHandlers()
     frame_1 = MainWindow(None, wx.ID_ANY, "")
