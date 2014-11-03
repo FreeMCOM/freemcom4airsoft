@@ -13,12 +13,15 @@
 
 	以下の物は遠隔監視を行う場合に必要となります。
 		PC
-		UTF-8とLFの改行コード対応のテキストエディタ
-
 		python 2.7系統
 		python2.7用のwxPython
 		pyserial2.7
 
+		加えて、XBee ATモードでの監視を行う場合、以下の物が追加で必要になります。
+			XBee ×2 (モデルにより外部アンテナも必要)
+			Xbee エクスプローラ ×1
+			Arduino ワイヤレスプロトシールド ×1
+			
 
 
 ・セットアップ
@@ -26,10 +29,10 @@
 
 	これは、struct TIMER { const long LIMIT , const long STEP , long TIME  }  という構造体になっています。
 
-		struct TIMER STAGE1 = {5, 2, 20} ;		//ステージ1(ゆっくり点滅)のLIMIT, STEP, TIME
-		struct TIMER STAGE2 = {2, 1, 10} ;		//ステージ2(早く点滅)のLIMIT, STEP, TIME
-		struct TIMER ENGAGE = {1, 1, 5};		//MCOM起動のLIMIT, STEP, TIME
-		struct TIMER DISENGAGE = {10, 1, 5};	//MCOM解除のLIMIT, STEP, TIME
+		struct TIMER STAGE1_DEFAULT = {5, 2, 20} ;		//ステージ1(ゆっくり点滅)のLIMIT, STEP, TIME
+		struct TIMER STAGE2_DEFAULT = {2, 1, 10} ;		//ステージ2(早く点滅)のLIMIT, STEP, TIME
+		struct TIMER ENGAGE_DEFFAULT = {1, 1, 5};		//MCOM起動のLIMIT, STEP, TIME
+		struct TIMER DISENGAGE_DEFAULT = {10, 1, 5};	//MCOM解除のLIMIT, STEP, TIME
 
 		LIMITは長押し時間・各ステージの最低時間を指しております。
 		STEPはMCOM解除毎にどれだけTIME(後述)を増減するかを表しております。
@@ -39,15 +42,34 @@
 
 	1:freemcom.inoをarduinoに焼きます
 	2:SW_PIN(2番ピン)を起動/解除用押ボタンに接続します。(このスイッチはケース表面から押せる所に設置)
-	3:リレーを使用して、BUZZER_PIN(4番ピン)を大音量ブザーに接続します。
-	4:リレーを使用して、LED_PIN(5番ピン)を赤色灯に接続します。
+	3:リレーを使用して、BUZZER_PIN(NO2)を大音量ブザーに接続します。
+	4:リレーを使用して、LED_PIN(NO1)を赤色灯に接続します。
 	5:Arudino UNOの場合リセットピンをGNDに落とすとリセットされるので、押ボタンスイッチを介してGNDに落とせるようにする。このスイッチはケース内等、容易に押せない場所に設置してください。
 
 	Fritzing形式の回路図はfreemcom.fzz , png形式の回路図はfreemcom_circuit.pngです。
 
 
 ・遠隔監視の行い方
-	(USBケーブルでの遠隔監視は実用的ではないので、本項目は無線化が完了後書く予定です。)
+	下準備:
+		X-CTUで各々のXBeeの初期設定を行う
+		・双方のXBeeモジュールに通信相手の固有IDを入力、PAN IDを書き込む
+		・(シリーズ2のみ)PC側を「Coodinator AT」に、MCOM側を「Router AT」に設定する。
+		詳細は以下を参照して頂ければ、と思います。
+			http://mag.switch-science.com/2012/07/20/startup_xbee_s1/ (スイッチサイエンス社の解説。シリーズ1)
+			http://mag.switch-science.com/2012/08/01/startup_xbee_zb/ (スイッチサイエンス社の解説。シリーズ2)
+
+		・Arduinoにリレーシールドを乗せ、その上に赤色灯とブザーを接続したワイヤレスプロトシールドを乗せ、最後にMCOM側のXBeeを乗せる
+		・XBeeエクスプローラにPC側XBeeを乗せ、USB端子に接続する
+
+	1:monitor/monitor.py の冒頭にある、「port_default」 の値をXBeeエクスプローラを接続したポートに書き換える(or コマンドライン引数でXBeeエクスプローラを接続したポートを指定する)
+	2:「起動まで　5　秒長押し」と表示されたのを確認後、ゲームを開始してください。(スケッチのENGAGE_DEFAULTを変更していない&Arduinoの電源を入れて一度もM-COMを起動させていない場合。)
+		2.1:「起動まで　　秒長押し」となって時間が表示されない場合、XBeeエクスプローラのリセットボタンをおしてください。
+		22:それでも直らないなら、以下の項目を点検してください。
+			・正しいポートを指定しているか(未使用ポートならば、"<ポート番号> が見つかりません。"と表示されますが、不運にも何らかの機器がそのポートを使用していた場合、正常に表示されないでしょう)。
+			・Arduinoに正しくスケッチを書き込んでいるか(ArduinoにUSBケーブル経由でスケッチを書き込む場合、ワイヤレスプロトシールドのSERIAL SELECTスイッチをUSB側にしなければ正常に書き込みができません)。
+			・各部配線の接続が確実か
+			・ワイヤレスプロトシールドのSERIAL SELECTスイッチがMICRO側になっているか。
+			・XBeeの設定が正しいか。 シリーズ2の場合CoodinatorとRouterを取り違えていないか。
 
 
 ・ゲームでの使い方
