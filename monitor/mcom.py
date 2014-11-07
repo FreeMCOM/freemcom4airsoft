@@ -44,6 +44,19 @@ class Mcom:
 		self.port.flushInput()			#使用済みのデータを破棄
 		while len(indata) != 4:			#要素数不足の場合、要素数が合うまでやり直す
 			indata = self.port.readline()
+			if indata == '' :
+				print (u"通信エラーが発生しました。終了します。")
+				print (u"以下の項目を点検してください。")
+				print (u"・正しいポートを指定していますか？")
+				print (u"・MCOMの電源は入っていますか？")
+				print (u"・ArduinoとXBeeは正しく接続されていますか？")
+				print (u"・ワイヤレスプロトシールドのSERIAL SELECTスイッチはMICRO側になっていますか？")
+				print ("")
+				print (u"これらが全て正常でもこのエラーが発生する場合は、MCOMからの電波がPCまで届いていない可能性があります。")
+				print (u"MCOMをPCに近づける、遮蔽物を取り除く等が必要かもしれません。")
+
+				exit()
+
 			indata = indata.strip("\n")	#末尾改行を削除
 			indata = indata.split(",")		# inputdataをコンマ毎に切り分ける
 		return indata
