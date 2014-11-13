@@ -10,7 +10,6 @@ import wx
 # begin wxGlade: extracode
 # end wxGlade
 
-
 class MainWindow(wx.Frame):
     def __init__(self, *args, **kwds):
         # begin wxGlade: MainWindow.__init__
@@ -34,6 +33,12 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_TEXT_ENTER, self.set_port, self.text_ctrl_1)
         self.Bind(wx.EVT_BUTTON, self.reset_button, self.button_1)
         self.Bind(wx.EVT_BUTTON, self.exit_button, self.button_2)
+
+        self.timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, self.refresh)
+        self.timer.Start(500)
+
+
         # end wxGlade
 
     def __set_properties(self):
@@ -80,9 +85,53 @@ class MainWindow(wx.Frame):
         event.Skip()
 
     def reset_button(self, event):  # wxGlade: MainWindow.<event_handler>
-        print "Event handler 'reset_button' not implemented!"
-        event.Skip()
+        mcom.reset(port)
+        time.sleep(2)
+        self.label_1.SetLabel(u"起動まで")
+        self.label_2.SetLabel(mcom.disengage)
+        self.label_3.SetLabel(u"秒長押し")
+
+        self.label_4.SetLabel(u"")
+        self.label_5.SetLabel(u"")
+        self.label_6.SetLabel(u"")
+
     def exit_button(self, event):  # wxGlade: MainWindow.<event_handler>
-        print "Event handler 'exit_button' not implemented!"
-        event.Skip()
+        exit()
+
+    def refresh(self, event):
+        mcom.getdata()
+
+        if mcom.mcom_mode == 0:
+            self.label_1.SetLabel(u"起動まで")
+            self.label_2.SetLabel(mcom.disengage)
+            self.label_3.SetLabel(u"秒長押し")
+            self.label_4.SetLabel(u"")
+            self.label_5.SetLabel(u"")
+            self.label_6.SetLabel(u"")
+
+        elif mcom.mcom_mode == 1:
+            self.label_1.SetLabel(u"解除まで")
+            self.label_2.SetLabel(mcom.disengage)
+            self.label_3.SetLabel(u"秒長押し")
+            self.label_4.SetLabel(u"破壊まで")
+            self.label_5.SetLabel(mcom.left)
+            self.label_6.SetLabel(u"秒")
+
+        elif mcom.mcom_mode == 2:
+            self.label_1.SetLabel(u"解除まで")
+            self.label_2.SetLabel(mcom.disengage)
+            self.label_3.SetLabel(u"秒長押し")
+            self.label_4.SetLabel(u"破壊まで")
+            self.label_5.SetLabel(mcom.left)
+            self.label_6.SetLabel(u"秒")
+
+	elif mcom.mcom_mode == 3:
+            self.label_1.SetLabel(u"破壊済み")
+            self.label_2.SetLabel("")
+            self.label_3.SetLabel("")
+            self.label_4.SetLabel("")
+            self.label_5.SetLabel("")
+            self.label_6.SetLabel("")
+
+
 # end of class MainWindow
