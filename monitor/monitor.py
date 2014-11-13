@@ -32,7 +32,26 @@ def HowToUse():					#ポートが見つからない時の処理サブルーチ�
 #    exit()
 
 
-def GetPort(port):
+
+
+if __name__ == "__main__":
+
+####コマンドラインオプションの処理
+    if len(sys.argv) == 1 : 			#オプション無し→デフォルト
+        port = port_default
+    elif sys.argv[1] == "help" :		#ヘルプ表示指示があればヘルプ表示
+        HowToUse()
+    elif sys.argv[1] == "--help" :
+        HowToUse()
+    elif sys.argv[1] == "-h" :
+        HowToUse()
+    elif sys.argv[1] == "/?" :
+        HowToUse()
+
+    else:						#オプション指定あれば第一引数
+        port = sys.argv[1]
+
+
 ####シリアルポート番号の取得・ウインドウタイトルでの表示名設定・ポート有無判定
     if sys.platform == "win32" :
         ###数字のみ抽出
@@ -51,27 +70,6 @@ def GetPort(port):
         print (u"%s が見つかりません。\n" ) % (portname)
         HowToUse()
 
-
-
-
-if __name__ == "__main__":
-
-    if len(sys.argv) == 1 :
-        port = port_default
-    elif sys.argv[1] == "help" :
-        HowToUse()
-    elif sys.argv[1] == "--help" :
-        HowToUse()
-    elif sys.argv[1] == "-h" :
-        HowToUse()
-    elif sys.argv[1] == "/?" :
-        HowToUse()
-
-    else:
-        port = sys.argv[1]
-
-
-    GetPort(port)
 
     gettext.install("app") # replace with the appropriate catalog name
     app = wx.PySimpleApp(0)
