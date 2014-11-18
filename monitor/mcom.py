@@ -31,7 +31,7 @@ class Mcom:
 		self.disengage = "" 
 
 		time.sleep(2)							#Arduinoの起動待ち
-		self.port = serial.Serial (port, 9600, timeout=10)
+		self.port = serial.Serial (port, 9600, timeout=5)
 
 	def reset(self, port):
 		self.port.write ("1")
@@ -45,7 +45,7 @@ class Mcom:
 		while len(indata) != 4:			#要素数不足の場合、要素数が合うまでやり直す
 			indata = self.port.readline()
 			if indata == '' :
-				print (u"通信エラーが発生しました。終了します。")
+				print (u"通信エラーが発生しました。")
 				print (u"以下の項目を点検してください。")
 				print (u"・正しいポートを指定していますか？")
 				print (u"・MCOMの電源は入っていますか？")
@@ -55,7 +55,7 @@ class Mcom:
 				print (u"これらが全て正常でもこのエラーが発生する場合は、MCOMからの電波がPCまで届いていない可能性があります。")
 				print (u"MCOMをPCに近づける、遮蔽物を取り除く等が必要かもしれません。")
 
-				exit()
+				return -1				#エラーなので-1を返す
 
 			indata = indata.strip("\n")	#末尾改行を削除
 			indata = indata.split(",")		# inputdataをコンマ毎に切り分ける
@@ -63,6 +63,9 @@ class Mcom:
 
 	def getdata(self):
 		indata = self.checkdata()
+		if indata == -1 :
+			return -1
+
 		self.mcom_mode = int(indata[0])			# mcom_mode	;	mcomの状態。0=待機中、 1=ステージ1, 2=ステージ2 , 3=破壊済み
 		self.button_pushing = int(indata[1])		# button_pushing	;	ボタン押下中か否か
 
