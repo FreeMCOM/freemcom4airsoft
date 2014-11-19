@@ -26,15 +26,16 @@ class MCOM_CONFIG(wx.Frame):
 
         self.panel_2 = wx.Panel(self, wx.ID_ANY)
         self.label_7 = wx.StaticText(self.panel_2, wx.ID_ANY, _(u"ポート名を正確に入力してください！"))
-        self.text_ctrl_1 = wx.TextCtrl(self.panel_2, wx.ID_ANY, port)
+        self.text_ctrl_1 = wx.TextCtrl(self.panel_2, wx.ID_ANY, port, style=wx.TE_PROCESS_ENTER)
         self.button_3 = wx.Button(self.panel_2, wx.ID_ANY, _("OK"))
 
         self.__set_properties()
         self.__do_layout()
 
-        self.Bind(wx.EVT_TEXT_ENTER, self.set_port , self.text_ctrl_1)
+        self.Bind(wx.EVT_TEXT_ENTER, self.OK_BUTTON , self.text_ctrl_1)
         self.Bind(wx.EVT_BUTTON, self.OK_BUTTON, self.button_3)
         # end wxGlade
+
 
     def __set_properties(self):
         # begin wxGlade: MCOM_CONFIG.__set_properties
@@ -44,6 +45,7 @@ class MCOM_CONFIG(wx.Frame):
         self.text_ctrl_1.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.button_3.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         # end wxGlade
+
 
     def __do_layout(self):
         # begin wxGlade: MCOM_CONFIG.__do_layout
@@ -58,11 +60,6 @@ class MCOM_CONFIG(wx.Frame):
         sizer_3.Fit(self)
         self.Layout()
         # end wxGlade
-
-    def set_port(self, event):  # wxGlade: MCOM_CONFIG.<event_handler>
-        print "Event handler 'set_port' not implemented!"
-        event.Skip()
-
 
 
     def OK_BUTTON(self, event):  # wxGlade: MCOM_CONFIG.<event_handler>
@@ -92,7 +89,6 @@ class MCOM_CONFIG(wx.Frame):
         except serial.serialutil.SerialException :
             print (u"%s が見つかりません。\n" ) % (portname)
             HowToUse()
-
 
 
     def GetPort(self):
@@ -128,7 +124,7 @@ class MCOM_CONFIG(wx.Frame):
         try:										#当該ポートが存在するか否かチェック
             global mcom
             mcom = Mcom(port)						#Mcomのインスタンス生成
-            print (u" %s を使用します") % (portname)
+            print (u" %s を使用します。\n") % (portname)
             frame_1.SetTitle(_("MCOM Monitor " + portname))
         except serial.serialutil.SerialException :
             print (u"%s が見つかりません。\n" ) % (portname)
@@ -177,6 +173,7 @@ class MainWindow(wx.Frame):
         self.button_2.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         # end wxGlade
 
+
     def __do_layout(self):
         # begin wxGlade: MainWindow.__do_layout
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
@@ -197,8 +194,10 @@ class MainWindow(wx.Frame):
         self.Layout()
         # end wxGlade
 
+
     def conf_button(self, event):  # wxGlade: MainWindow.<event_handler>
         frame_2.Show(True)
+
 
     def reset_button(self, event):  # wxGlade: MainWindow.<event_handler>
         global mcom
@@ -219,19 +218,19 @@ class MainWindow(wx.Frame):
     def refresh(self, event):
         global mcom
         if mcom.getdata() == -1 :
-            print (u"通信エラーが発生しました。以下の項目を点検してください。")
-            print (u"・正しいポートを指定していますか？")
-            print (u"・MCOMの電源は入っていますか？")
-            print (u"・ArduinoとXBeeは正しく接続されていますか？")
-            print (u"・ワイヤレスプロトシールドのSERIAL SELECTスイッチはMICRO側になっていますか？")
-            print ("")
-            print (u"これらが全て正常でもこのエラーが発生する場合、MCOMからの電波がPCまで届いていない可能性があります。")
-            print (u"MCOMをPCに近づける、遮蔽物を取り除く等が必要かもしれません。")
+            errormsg = (u"通信エラーが発生しました。以下の項目を点検してください。\n\n")
+            errormsg += (u"・正しいポートを指定していますか？\n")
+            errormsg += (u"・MCOMの電源は入っていますか？\n")
+            errormsg += (u"・ArduinoとXBeeは正しく接続されていますか？\n")
+            errormsg += (u"・ワイヤレスプロトシールドのSERIAL SELECTスイッチはMICRO側になっていますか？\n\n")
+            errormsg += (u"これらが全て正常でもこのエラーが発生する場合、MCOMからの電波がPCまで届いていない可能性があります。\n")
+            errormsg += (u"MCOMをPCに近づける、遮蔽物を取り除く等が必要かもしれません。\n")
+
+            print errormsg
             self.timer.Stop()
             frame_2.Show(True)
 
-            errormsg = (u"通信エラーが発生しました。以下の項目を点検してください。\n\n・正しいポートを指定していますか？\n・MCOMの電源は入っていますか？\n・ArduinoとXBeeは正しく接続されていますか？\n・ワイヤレスプロトシールドのSERIAL SELECTスイッチはMICRO側になっていますか？\n\nこれらが全て正常でもこのエラーが発生する場合、MCOMからの電波がPCまで届いていない可能性があります。\nMCOMをPCに近づける、遮蔽物を取り除く等が必要かもしれません。")
-            dialog_1 = wx.MessageDialog(None, errormsg  , u"Error!!", wx.OK | wx.ICON_ERROR)
+            dialog_1 = wx.MessageDialog(None, errormsg  , u"Can not receive data from MCOM!!", wx.OK | wx.ICON_ERROR)
             dialog_1.ShowModal()
 
         if mcom.mcom_mode == 0:
@@ -268,23 +267,21 @@ class MainWindow(wx.Frame):
 
 
 
-
 def HowToUse():					#ポートが見つからない時の処理サブルーチン
 
-    errormsg = (u"通常、ポート名は以下のようになります。\n\nWindowsの場合 - COMx \nLinuxの場合 - /dev/ttyACMx \n\nデフォルトでは %s が使用されます。") % (port_default) 
+    errormsg = (u"通常、ポート名は以下のようになります。\n\n")
+    errormsg += (u"Windowsの場合 - COMx \n")
+    errormsg += (u"Linuxの場合 - /dev/ttyACMx \n\n")
+    errormsg += (u"デフォルトでは %s が使用されます。") % (port_default) 
 
     print (u"使用法 :")
     print (u" %s  <ポート名> ")  % (sys.argv[0])
-    print (u"通常、ポート名はWindowsの場合はCOMx, Linuxの場合は/dev/ttyACMx のようになります。")
-    print (u"デフォルトでは %s が使用されます。") % (port_default) 
+    print errormsg
 
     frame_1.timer.Stop()
-    dialog_1 = wx.MessageDialog(None, errormsg  , u"Error!!", wx.OK | wx.ICON_ERROR)
+    dialog_1 = wx.MessageDialog(None, errormsg  , u"Port not found!", wx.OK | wx.ICON_ERROR)
     frame_2.Show()
     dialog_1.ShowModal()
-
-
-
 
 
 if __name__ == "__main__":
@@ -295,9 +292,6 @@ if __name__ == "__main__":
     frame_1 = MainWindow(None, wx.ID_ANY, "")
     frame_2 = MCOM_CONFIG(frame_1, wx.ID_ANY, "")
     frame_2.GetPort()
-
-
-
     app.SetTopWindow(frame_1)
     frame_1.Show()
     app.MainLoop()
