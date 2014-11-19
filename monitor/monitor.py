@@ -25,7 +25,7 @@ class MCOM_CONFIG(wx.Frame):
         port = ""
 
         self.panel_2 = wx.Panel(self, wx.ID_ANY)
-        self.label_8 = wx.StaticText(self.panel_2, wx.ID_ANY, _(u"ポート名を正確に入力してください！"))
+        self.label_7 = wx.StaticText(self.panel_2, wx.ID_ANY, _(u"ポート名を正確に入力してください！"))
         self.text_ctrl_1 = wx.TextCtrl(self.panel_2, wx.ID_ANY, port)
         self.button_3 = wx.Button(self.panel_2, wx.ID_ANY, _("OK"))
 
@@ -39,7 +39,7 @@ class MCOM_CONFIG(wx.Frame):
     def __set_properties(self):
         # begin wxGlade: MCOM_CONFIG.__set_properties
         self.SetTitle(_("MCOM CONFIG"))
-        self.label_8.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        self.label_7.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.text_ctrl_1.SetMinSize((180, 30))
         self.text_ctrl_1.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.button_3.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
@@ -49,7 +49,7 @@ class MCOM_CONFIG(wx.Frame):
         # begin wxGlade: MCOM_CONFIG.__do_layout
         sizer_3 = wx.BoxSizer(wx.VERTICAL)
         sizer_4 = wx.BoxSizer(wx.VERTICAL)
-        sizer_4.Add(self.label_8, 0, wx.ALIGN_CENTER_HORIZONTAL, 0)
+        sizer_4.Add(self.label_7, 0, wx.ALIGN_CENTER_HORIZONTAL, 0)
         sizer_4.Add(self.text_ctrl_1, 0, wx.ALIGN_CENTER_HORIZONTAL, 0)
         sizer_4.Add(self.button_3, 0, wx.ALIGN_CENTER_HORIZONTAL, 0)
         self.panel_2.SetSizer(sizer_4)
@@ -219,11 +219,20 @@ class MainWindow(wx.Frame):
     def refresh(self, event):
         global mcom
         if mcom.getdata() == -1 :
-#            dialog = ErrorDialog(self, wx.ID_ANY, "")
-#            dialog.Show()
+            print (u"通信エラーが発生しました。以下の項目を点検してください。")
+            print (u"・正しいポートを指定していますか？")
+            print (u"・MCOMの電源は入っていますか？")
+            print (u"・ArduinoとXBeeは正しく接続されていますか？")
+            print (u"・ワイヤレスプロトシールドのSERIAL SELECTスイッチはMICRO側になっていますか？")
+            print ("")
+            print (u"これらが全て正常でもこのエラーが発生する場合、MCOMからの電波がPCまで届いていない可能性があります。")
+            print (u"MCOMをPCに近づける、遮蔽物を取り除く等が必要かもしれません。")
             self.timer.Stop()
             frame_2.Show(True)
-#            exit()			#暫定
+
+            errormsg = (u"通信エラーが発生しました。以下の項目を点検してください。\n\n・正しいポートを指定していますか？\n・MCOMの電源は入っていますか？\n・ArduinoとXBeeは正しく接続されていますか？\n・ワイヤレスプロトシールドのSERIAL SELECTスイッチはMICRO側になっていますか？\n\nこれらが全て正常でもこのエラーが発生する場合、MCOMからの電波がPCまで届いていない可能性があります。\nMCOMをPCに近づける、遮蔽物を取り除く等が必要かもしれません。")
+            dialog_1 = wx.MessageDialog(None, errormsg  , u"Error!!", wx.OK | wx.ICON_ERROR)
+            dialog_1.ShowModal()
 
         if mcom.mcom_mode == 0:
             self.label_1.SetLabel(u"起動まで")
@@ -260,16 +269,20 @@ class MainWindow(wx.Frame):
 
 
 
-
-
 def HowToUse():					#ポートが見つからない時の処理サブルーチン
+
+    errormsg = (u"通常、ポート名は以下のようになります。\n\nWindowsの場合 - COMx \nLinuxの場合 - /dev/ttyACMx \n\nデフォルトでは %s が使用されます。") % (port_default) 
+
     print (u"使用法 :")
     print (u" %s  <ポート名> ")  % (sys.argv[0])
-    print (u"通常、ポート名はWindowsの場合はCOMx, Linuxの場合は/dev/ttyACMx のようになります。 ")
-    print (u"デフォルトでは %s が使用されます。\n") % (port_default)
+    print (u"通常、ポート名はWindowsの場合はCOMx, Linuxの場合は/dev/ttyACMx のようになります。")
+    print (u"デフォルトでは %s が使用されます。") % (port_default) 
 
     frame_1.timer.Stop()
+    dialog_1 = wx.MessageDialog(None, errormsg  , u"Error!!", wx.OK | wx.ICON_ERROR)
     frame_2.Show()
+    dialog_1.ShowModal()
+
 
 
 
@@ -282,6 +295,7 @@ if __name__ == "__main__":
     frame_1 = MainWindow(None, wx.ID_ANY, "")
     frame_2 = MCOM_CONFIG(frame_1, wx.ID_ANY, "")
     frame_2.GetPort()
+
 
 
     app.SetTopWindow(frame_1)
