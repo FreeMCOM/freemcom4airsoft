@@ -32,7 +32,7 @@ logicalmkup
 \paperfontsize default
 \spacing single
 \use_hyperref true
-\pdf_bookmarks true
+\pdf_bookmarks false
 \pdf_bookmarksnumbered false
 \pdf_bookmarksopen false
 \pdf_bookmarksopenlevel 1
@@ -41,6 +41,7 @@ logicalmkup
 \pdf_colorlinks true
 \pdf_backref false
 \pdf_pdfusetitle true
+\pdf_quoted_options "pdfencoding=pdfdoc"
 \papersize default
 \use_geometry false
 \use_amsmath 1
@@ -311,8 +312,23 @@ struct TIMER DISENGAGE_DEFAULT = {10, 1, 5}; //MCOM解除のLIMIT, STEP, TIME
 \end_layout
 
 \begin_layout Standard
-ここで、LIMITは長押し時間・各ステージの最低時間を指し、STEPはMCOM解除毎にどれだけTIME(後述)を増減するかを表しており、正の値だと各ステージ及び
-起動長押しは解除毎にSTEP秒短くなり、解除長押しは長くなります。TIMEはそれぞれの長押し時間・各ステージの継続時間です。
+ここで、
+\shape slanted
+LIMIT
+\shape default
+は長押し時間・各ステージの最低時間を指し、
+\shape slanted
+STEP
+\shape default
+はMCOM解除毎にどれだけTIME(後述)を増減するかを表しており、正の値だと各ステージ及び起動長押しは解除毎に
+\shape slanted
+STEP
+\shape default
+秒短くなり、解除長押しは長くなります。
+\shape slanted
+TIME
+\shape default
+はそれぞれの長押し時間・各ステージの継続時間です。
 \end_layout
 
 \begin_layout Subsection
@@ -461,21 +477,51 @@ http://mag.switch-science.com/2012/08/01/startup_xbee_zb
 \end_layout
 
 \begin_layout Enumerate
-起動/解除ボタンをENGAGE.TIMEで指定した時間押し続けると、断続的にブザーが鳴り、LEDが点滅を初めます。
+起動/解除ボタンを
+\shape slanted
+ENGAGE.TIME
+\shape default
+で指定した時間押し続けると、断続的にブザーが鳴り、LEDが点滅を初めます。
 \end_layout
 
 \begin_layout Enumerate
-STAGE1.TIMEが経過するとSTAGE2.TIMEに入り、LED点滅サイクルとブザーの断続間隔が短くなります。
+
+\shape slanted
+STAGE1.TIME
+\shape default
+が経過すると
+\shape slanted
+STAGE2.TIME
+\shape default
+に入り、LED点滅サイクルとブザーの断続間隔が短くなります。
 \end_layout
 
 \begin_layout Enumerate
-2〜3の間に起動/解除ボタンをDISENGAGE_TIMEで指定された時間押し続けると、ブザーが短く鳴る&LEDが2回点滅し、待機状態に戻ります。(この時、ST
-AGE1.TIMEはSTAGE1.STEPだけ短くなり、同様にSTAGE2.TIMEもSTAGE2.STEPだけ短くなります)
+2〜3の間に起動/解除ボタンをDISENGAGE_TIMEで指定された時間押し続けると、ブザーが短く鳴る&LEDが2回点滅し、待機状態に戻ります。(この時、
+\shape slanted
+STAGE1.TIME
+\shape default
+は
+\shape slanted
+STAGE1.STEP
+\shape default
+だけ短くなり、同様に
+\shape slanted
+STAGE2.TIME
+\shape default
+も
+\shape slanted
+STAGE2.STEP
+\shape default
+だけ短くなります)
 \end_layout
 
 \begin_layout Enumerate
-STAGE2.TIMEが経過してしまうと、LEDが点灯し、同時に5秒間ブザーが鳴り続けて「フリーズ」します。(これ以降、起動/解除ボタンを押しても初期状態には戻せ
-ません)
+
+\shape slanted
+STAGE2.TIME
+\shape default
+が経過してしまうと、LEDが点灯し、同時に5秒間ブザーが鳴り続けて「フリーズ」します。(これ以降、起動/解除ボタンを押しても初期状態には戻せません)
 \end_layout
 
 \begin_layout Enumerate
@@ -520,21 +566,55 @@ COM3
 \end_layout
 
 \begin_layout Enumerate
-起動/解除ボタンをENGAGE.TIMEで指定した時間押し続けると、断続的にブザーが鳴り、LEDが点滅を初めます。
+起動/解除ボタンを
+\shape slanted
+ENGAGE.TIME
+\shape default
+で指定した時間押し続けると、断続的にブザーが鳴り、LEDが点滅を初めます。
 \end_layout
 
 \begin_layout Enumerate
-STAGE1.TIMEが経過するとSTAGE2.TIMEに入り、LED点滅サイクルとブザーの断続間隔が短くなります。
+
+\shape slanted
+STAGE1.TIME
+\shape default
+が経過すると
+\shape slanted
+STAGE2.TIME
+\shape default
+に入り、LED点滅サイクルとブザーの断続間隔が短くなります。
 \end_layout
 
 \begin_layout Enumerate
-2〜3の間に起動/解除ボタンをDISENGAGE_TIMEで指定された時間押し続けると、ブザーが短く鳴る&LEDが2回点滅し、待機状態に戻ります。(この時、ST
-AGE1.TIMEはSTAGE1.STEPだけ短くなり、同様にSTAGE2.TIMEもSTAGE2.STEPだけ短くなります)
+2〜3の間に起動/解除ボタンを
+\shape slanted
+DISENGAGE_TIME
+\shape default
+で指定された時間押し続けると、ブザーが短く鳴る&LEDが2回点滅し、待機状態に戻ります。(この時、
+\shape slanted
+STAGE1.TIME
+\shape default
+は
+\shape slanted
+STAGE1.STEP
+\shape default
+だけ短くなり、同様に
+\shape slanted
+STAGE2.TIME
+\shape default
+も
+\shape slanted
+STAGE2.STEP
+\shape default
+だけ短くなります)
 \end_layout
 
 \begin_layout Enumerate
-STAGE2.TIMEが経過してしまうと、LEDが点灯し、同時に5秒間ブザーが鳴り続けて「フリーズ」します。(これ以降、起動/解除ボタンを押しても初期状態には戻せ
-ません)
+
+\shape slanted
+STAGE2.TIME
+\shape default
+が経過してしまうと、LEDが点灯し、同時に5秒間ブザーが鳴り続けて「フリーズ」します。(これ以降、起動/解除ボタンを押しても初期状態には戻せません)
 \end_layout
 
 \begin_layout Enumerate
