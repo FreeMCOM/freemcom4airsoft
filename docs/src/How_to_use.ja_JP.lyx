@@ -1,0 +1,735 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass jsarticle
+\use_default_options true
+\begin_modules
+fixltx2e
+figs-within-sections
+logicalmkup
+\end_modules
+\maintain_unincluded_children false
+\language japanese
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics xdvi
+\default_output_format pdf
+\output_sync 0
+\bibtex_command default
+\index_command makeindex
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+FreeMCOM for Airsoft v1.0.0 導入説明書
+\end_layout
+
+\begin_layout Author
+FreeMCOM for Airsoft development squatron
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+これは何ですか？
+\end_layout
+
+\begin_layout Standard
+サバゲ・ペイントボール等で、Battlefield(R)シリーズの「ラッシュ」に準じたルールで遊ぶための、Arduinoを使用したM-COMのクローンを製作する
+ためのソフトウェアです。要するに、
+\end_layout
+
+\begin_layout Itemize
+予めArduinoに本ソフトウェアを書き込んだ上で、ボタン・ブザー・赤色灯を接続しておく
+\end_layout
+
+\begin_layout Itemize
+攻撃チームと防衛チームに分かれる
+\end_layout
+
+\begin_layout Itemize
+攻撃チームはM-COMを破壊するために、ボタンを長押しして起爆の準備をし、爆発まで防衛チームに解除されないように守らなくてはなりません。
+\end_layout
+
+\begin_layout Itemize
+防衛チームは攻撃チームを排除すると共に、万が一起爆準備をされてしまった場合、ボタンを長押ししてそれを解除しなくてはなりません。
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+セットアップ
+\end_layout
+
+\begin_layout Section
+セットアップ
+\end_layout
+
+\begin_layout Subsection
+基本的な使用に必要なハードウェア
+\end_layout
+
+\begin_layout Enumerate
+Arduino (リレーシールドとの兼ね合い上、Arduino Uno/Leonard等、標準サイズ推奨。)
+\end_layout
+
+\begin_layout Enumerate
+大音量のブザー
+\end_layout
+
+\begin_layout Enumerate
+LED赤色灯
+\end_layout
+
+\begin_layout Enumerate
+押ボタンスイッチ(モーメンタリ) ×1 (起動/解除用)
+\end_layout
+
+\begin_layout Enumerate
+タクトスイッチ ×1 (リセットボタン用)
+\end_layout
+
+\begin_layout Enumerate
+10k
+\begin_inset Formula $\Omega$
+\end_inset
+
+抵抗(プルダウン抵抗) ×1
+\end_layout
+
+\begin_layout Enumerate
+ユニバーサル基板 ×1
+\end_layout
+
+\begin_layout Enumerate
+リレーシールド (本書ではSLD01101Pを想定)
+\end_layout
+
+\begin_layout Enumerate
+電源 (Arduino用と、LED赤色灯・ブザー用の2系統が必要)
+\end_layout
+
+\begin_layout Enumerate
+ケース(ダイソーの適当な箱を電動ドリルで加工すれば事足ります)
+\end_layout
+
+\begin_layout Subsubsection
+遠隔監視を行う場合に追加で必要となるハードウェア
+\end_layout
+
+\begin_layout Enumerate
+PC
+\end_layout
+
+\begin_layout Enumerate
+XBee ×2 (モデルにより外部アンテナも必要)
+\end_layout
+
+\begin_layout Enumerate
+XBee エクスプローラ ×1
+\end_layout
+
+\begin_layout Enumerate
+ワイヤレスプロトシールド ×1 (本解説書ではARDUINO-A000064を想定)
+\end_layout
+
+\begin_layout Subsection
+基本的な使用に必要なソフトウェア
+\end_layout
+
+\begin_layout Enumerate
+Arduino IDE 1.0.5以降 (
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.arduino.cc/
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Subsubsection
+遠隔監視を行う場合に追加で必要となるソフトウェア
+\end_layout
+
+\begin_layout Enumerate
+Python 2系列(2.7以降)
+\end_layout
+
+\begin_layout Enumerate
+wxPython(導入しているpythonのバージョンに対応するもの)
+\end_layout
+
+\begin_layout Enumerate
+pyserial(導入しているpythonのバージョンに対応するもの)
+\end_layout
+
+\begin_layout Enumerate
+X-CTU
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+なお、本文書では関連ソフトウェアのインストールについては取り扱いません。必要に応じインターネット上に多数存在する解説サイトをご覧ください。
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+あなたのM-COMを組み立てる
+\end_layout
+
+\begin_layout Subsection
+規定値の調整について
+\end_layout
+
+\begin_layout Enumerate
+好みに合わせ、freemcom/freemcom.inoの26行〜29行辺りのグローバルな変数・定数を変更します。これは、
+\family typewriter
+\shape slanted
+struct TIMER { const long LIMIT , const long STEP , long TIME } 
+\family default
+\shape default
+という構造体になっています。
+\end_layout
+
+\begin_layout Quote
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+struct TIMER STAGE1_DEFAULT = {5, 2, 20} ; //ステージ1(ゆっくり点滅)のLIMIT, STEP,
+ TIME
+\end_layout
+
+\begin_layout Plain Layout
+struct TIMER STAGE2_DEFAULT = {2, 1, 10} ; //ステージ2(早く点滅)のLIMIT, STEP, TIME
+\end_layout
+
+\begin_layout Plain Layout
+struct TIMER ENGAGE_DEFFAULT = {1, 1, 5}; //MCOM起動のLIMIT, STEP, TIME
+\end_layout
+
+\begin_layout Plain Layout
+struct TIMER DISENGAGE_DEFAULT = {10, 1, 5}; //MCOM解除のLIMIT, STEP, TIME
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+ここで、LIMITは長押し時間・各ステージの最低時間を指し、STEPはMCOM解除毎にどれだけTIME(後述)を増減するかを表しており、正の値だと各ステージ及び
+起動長押しは解除毎にSTEP秒短くなり、解除長押しは長くなります。TIMEはそれぞれの長押し時間・各ステージの継続時間です。
+\end_layout
+
+\begin_layout Subsection
+組立について
+\end_layout
+
+\begin_layout Subsubsection
+基本的な組立作業
+\end_layout
+
+\begin_layout Enumerate
+freemcom/freemcom.inoをarduinoに書き込みます。
+\end_layout
+
+\begin_layout Enumerate
+リレーシールド、ワイヤレスプロトシールドをarduinoに接続します。
+\end_layout
+
+\begin_layout Enumerate
+下記回路図に従い、D2ピンを起動/解除用押ボタンに接続します。(このスイッチはケース表面から押せる所に設置)
+\end_layout
+
+\begin_layout Enumerate
+リレーシールドのNO2・COM2を大音量ブザーに接続します。
+\end_layout
+
+\begin_layout Enumerate
+リレーシールドのNO1・COM1を赤色灯に接続します。
+\end_layout
+
+\begin_layout Enumerate
+Arudino UNOの場合リセットピンをGNDに落とすとリセットされるので、押ボタンスイッチを介してGNDに落とせるようにする。このスイッチはケース内等、容易
+に押せない場所に設置してください。
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename freemcom_circuit.png
+	lyxscale 10
+	width 70page%
+	height 70pheight%
+	rotateAngle 90
+
+\end_inset
+
+
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+遠隔監視を行う場合の追加の作業
+\end_layout
+
+\begin_layout Enumerate
+2つのXBeeのうち、Arduinoに接続するXBeeとPCに接続するXBee、PAN ID(通信可能なグループ番号)を決め、それぞれのシリアルナンバーを控えま
+す。
+\end_layout
+
+\begin_layout Enumerate
+XBee エクスプローラに「Arduinoに接続する方のXBee」を接続してから、XBeeエクスプローラをPCに接続します。
+\end_layout
+
+\begin_layout Enumerate
+X-CTUを起動し、通信相手のシリアルナンバーとPAN IDを書き込みます。
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+注意:シリーズ2では、PCに接続するXBeeのFunction Setを「Coodinator AT」に、Arduinoに接続するXBeeのFunction
+ Setを「Router AT」に設定する必要があります。
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+XBeeエクスプローラをPCから取り外してから、XBeeを取り外し、Arduinoに接続されたワイヤレスプロトシールドに接続します。
+\end_layout
+
+\begin_layout Enumerate
+上記2・3と同じ手順で、PCに接続するXBeeの設定を行います。
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+詳細はXBeeを日本国内で取り扱っている会社の一つである、スイッチサイエンスによる解説記事を参照して頂ければ、と思います。
+\end_layout
+
+\begin_layout Standard
+XBee シリーズ1の設定解説 (
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://mag.switch-science.com/2012/07/20/startup_xbee_s1
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+XBee シリーズ2の設定解説 (
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://mag.switch-science.com/2012/08/01/startup_xbee_zb
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+ゲームでの使用方法
+\end_layout
+
+\begin_layout Section
+ゲームで使う
+\end_layout
+
+\begin_layout Subsection
+遠隔監視を使用しない場合の使用方法
+\end_layout
+
+\begin_layout Enumerate
+ゲーム開始前にArduinoの電源を入れ、リセットボタンを押す。
+\end_layout
+
+\begin_layout Enumerate
+起動/解除ボタンをENGAGE.TIMEで指定した時間押し続けると、断続的にブザーが鳴り、LEDが点滅を初めます。
+\end_layout
+
+\begin_layout Enumerate
+STAGE1.TIMEが経過するとSTAGE2.TIMEに入り、LED点滅サイクルとブザーの断続間隔が短くなります。
+\end_layout
+
+\begin_layout Enumerate
+2〜3の間に起動/解除ボタンをDISENGAGE_TIMEで指定された時間押し続けると、ブザーが短く鳴る&LEDが2回点滅し、待機状態に戻ります。(この時、ST
+AGE1.TIMEはSTAGE1.STEPだけ短くなり、同様にSTAGE2.TIMEもSTAGE2.STEPだけ短くなります)
+\end_layout
+
+\begin_layout Enumerate
+STAGE2.TIMEが経過してしまうと、LEDが点灯し、同時に5秒間ブザーが鳴り続けて「フリーズ」します。(これ以降、起動/解除ボタンを押しても初期状態には戻せ
+ません)
+\end_layout
+
+\begin_layout Enumerate
+ゲームの勝敗が決する、あるいは時間切れでゲームが終了したら、本体のリセットボタンを押して初期状態に戻してください。 
+\end_layout
+
+\begin_layout Subsection
+遠隔監視を行う場合の使用方法
+\end_layout
+
+\begin_layout Enumerate
+ゲーム開始前にPCとXBeeを接続し、Arduinoの電源を入れる。
+\end_layout
+
+\begin_layout Enumerate
+monitor/monitor.pyを起動します。コマンドラインオプションでポートを指定することができます。また、monitor.monitor.pyの
+\family typewriter
+\shape italic
+port_default
+\family default
+\shape default
+の値を書き換えたり、コマンドラインオプション入りのショートカットを作成することで、この手順を省く事ができます。
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+例: $./monitor.py 
+\family typewriter
+\shape slanted
+COM3
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+「起動まで 
+\family typewriter
+\shape italic
+5
+\family default
+\shape default
+ 秒長押し」と表示されたのを確認後、ゲームを開始してください。
+\end_layout
+
+\begin_layout Enumerate
+起動/解除ボタンをENGAGE.TIMEで指定した時間押し続けると、断続的にブザーが鳴り、LEDが点滅を初めます。
+\end_layout
+
+\begin_layout Enumerate
+STAGE1.TIMEが経過するとSTAGE2.TIMEに入り、LED点滅サイクルとブザーの断続間隔が短くなります。
+\end_layout
+
+\begin_layout Enumerate
+2〜3の間に起動/解除ボタンをDISENGAGE_TIMEで指定された時間押し続けると、ブザーが短く鳴る&LEDが2回点滅し、待機状態に戻ります。(この時、ST
+AGE1.TIMEはSTAGE1.STEPだけ短くなり、同様にSTAGE2.TIMEもSTAGE2.STEPだけ短くなります)
+\end_layout
+
+\begin_layout Enumerate
+STAGE2.TIMEが経過してしまうと、LEDが点灯し、同時に5秒間ブザーが鳴り続けて「フリーズ」します。(これ以降、起動/解除ボタンを押しても初期状態には戻せ
+ません)
+\end_layout
+
+\begin_layout Enumerate
+ゲームの勝敗が決する、あるいは時間切れでゲームが終了したら、本体のリセットボタンを押すか、監視ソフトのリセットボタンをクリックして初期状態に戻してください。
+ 
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+トラブルシューティング
+\end_layout
+
+\begin_layout Section
+うまく動かない時は
+\end_layout
+
+\begin_layout Subsection
+遠隔監視を使用しない場合の確認事項
+\end_layout
+
+\begin_layout Enumerate
+freemcom/freemcom.inoが正しく書き込まれているか確認する。書き込み時に何かエラーメッセージが出ている場合、書き込めていません。
+\end_layout
+
+\begin_layout Enumerate
+配線が適切で、断線していないかテスターを使用して検査する。
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+ピンがソケットに正しく差し込まれていて、間違って隣のピンに差し込んでいないかを確認する。
+\end_layout
+
+\begin_layout Enumerate
+シールドが正しく差し込まれているか。
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+電源が供給されているか。Arduinoとリレーシールドを動かすための電源と、LED赤色灯やブザーを動かすための電源の両方が必要です。
+\end_layout
+
+\begin_layout Subsection
+遠隔監視を使用する場合の追加の確認事項
+\end_layout
+
+\begin_layout Enumerate
+正しいポートを指定しているか(未使用ポートならば、「
+\begin_inset Formula $\left\langle \text{ポート番号}\right\rangle $
+\end_inset
+
+ が見つかりません。」と表示されますが、不運にも何らかの機器がそのポートを使用していた場合、正常に表示されないでしょう)。
+\end_layout
+
+\begin_layout Enumerate
+Arduinoに正しくスケッチを書き込んでいるか(ArduinoにUSBケーブル経由でのスケッチ書込時には、ワイヤレスプロトシールドのSERIAL
+ SELECTスイッチをUSB側にしなければなりません)。
+\end_layout
+
+\begin_layout Enumerate
+ゲーム時に、ワイヤレスプロトシールドのSERIAL SELECTスイッチがMICRO側になっているか。
+\end_layout
+
+\begin_layout Enumerate
+XBeeの設定が正しいか。 シリーズ2の場合CoodinatorとRouterを取り違えていないか。
+\end_layout
+
+\begin_layout Standard
+これらが全て正常でも通信の不具合が発生する場合、MCOMからの電波がPCまで届いていない可能性があります。その場合、以下の事をお試しください。
+\end_layout
+
+\begin_layout Enumerate
+MCOMをPCに近づける
+\end_layout
+
+\begin_layout Enumerate
+遮蔽物を取り除く
+\end_layout
+
+\begin_layout Enumerate
+XBeeをU.FLコネクタ型に交換し外部アンテナを取り付ける
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+本プログラム及び使用ライブラリのライセンス、著作権
+\end_layout
+
+\begin_layout Section
+本プログラムの著作権及び使用ライセンス
+\end_layout
+
+\begin_layout Itemize
+Copyright (c) 2014 AOKI Kiyohito, FreeMCOM for Airsoft develop squatron
+\end_layout
+
+\begin_layout Standard
+本プログラムは上記が著作権を保有し、GNU GENERAL PUBLIC LICENSE Version 3 (or lator) により提供されています。ライ
+センスの全文はCOPYINGを参照ください。
+\end_layout
+
+\begin_layout Subsection
+使用ライブラリの著作権及びライセンス
+\end_layout
+
+\begin_layout Standard
+本プログラムは、以下のライブラリを使用しています。
+\end_layout
+
+\begin_layout Itemize
+wxPython library
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Copyright (c) 1992-2013 Julian Smart, Vadim Zeitlin, Stefan Csomor, Robert
+ Roebling, and other members of the wxWidgets team, please see the acknowledgeme
+nts section below.
+\end_layout
+
+\begin_layout Standard
+Acknowledgements
+\end_layout
+
+\begin_layout Standard
+The following is the list of the core, active developers of wxWidgets which
+ keep it running and have provided an invaluable, extensive and high-quality
+ amount of changes over the many of years of wxWidgets' life:
+\end_layout
+
+\begin_layout Itemize
+Julian Smart
+\end_layout
+
+\begin_layout Itemize
+Vadim Zeitlin
+\end_layout
+
+\begin_layout Itemize
+Robert Roebling
+\end_layout
+
+\begin_layout Itemize
+Robin Dunn
+\end_layout
+
+\begin_layout Itemize
+Stefan Csomor
+\end_layout
+
+\begin_layout Itemize
+Vaclav Slavik
+\end_layout
+
+\begin_layout Itemize
+Paul Cornett
+\end_layout
+
+\begin_layout Itemize
+Wlodzimierz `ABX' Skiba
+\end_layout
+
+\begin_layout Itemize
+Chris Elliott
+\end_layout
+
+\begin_layout Itemize
+David Elliott
+\end_layout
+
+\begin_layout Itemize
+Kevin Hock
+\end_layout
+
+\begin_layout Itemize
+Stefan Neis
+\end_layout
+
+\begin_layout Itemize
+Michael Wetherell
+\end_layout
+
+\begin_layout Standard
+ライセンス原文はhttps://www.wxwidgets.org/about/licence/ にあります。
+\end_layout
+
+\end_deeper
+\end_body
+\end_document
