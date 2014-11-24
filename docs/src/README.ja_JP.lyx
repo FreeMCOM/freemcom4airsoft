@@ -3,6 +3,11 @@
 \begin_document
 \begin_header
 \textclass jsarticle
+\begin_preamble
+\usepackage[dvipdfm,bookmarks=true,bookmarksnumbered=true,bookmarkstype=toc, %
+colorlinks=true, linkcolor=blue,filecolor=blue,urlcolor=blue]{hyperref}
+\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+\end_preamble
 \use_default_options true
 \begin_modules
 fixltx2e
@@ -25,14 +30,14 @@ logicalmkup
 \font_tt_scale 100
 
 \graphics xdvi
-\default_output_format pdf
+\default_output_format pdf3
 \output_sync 0
 \bibtex_command default
 \index_command makeindex
 \paperfontsize default
 \spacing single
-\use_hyperref true
-\pdf_bookmarks false
+\use_hyperref false
+\pdf_bookmarks true
 \pdf_bookmarksnumbered false
 \pdf_bookmarksopen false
 \pdf_bookmarksopenlevel 1
@@ -807,9 +812,161 @@ Michael Wetherell
 \end_layout
 
 \begin_layout Standard
-ライセンス原文はhttps://www.wxwidgets.org/about/licence/ にあります。
+ライセンス原文は
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+https://www.wxwidgets.org/about/licence/
+\end_layout
+
+\end_inset
+
+ にあります。
 \end_layout
 
 \end_deeper
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+参考文献等
+\end_layout
+
+\begin_layout Standard
+FreeMCOM for Airsoftの製作にあたり、参考にした書籍及びwebサイト等を紹介いたします。
+\end_layout
+
+\begin_layout Itemize
+Arduinoをはじめよう　第二版 (
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.oreilly.co.jp/books/9784873115375/
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+XBeeで作るワイヤレスセンサーネットワーク (
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://www.oreilly.co.jp/books/9784873115306/
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Arduino 日本語リファレンス (
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.musashinodenpa.com/arduino/ref/
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+スイッチサイエンスマガジン (
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://mag.switch-science.com/
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Pythonスタートブック (
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://gihyo.jp/book/2010/978-4-7741-4229-6
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+[改訂第五版] LaTeX2e微分処作成入門 (
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://gihyo.jp/book/2010/978-4-7741-4319-4
+\end_layout
+
+\end_inset
+
+) 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+本文書執筆時点で、既に第6版が発行されています。これからお買い求めの方は
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://gihyo.jp/book/2013/978-4-7741-6045-0
+\end_layout
+
+\end_inset
+
+を購入されることをお勧めします。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+ものくろ ぼっくす (
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.monochrome-photo.info/
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
 \end_body
 \end_document
