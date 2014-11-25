@@ -42,7 +42,7 @@ class Mcom:
         return
 
 
-   def checkdata(self):
+    def checkdata(self):
         indata = ''
         self.port.flushInput()			#使用済みのデータを破棄
         while len(indata) != 4:			#要素数不足の場合、要素数が合うまでやり直す
@@ -83,4 +83,9 @@ class Mcom:
         else:
             self.disengage = int(indata[3]) /1000
         return
+
+
+if __name__ == "__main__":
+    print (u"このファイルはクラスファイルです。終了します。")
+    exit()
 
