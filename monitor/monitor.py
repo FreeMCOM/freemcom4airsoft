@@ -204,7 +204,7 @@ class MainWindow(wx.Frame):
         mcom.reset(port)
         time.sleep(1)
         self.label_1.SetLabel(u"起動まで")
-        self.label_2.SetLabel(mcom.disengage)
+        self.label_2.SetLabel(str(mcom.disengage))
         self.label_3.SetLabel(u"秒長押し")
         self.label_4.SetLabel(u"")
         self.label_5.SetLabel(u"")
@@ -235,7 +235,7 @@ class MainWindow(wx.Frame):
 
         if mcom.mcom_mode == 0:
             self.label_1.SetLabel(u"起動まで")
-            self.label_2.SetLabel(mcom.disengage)
+            self.label_2.SetLabel(str(mcom.disengage))
             self.label_3.SetLabel(u"秒長押し")
             self.label_4.SetLabel(u"")
             self.label_5.SetLabel(u"")
@@ -243,18 +243,18 @@ class MainWindow(wx.Frame):
 
         elif mcom.mcom_mode == 1:
             self.label_1.SetLabel(u"解除まで")
-            self.label_2.SetLabel(mcom.disengage)
+            self.label_2.SetLabel(str(mcom.disengage))
             self.label_3.SetLabel(u"秒長押し")
             self.label_4.SetLabel(u"破壊まで")
-            self.label_5.SetLabel(mcom.left)
+            self.label_5.SetLabel(str(mcom.left))
             self.label_6.SetLabel(u"秒")
 
         elif mcom.mcom_mode == 2:
             self.label_1.SetLabel(u"解除まで")
-            self.label_2.SetLabel(mcom.disengage)
+            self.label_2.SetLabel(str(mcom.disengage))
             self.label_3.SetLabel(u"秒長押し")
             self.label_4.SetLabel(u"破壊まで")
-            self.label_5.SetLabel(mcom.left)
+            self.label_5.SetLabel(str(mcom.left))
             self.label_6.SetLabel(u"秒")
 
 	elif mcom.mcom_mode == 3:
