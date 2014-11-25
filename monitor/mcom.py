@@ -42,7 +42,7 @@ class Mcom:
         return
 
 
-    def checkdata(self):
+   def checkdata(self):
         indata = ''
         self.port.flushInput()			#使用済みのデータを破棄
         while len(indata) != 4:			#要素数不足の場合、要素数が合うまでやり直す
@@ -67,6 +67,14 @@ class Mcom:
             self.left = ( int(indata[2]) +1000) /1000		#余りがあれば、表示は + 1000ミリ秒
         else:
             self.left  = int(indata[2]) /1000
+
+        if int(indata[3]) <= 1000 :				# disengage		;	起動・解除までの残り時間
+            self.disengage = 1					#1000ミリ秒以下なら1秒を表示
+        elif  int(indata[3]) % 1000 >= 1 : 				
+            self.disengage = ( int(indata[3]) +1000) /1000	#余りがあれば、表示は + 1000ミリ秒
+        else:
+            self.disengage = int(indata[3]) /1000
+        return
 
         if int(indata[3]) <= 1000 :				# disengage		;	起動・解除までの残り時間
             self.disengage = 1					#1000ミリ秒以下なら1秒を表示
