@@ -653,7 +653,8 @@ freemcom/freemcom.inoが正しく書き込まれているか確認する。書�
 
 \begin_deeper
 \begin_layout Enumerate
-ピンがソケットに正しく差し込まれていて、間違って隣のピンに差し込んでいないかを確認する。
+ピンがソケットに正しく差し込まれていて、間違って隣のピンに差し込んでいないかを確認する。特にプルダウン抵抗を挟んでアースに落とすピンが抜けていると、動作が非常に
+不安定になります。
 \end_layout
 
 \begin_layout Enumerate
