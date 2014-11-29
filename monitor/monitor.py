@@ -13,6 +13,7 @@ import wx							# begin wxGlade: dependencies
 import gettext							# end wxGlade
 from mcom import  *						#mcomのクラス定義ファイルをインポート
 
+_ = gettext.translation(domain = 'messages', localedir = './locale',  fallback=True).ugettext
 
 
 class MainWindow(wx.Frame):
@@ -21,12 +22,12 @@ class MainWindow(wx.Frame):
         kwds["style"] = wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
         self.panel_1 = wx.Panel(self, wx.ID_ANY)
-        self.label_1 = wx.StaticText(self.panel_1, wx.ID_ANY, _(u"接続待ち"))
-        self.label_2 = wx.StaticText(self.panel_1, wx.ID_ANY, _(u""))
-        self.label_3 = wx.StaticText(self.panel_1, wx.ID_ANY, _(u""))
-        self.button_1 = wx.Button(self.panel_1, wx.ID_ANY, _(u"リセット"))
-        self.button_2 = wx.Button(self.panel_1, wx.ID_ANY, _(u"設定"))
-        self.button_3 = wx.Button(self.panel_1, wx.ID_ANY, _(u"終了"))
+        self.label_1 = wx.StaticText(self.panel_1, wx.ID_ANY, _(u"Connecting..."))
+        self.label_2 = wx.StaticText(self.panel_1, wx.ID_ANY, "")
+        self.label_3 = wx.StaticText(self.panel_1, wx.ID_ANY, "")
+        self.button_1 = wx.Button(self.panel_1, wx.ID_ANY, _(u"Reset"))
+        self.button_2 = wx.Button(self.panel_1, wx.ID_ANY, _(u"Config"))
+        self.button_3 = wx.Button(self.panel_1, wx.ID_ANY, _(u"Exit"))
 
         self.__set_properties()
         self.__do_layout()
@@ -42,14 +43,14 @@ class MainWindow(wx.Frame):
 
     def __set_properties(self):
         # begin wxGlade: MainWindow.__set_properties
-        self.SetTitle(_("MCOM Monitor"))
-        self.label_1.SetFont(wx.Font(24, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
-        self.label_2.SetFont(wx.Font(24, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
-        self.label_3.SetFont(wx.Font(24, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        self.SetTitle(_(u"MCOM Monitor"))
+        self.label_1.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        self.label_2.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        self.label_3.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.button_1.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.button_2.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.button_3.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
-        self.panel_1.SetMinSize((300, 197))
+        self.panel_1.SetMinSize((310, 197))
         # end wxGlade
 
     def __do_layout(self):
@@ -77,7 +78,7 @@ class MainWindow(wx.Frame):
         global mcom
         mcom.reset(port)
         time.sleep(1)
-        self.label_1.SetLabel( (u"起動まで %d 秒長押し") % (mcom.disengage) )
+        self.label_1.SetLabel( _(u"Press %d sec. until MCOM engage.") % (mcom.disengage) )
         self.label_2.SetLabel("")
         self.label_3.SetLabel("")
 
@@ -88,51 +89,51 @@ class MainWindow(wx.Frame):
     def refresh(self, event):
         global mcom
         if mcom.getdata() == -1 :
-            errormsg = (u"通信エラーが発生しました。以下の項目を点検してください。\n\n")
-            errormsg += (u"・正しいポートを指定していますか？\n")
-            errormsg += (u"・MCOMの電源は入っていますか？\n")
-            errormsg += (u"・ArduinoとXBeeは正しく接続されていますか？\n")
-            errormsg += (u"・ワイヤレスプロトシールドのSERIAL SELECTスイッチはMICRO側になっていますか？\n\n")
-            errormsg += (u"これらが全て正常でもこのエラーが発生する場合、MCOMからの電波がPCまで届いていない可能性があります。\n")
-            errormsg += (u"MCOMをPCに近づける、遮蔽物を取り除く等が必要かもしれません。\n")
+            errormsg = _(u"Communication error occurred. Please do following checklist :\n\n")
+            errormsg += _(u"- Designate correctly port ?\n")
+            errormsg += _(u"- MCOM power are turned on? \n")
+            errormsg += _(u"- Correctly connect between Arduino and XBee ?\n")
+            errormsg += _(u"- SERIAL SELECT switch (on wireless proto shield) is choose MICRO ? \n\n")
+            errormsg += _(u"Error occurred if when above are good, possibility PC cannot recive radio wave from MCOM. \n")
+            errormsg += _(u"You have to remove interrupt object, move MCOM to more near from PC, and etc... \n")
 
             print errormsg
             self.timer.Stop()
             frame_2.Show(True)
 
-            dialog_1 = wx.MessageDialog(None, errormsg  , u"Can not receive data from MCOM!!", wx.OK | wx.ICON_ERROR)
+            dialog_1 = wx.MessageDialog(None, errormsg  , _(u"Can not receive data from MCOM!!"), wx.OK | wx.ICON_ERROR)
             dialog_1.ShowModal()
 
         if mcom.mcom_mode == 0:
-            self.label_1.SetLabel( (u"起動まで %d 秒長押し") % (mcom.disengage) )
+            self.label_1.SetLabel( _(u"Press %d sec. until MCOM engage.") % (mcom.disengage) )
             self.label_2.SetLabel("")
             if mcom.button_pushing == 1:
-                self.label_3.SetLabel("MCOM起動作業中")
+                self.label_3.SetLabel(_(u"MCOM was Engaging..."))
             else :
                 self.label_3.SetLabel("")
 
 
         elif mcom.mcom_mode == 1:
-            self.label_1.SetLabel( (u"解除まで %d 秒長押し") % (mcom.disengage) )
-            self.label_2.SetLabel( (u"破壊まで %d 秒") % (mcom.left) )
+            self.label_1.SetLabel( _(u"Press %d sec. until MCOM disengage.") % (mcom.disengage) )
+            self.label_2.SetLabel( _(u"Until destruction %d sec. ") % (mcom.left) )
             if mcom.button_pushing == 1:
-                self.label_3.SetLabel("MCOM解除作業中")
+                self.label_3.SetLabel( _(u"MCOM was Disengaging..."))
             else :
                 self.label_3.SetLabel("")
 
 
 
         elif mcom.mcom_mode == 2:
-            self.label_1.SetLabel( (u"解除まで %d 秒長押し") % (mcom.disengage) )
-            self.label_2.SetLabel( (u"破壊まで %d 秒") % (mcom.left) )
+            self.label_1.SetLabel( _(u"Press %d sec. until MCOM disengage.") % (mcom.disengage) )
+            self.label_2.SetLabel( _(u"Until destruction %d sec. ") % (mcom.left) )
             if mcom.button_pushing == 1:
-                self.label_3.SetLabel("MCOM解除作業中")
+                self.label_3.SetLabel(_(u"MCOM was Disengaging..."))
             else :
                 self.label_3.SetLabel("")
 
 
 	elif mcom.mcom_mode == 3:
-            self.label_1.SetLabel(u"破壊済み")
+            self.label_1.SetLabel(_(u"MCOM was Destroyed!!"))
             self.label_2.SetLabel("")
             self.label_3.SetLabel("")
 
@@ -150,9 +151,9 @@ class MCOM_CONFIG(wx.Frame):
         port = ""
 
         self.panel_2 = wx.Panel(self, wx.ID_ANY)
-        self.label_4 = wx.StaticText(self.panel_2, wx.ID_ANY, _(u"ポート名を正確に入力してください！"))
+        self.label_4 = wx.StaticText(self.panel_2, wx.ID_ANY, _(u"Input port name correctly."))
         self.text_ctrl_1 = wx.TextCtrl(self.panel_2, wx.ID_ANY, port, style=wx.TE_PROCESS_ENTER)
-        self.button_4 = wx.Button(self.panel_2, wx.ID_ANY, _("OK"))
+        self.button_4 = wx.Button(self.panel_2, wx.ID_ANY, _(u"OK"))
 
         self.__set_properties()
         self.__do_layout()
@@ -164,11 +165,12 @@ class MCOM_CONFIG(wx.Frame):
 
     def __set_properties(self):
         # begin wxGlade: MCOM_CONFIG.__set_properties
-        self.SetTitle(_("MCOM CONFIG"))
+        self.SetTitle(_(u"MCOM CONFIG"))
         self.label_4.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
-        self.text_ctrl_1.SetMinSize((180, 30))
+        self.text_ctrl_1.SetMinSize((200, 30))
         self.text_ctrl_1.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.button_4.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        self.panel_2.SetMinSize((300,84 ))
         # end wxGlade
 
 
@@ -229,10 +231,10 @@ class MCOM_CONFIG(wx.Frame):
         try:								#当該ポートが存在するか否かチェック
             global mcom
             mcom = Mcom(port)						#Mcomのインスタンス生成
-            print (u" %s を使用します。\n") % (portname)
-            frame_1.SetTitle( _("MCOM Monitor %s") % (portname) )
+            print _(u"Use port %s . \n") % (portname)
+            frame_1.SetTitle( _(u"MCOM Monitor - %s") % (portname) )
         except serial.serialutil.SerialException :
-            print (u"%s が見つかりません。\n" ) % (portname)
+            print _(u"Not found %s . \n" ) % (portname)
             HowToUse()
 
 # end of class MCOM_CONFIG
@@ -240,17 +242,17 @@ class MCOM_CONFIG(wx.Frame):
 
 def HowToUse():					#ポートが見つからない時の処理サブルーチン
 
-    errormsg = (u"通常、ポート名は以下のようになります。\n\n")
-    errormsg += (u"Windowsの場合 - COMx \n")
-    errormsg += (u"Linuxの場合 - /dev/ttyACMx \n\n")
-    errormsg += (u"デフォルトでは %s が使用されます。") % (port_default) 
+    errormsg = _(u"Normally, port name is like below. \n\n")
+    errormsg += _(u"Windows - COMx \n")
+    errormsg += _(u"Linux - /dev/ttyACMx \n\n")
+    errormsg += _(u"default are %s .") % (port_default) 
 
-    print (u"使用法 :")
-    print (u" %s  <ポート名> ")  % (sys.argv[0])
+    print _(u"Usage :")
+    print _(u" %s  <port name> ")  % (sys.argv[0])
     print errormsg
 
     frame_1.timer.Stop()
-    dialog_1 = wx.MessageDialog(None, errormsg  , u"Port not found!", wx.OK | wx.ICON_ERROR)
+    dialog_1 = wx.MessageDialog(None, errormsg  , _(u"Port not found!"), wx.OK | wx.ICON_ERROR)
     frame_2.Show()
     dialog_1.ShowModal()
 

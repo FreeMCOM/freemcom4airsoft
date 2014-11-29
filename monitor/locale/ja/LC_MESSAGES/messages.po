@@ -1,0 +1,124 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2014-11-29 20:22+JST\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+	#class MainWindow()
+	#__init()
+msgid "Connecting..."
+msgstr "  接続待ち"
+
+msgid "Reset"
+msgstr "リセット"
+
+msgid "Config"
+msgstr "設定"
+
+msgid "Exit"
+msgstr "終了"
+
+
+	#__set_properties()
+msgid "MCOM Monitor"
+msgstr "MCOM監視"
+
+
+	#reset_button()
+msgid "Press %d sec. until MCOM engage."
+msgstr "  起動まで %d 秒長押し"
+
+	#refresh()
+msgid "Communication error occurred. Please do following checklist :\n\n"
+msgstr "通信エラーが発生しました。以下のチェックリストを実施してください :\n\n"
+
+msgid "- Designate correctly port ?\n"
+msgstr "・正しいポートを指定していますか？\n"
+
+msgid "- MCOM power are turned on? \n"
+msgstr "・MCOMの電源は入っていますか？\n"
+
+msgid "- Correctly connect between Arduino and XBee ?\n"
+msgstr "・ArduinoとXBeeは正しく接続されていますか？\n"
+
+msgid "- SERIAL SELECT switch (on wireless proto shield) is choose MICRO ? \n\n"
+msgstr "・ワイヤレスプロトシールド上のSERIAL SELECTスイッチはMICROを選択しているか？\n\n"
+
+msgid "Error occurred if when above are good, possibility PC cannot recive radio wave from MCOM. \n"
+msgstr "これらが全て正常でもこのエラーが発生する場合、PCがMCOMからの電波を受信できていないようです。\n"
+
+msgid "You have to remove interrupt object, move MCOM to more near from PC, and etc... \n"
+msgstr "もっとPCの近くにMCOMを移動する、遮蔽物を取り除く等の措置が必要です。\n"
+
+msgid "Can not receive data from MCOM!!"
+msgstr "MCOMからのデータを受信できません!!"
+
+msgid "MCOM was Engaging..."
+msgstr "  MCOM起動作業中..."
+
+msgid "Press %d sec. until MCOM disengage."
+msgstr "  解除まで %d 秒長押し"
+
+msgid "Until destruction %d sec. "
+msgstr "  破壊まで %d 秒"
+
+msgid "MCOM was Disengaging..."
+msgstr "  MCOM解除作業中..."
+
+msgid "MCOM was Destroyed!!"
+msgstr "  破壊済み"
+
+
+	#class MCOM_CONFIG()
+msgid "Input port name correctly."
+msgstr "ポート名を正確に入力してください。"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "MCOM CONFIG"
+msgstr "MCOMの設定"
+
+msgid "Use port %s . \n"
+msgstr " %s を使用します。\n"
+
+msgid "Not found %s . \n"
+msgstr " %s が見つかりません。\n"
+
+msgid "MCOM Monitor - %s"
+msgstr "MCOM監視 - %s"
+
+
+	#HowToUse() in monitor.py
+
+msgid "Normally, port name is like below. \n\n"
+msgstr "通常、ポート名は以下のようになります。\n\n"
+
+msgid "Windows - COMx \n"
+msgstr"Windows - COMx \n"
+
+msgid "Linux - /dev/ttyACMx \n\n"
+msgstr"Linux - /dev/ttyACMx \n\n"
+
+msgid "default are %s ."
+msgstr"デフォルトは %s です。"
+
+msgid "Usage :"
+msgstr "使用法 :"
+
+msgid " %s  <port name> "
+msgstr " %s  <ポート名> "
+
+msgid "Port not found!"
+msgstr "ポートが見つかりません!"
