@@ -13,7 +13,7 @@ import wx							# begin wxGlade: dependencies
 import gettext							# end wxGlade
 from mcom import  *						#mcomのクラス定義ファイルをインポート
 
-_ = gettext.translation(domain = 'messages', localedir = './locale',  fallback=True).ugettext
+_ = gettext.translation("messages", os.path.abspath(os.path.dirname(__file__))+'/locale' , fallback=False  ).ugettext
 
 
 class MainWindow(wx.Frame):
@@ -248,7 +248,7 @@ def HowToUse():					#ポートが見つからない時の処理サブルーチ�
     errormsg += _(u"default are %s .") % (port_default) 
 
     print _(u"Usage :")
-    print _(u" %s  <port name> ")  % (sys.argv[0])
+    print _(u" %s  <port name> ")  % os.path.basename(__file__)
     print errormsg
 
     frame_1.timer.Stop()
@@ -259,7 +259,6 @@ def HowToUse():					#ポートが見つからない時の処理サブルーチ�
 
 if __name__ == "__main__":
 
-    gettext.install("app") # replace with the appropriate catalog name
     app = wx.PySimpleApp(0)
     wx.InitAllImageHandlers()
     frame_1 = MainWindow(None, wx.ID_ANY, "")
