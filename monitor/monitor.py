@@ -5,6 +5,8 @@
 #
 
 port_default = "COM3"					#デフォルトのシリアルポートを指定
+lang = [""]						#言語の強制指定
+#lang = ["ja"]						#日本語を指定する例
 
 import sys
 import os.path
@@ -13,7 +15,15 @@ import wx							# begin wxGlade: dependencies
 import gettext							# end wxGlade
 from mcom import  *						#mcomのクラス定義ファイルをインポート
 
-_ = gettext.translation("messages", os.path.abspath(os.path.dirname(__file__))+'/locale' , fallback=False  ).ugettext
+
+
+if sys.platform == "win32" :
+    localedir = os.path.abspath(os.path.dirname(__file__))+'\\locale'
+    _ = gettext.translation("messages", localedir, lang, fallback=True  ).ugettext
+
+else :
+    localedir = os.path.abspath(os.path.dirname(__file__))+'/locale'
+    _ = gettext.translation("messages", localedir , fallback=True  ).ugettext
 
 
 class MainWindow(wx.Frame):
@@ -50,7 +60,7 @@ class MainWindow(wx.Frame):
         self.button_1.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.button_2.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.button_3.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
-        self.panel_1.SetMinSize((310, 197))
+        self.panel_1.SetMinSize((330, 197))
         # end wxGlade
 
     def __do_layout(self):
@@ -88,55 +98,54 @@ class MainWindow(wx.Frame):
 
     def refresh(self, event):
         global mcom
-        if mcom.getdata() == -1 :
-            errormsg = _(u"Communication error occurred. Please do following checklist :\n\n")
-            errormsg += _(u"- Designate correctly port ?\n")
-            errormsg += _(u"- MCOM power are turned on? \n")
-            errormsg += _(u"- Correctly connect between Arduino and XBee ?\n")
-            errormsg += _(u"- SERIAL SELECT switch (on wireless proto shield) is choose MICRO ? \n\n")
-            errormsg += _(u"Error occurred if when above are good, possibility PC cannot recive radio wave from MCOM. \n")
-            errormsg += _(u"You have to remove interrupt object, move MCOM to more near from PC, and etc... \n")
+        try :
+            if mcom.getdata() == -1 :
+                errormsg = _(u"Communication error occurred. Please do following checklist :\n\n")
+                errormsg += _(u"- Designate correctly port ?\n")
+                errormsg += _(u"- MCOM power are turned on? \n")
+                errormsg += _(u"- Correctly connect between Arduino and XBee ?\n")
+                errormsg += _(u"- SERIAL SELECT switch (on wireless proto shield) is choose MICRO ? \n\n")
+                errormsg += _(u"Error occurred if when above are good, possibility PC cannot recive radio wave from MCOM. \n")
+                errormsg += _(u"You have to remove interrupt object, move MCOM to more near from PC, and etc... \n")
 
-            print errormsg
+                print errormsg
+                self.timer.Stop()
+                frame_2.Show(True)
+
+                dialog_1 = wx.MessageDialog(None, errormsg  , _(u"Can not receive data from MCOM!!"), wx.OK | wx.ICON_ERROR)
+                dialog_1.ShowModal()
+
+            if mcom.mcom_mode == 0:
+                self.label_1.SetLabel( _(u"Press %d sec. until MCOM engage.") % (mcom.disengage) )
+                self.label_2.SetLabel("")
+                if mcom.button_pushing == 1:
+                    self.label_3.SetLabel(_(u"MCOM was Engaging..."))
+                else :
+                    self.label_3.SetLabel("")
+
+            elif mcom.mcom_mode == 1:
+                self.label_1.SetLabel( _(u"Press %d sec. until MCOM disengage.") % (mcom.disengage) )
+                self.label_2.SetLabel( _(u"Until destruction %d sec. ") % (mcom.left) )
+                if mcom.button_pushing == 1:
+                    self.label_3.SetLabel( _(u"MCOM was Disengaging..."))
+                else :
+                    self.label_3.SetLabel("")
+
+            elif mcom.mcom_mode == 2:
+                self.label_1.SetLabel( _(u"Press %d sec. until MCOM disengage.") % (mcom.disengage) )
+                self.label_2.SetLabel( _(u"Until destruction %d sec. ") % (mcom.left) )
+                if mcom.button_pushing == 1:
+                    self.label_3.SetLabel(_(u"MCOM was Disengaging..."))
+                else :
+                    self.label_3.SetLabel("")
+
+            elif mcom.mcom_mode == 3:
+                self.label_1.SetLabel(_(u"MCOM was Destroyed!!"))
+                self.label_2.SetLabel("")
+                self.label_3.SetLabel("")
+
+        except :
             self.timer.Stop()
-            frame_2.Show(True)
-
-            dialog_1 = wx.MessageDialog(None, errormsg  , _(u"Can not receive data from MCOM!!"), wx.OK | wx.ICON_ERROR)
-            dialog_1.ShowModal()
-
-        if mcom.mcom_mode == 0:
-            self.label_1.SetLabel( _(u"Press %d sec. until MCOM engage.") % (mcom.disengage) )
-            self.label_2.SetLabel("")
-            if mcom.button_pushing == 1:
-                self.label_3.SetLabel(_(u"MCOM was Engaging..."))
-            else :
-                self.label_3.SetLabel("")
-
-
-        elif mcom.mcom_mode == 1:
-            self.label_1.SetLabel( _(u"Press %d sec. until MCOM disengage.") % (mcom.disengage) )
-            self.label_2.SetLabel( _(u"Until destruction %d sec. ") % (mcom.left) )
-            if mcom.button_pushing == 1:
-                self.label_3.SetLabel( _(u"MCOM was Disengaging..."))
-            else :
-                self.label_3.SetLabel("")
-
-
-
-        elif mcom.mcom_mode == 2:
-            self.label_1.SetLabel( _(u"Press %d sec. until MCOM disengage.") % (mcom.disengage) )
-            self.label_2.SetLabel( _(u"Until destruction %d sec. ") % (mcom.left) )
-            if mcom.button_pushing == 1:
-                self.label_3.SetLabel(_(u"MCOM was Disengaging..."))
-            else :
-                self.label_3.SetLabel("")
-
-
-	elif mcom.mcom_mode == 3:
-            self.label_1.SetLabel(_(u"MCOM was Destroyed!!"))
-            self.label_2.SetLabel("")
-            self.label_3.SetLabel("")
-
 
 
 # end of class MainWindow
@@ -147,12 +156,9 @@ class MCOM_CONFIG(wx.Frame):
         kwds["style"] = wx.FRAME_FLOAT_ON_PARENT
         wx.Frame.__init__(self, *args, **kwds)
 
-        global port
-        port = ""
-
         self.panel_2 = wx.Panel(self, wx.ID_ANY)
         self.label_4 = wx.StaticText(self.panel_2, wx.ID_ANY, _(u"Input port name correctly."))
-        self.text_ctrl_1 = wx.TextCtrl(self.panel_2, wx.ID_ANY, port, style=wx.TE_PROCESS_ENTER)
+        self.text_ctrl_1 = wx.TextCtrl(self.panel_2, wx.ID_ANY, "", style=wx.TE_PROCESS_ENTER)
         self.button_4 = wx.Button(self.panel_2, wx.ID_ANY, _(u"OK"))
 
         self.__set_properties()
@@ -170,7 +176,7 @@ class MCOM_CONFIG(wx.Frame):
         self.text_ctrl_1.SetMinSize((200, 30))
         self.text_ctrl_1.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.button_4.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
-        self.panel_2.SetMinSize((300,84 ))
+        self.panel_2.SetMinSize((320,84 ))
         # end wxGlade
 
 
@@ -192,18 +198,14 @@ class MCOM_CONFIG(wx.Frame):
     def OK_BUTTON(self, event):  # wxGlade: MCOM_CONFIG.<event_handler>
         global port
         global portname
-        port = self.text_ctrl_1.GetValue()
+        global mcom
 
-        ####シリアルポート番号の取得・ウインドウタイトルでの表示名設定・ポート有無判定
-        if sys.platform == "win32" :
-            ###数字のみ抽出
-            port = port.upper()						#一旦全て大文字に変換　(CoMとかComとかに対処するため)
-            port = port.replace("COM", "")				#"COM"の文字列を削除
-            port = int(port)	 					#int型に変換
-            port -= 1							#番号を1引く
-            portname = "COM" + str(port +1)				#文字列操作して表示用の名前にする
-        else:
-            portname = port
+        try :
+            mcom.port.close()
+        except  :
+            pass
+                    
+        port = str(self.text_ctrl_1.GetValue())
 
         self.GetPort()
         frame_1.timer.Start(500) 
@@ -214,22 +216,22 @@ class MCOM_CONFIG(wx.Frame):
     def GetPort(self):
         global port
         global portname
-
+        global mcom
 
 
         ####シリアルポート番号の取得・ウインドウタイトルでの表示名設定・ポート有無判定
         if sys.platform == "win32" :
             ###数字のみ抽出
-            port = port.upper()						#一旦全て大文字に変換　(CoMとかComとかに対処するため)
-            port = port.replace("COM", "")				#"COM"の文字列を削除
-            port = int(port)	 					#int型に変換
-            port -= 1							#番号を1引く
-            portname = "COM" + str(port +1)				#文字列操作して表示用の名前にする
+            port = str(port).upper()			#一旦全てstr型にした上で大文字に変換　(CoMとかComとかに対処するため)
+            port = port.replace("COM", "")		#"COM"の文字列を削除
+            port = int(port)	 			#int型に変換
+            port -= 1					#番号を1引く
+            portname = "COM" + str(port +1)		#文字列操作して表示用の名前にする
+
         else:
             portname = port
 
         try:								#当該ポートが存在するか否かチェック
-            global mcom
             mcom = Mcom(port)						#Mcomのインスタンス生成
             print _(u"Use port %s . \n") % (portname)
             frame_1.SetTitle( _(u"MCOM Monitor - %s") % (portname) )
@@ -258,6 +260,7 @@ def HowToUse():					#ポートが見つからない時の処理サブルーチ�
 
 
 if __name__ == "__main__":
+#    print os.path.abspath(os.path.dirname(__file__))
 
     app = wx.PySimpleApp(0)
     wx.InitAllImageHandlers()

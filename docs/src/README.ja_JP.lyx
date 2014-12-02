@@ -81,7 +81,7 @@ logicalmkup
 \begin_body
 
 \begin_layout Title
-FreeMCOM for Airsoft v1.0.0 導入説明書
+FreeMCOM for Airsoft v1.1.0 導入説明書
 \end_layout
 
 \begin_layout Author
@@ -110,8 +110,15 @@ LatexCommand tableofcontents
 \end_layout
 
 \begin_layout Standard
-サバゲ・ペイントボール等で、Battlefield(R)シリーズの「ラッシュ」に準じたルールで遊ぶための、Arduinoを使用したM-COMのクローンを製作する
-ためのソフトウェアです。要するに、
+サバゲ・ペイントボール等で、Battlefield(R)シリーズの
+\begin_inset Quotes eld
+\end_inset
+
+ラッシュ
+\begin_inset Quotes eld
+\end_inset
+
+に準じたルールで遊ぶための、Arduinoを使用したM-COMのクローンを製作するためのソフトウェアです。要するに、
 \end_layout
 
 \begin_layout Itemize
@@ -139,7 +146,7 @@ LatexCommand tableofcontents
 \end_layout
 
 \begin_layout Section
-セットアップ
+セットアップに必要な部品一覧
 \end_layout
 
 \begin_layout Subsection
@@ -151,11 +158,46 @@ Arduino (リレーシールドとの兼ね合い上、Arduino Uno/Leonard等、�
 \end_layout
 
 \begin_layout Enumerate
+電源 (Arduino用と、LED赤色灯・ブザー用の2系統が必要)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Arduino用の電源は、スマートフォン用のモバイルバッテリーを使うのが楽です。また、LED赤色灯・ブザー用の電源は12Vの物を選択すると、安くて音量・輝度が大
+きい、自動車用の部品が使用可能になります。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
 大音量のブザー
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+なお、とある開発メンバーはブザーの代わりに、自動車用のホーンを使用したら近所から苦情がきたそうです。
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Enumerate
 LED赤色灯
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+先述の開発メンバーは、12V車対応のマーカーランプを使用しています。
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Enumerate
@@ -183,11 +225,17 @@ LED赤色灯
 \end_layout
 
 \begin_layout Enumerate
-電源 (Arduino用と、LED赤色灯・ブザー用の2系統が必要)
+ケース
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+ダイソーの適当な箱を電動ドリルで加工すれば事足ります
 \end_layout
 
-\begin_layout Enumerate
-ケース(ダイソーの適当な箱を電動ドリルで加工すれば事足ります)
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -353,7 +401,17 @@ freemcom/freemcom.inoをarduinoに書き込みます。
 \end_layout
 
 \begin_layout Enumerate
-下記回路図に従い、D2ピンを起動/解除用押ボタンに接続します。(このスイッチはケース表面から押せる所に設置)
+下記回路図に従い、D2ピンを起動/解除用押ボタンに接続します。
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+このスイッチはケース表面から押せる所に設置します。
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Enumerate
@@ -365,8 +423,17 @@ freemcom/freemcom.inoをarduinoに書き込みます。
 \end_layout
 
 \begin_layout Enumerate
-Arudino UNOの場合リセットピンをGNDに落とすとリセットされるので、押ボタンスイッチを介してGNDに落とせるようにする。このスイッチはケース内等、容易
-に押せない場所に設置してください。
+Arudino UNOの場合リセットピンをGNDに落とすとリセットされるので、押ボタンスイッチを介してGNDに落とせるようにする。
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+このスイッチはケース内等、容易に押せない場所に設置してください。
+\end_layout
+
+\end_inset
+
+
 \begin_inset Newpage pagebreak
 \end_inset
 
@@ -400,7 +467,15 @@ Arudino UNOの場合リセットピンをGNDに落とすとリセットされる
 \end_layout
 
 \begin_layout Enumerate
-XBee エクスプローラに「Arduinoに接続する方のXBee」を接続してから、XBeeエクスプローラをPCに接続します。
+XBee エクスプローラに
+\begin_inset Quotes eld
+\end_inset
+
+Arduinoに接続する方のXBee
+\begin_inset Quotes eld
+\end_inset
+
+を接続してから、XBeeエクスプローラをPCに接続します。
 \end_layout
 
 \begin_layout Enumerate
@@ -409,8 +484,23 @@ X-CTUを起動し、通信相手のシリアルナンバーとPAN IDを書き込
 
 \begin_deeper
 \begin_layout Standard
-注意:シリーズ2では、PCに接続するXBeeのFunction Setを「Coodinator AT」に、Arduinoに接続するXBeeのFunction
- Setを「Router AT」に設定する必要があります。
+注意:シリーズ2では、PCに接続するXBeeのFunction Setを
+\begin_inset Quotes eld
+\end_inset
+
+Coodinator AT
+\begin_inset Quotes eld
+\end_inset
+
+に、Arduinoに接続するXBeeのFunction Setを
+\begin_inset Quotes eld
+\end_inset
+
+Router AT
+\begin_inset Quotes eld
+\end_inset
+
+に設定する必要があります。
 \end_layout
 
 \end_deeper
@@ -502,7 +592,11 @@ STAGE2.TIME
 \end_layout
 
 \begin_layout Enumerate
-2〜3の間に起動/解除ボタンをDISENGAGE_TIMEで指定された時間押し続けると、ブザーが短く鳴る&LEDが2回点滅し、待機状態に戻ります。(この時、
+2〜3の間に起動/解除ボタンを
+\shape slanted
+DISENGAGE_TIME
+\shape default
+で指定された時間押し続けると、ブザーが短く鳴る&LEDが2回点滅し、待機状態に戻ります。(この時、
 \shape slanted
 STAGE1.TIME
 \shape default
@@ -526,7 +620,15 @@ STAGE2.STEP
 \shape slanted
 STAGE2.TIME
 \shape default
-が経過してしまうと、LEDが点灯し、同時に5秒間ブザーが鳴り続けて「フリーズ」します。(これ以降、起動/解除ボタンを押しても初期状態には戻せません)
+が経過してしまうと、LEDが点灯し、同時に5秒間ブザーが鳴り続けて
+\begin_inset Quotes eld
+\end_inset
+
+フリーズ
+\begin_inset Quotes eld
+\end_inset
+
+します。(これ以降、起動/解除ボタンを押しても初期状態には戻せません)
 \end_layout
 
 \begin_layout Enumerate
@@ -543,10 +645,8 @@ STAGE2.TIME
 
 \begin_layout Enumerate
 monitor/monitor.pyを起動します。コマンドラインオプションでポートを指定することができます。また、monitor.monitor.pyの
-\family typewriter
-\shape italic
+\shape slanted
 port_default
-\family default
 \shape default
 の値を書き換えたり、コマンドラインオプション入りのショートカットを作成することで、この手順を省く事ができます。
 \end_layout
@@ -561,13 +661,20 @@ COM3
 
 \end_deeper
 \begin_layout Enumerate
-「起動まで 
+\begin_inset Quotes eld
+\end_inset
+
+起動まで 
 \family typewriter
 \shape italic
 5
 \family default
 \shape default
- 秒長押し」と表示されたのを確認後、ゲームを開始してください。
+ 秒長押し
+\begin_inset Quotes eld
+\end_inset
+
+と表示されたのを確認後、ゲームを開始してください。
 \end_layout
 
 \begin_layout Enumerate
@@ -619,7 +726,25 @@ STAGE2.STEP
 \shape slanted
 STAGE2.TIME
 \shape default
-が経過してしまうと、LEDが点灯し、同時に5秒間ブザーが鳴り続けて「フリーズ」します。(これ以降、起動/解除ボタンを押しても初期状態には戻せません)
+が経過してしまうと、LEDが点灯し、同時に5秒間ブザーが鳴り続けて
+\begin_inset Quotes eld
+\end_inset
+
+フリーズ
+\begin_inset Quotes eld
+\end_inset
+
+します。
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+これ以降、起動/解除ボタンを押しても初期状態には戻せません。
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Enumerate
@@ -635,6 +760,64 @@ STAGE2.TIME
 トラブルシューティング
 \end_layout
 
+\begin_layout Section
+既知の制限とバグ
+\end_layout
+
+\begin_layout Subsection
+全ての環境で共通
+\end_layout
+
+\begin_layout Itemize
+設定ダイアログを開いている時には、主ウインドウの内容が更新されません。
+\end_layout
+
+\begin_layout Subsection
+Windows環境のみ
+\end_layout
+
+\begin_layout Itemize
+遠隔監視時に、いつもと違うUSBポートにXBeeを接続した場合、COMポートを正しく選択していても、正常に認識しない事がある
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+デバイスマネージャーで、「デバイスを削除」を実行後、一旦XBeeをPCから取り外して装着しなおすと改善される事がある。
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+正常にOS側で設定されている言語での表示ができない
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+暫定対策として、monitor.pyの8行目辺りの「lang = [""]」行で言語指定をできるようにしています。
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+日本語を指定する場合は、 lang = [
+\shape slanted
+
+\begin_inset Quotes eld
+\end_inset
+
+ja
+\begin_inset Quotes erd
+\end_inset
+
+
+\shape default
+] となります。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout Section
 うまく動かない時は
 \end_layout
@@ -671,11 +854,19 @@ freemcom/freemcom.inoが正しく書き込まれているか確認する。書�
 \end_layout
 
 \begin_layout Enumerate
-正しいポートを指定しているか(未使用ポートならば、「
+正しいポートを指定しているか(未使用ポートならば、
+\begin_inset Quotes eld
+\end_inset
+
+
 \begin_inset Formula $\left\langle \text{ポート番号}\right\rangle $
 \end_inset
 
- が見つかりません。」と表示されますが、不運にも何らかの機器がそのポートを使用していた場合、正常に表示されないでしょう)。
+ が見つかりません。
+\begin_inset Quotes eld
+\end_inset
+
+と表示されますが、不運にも何らかの機器がそのポートを使用していた場合、正常に表示されないでしょう)。
 \end_layout
 
 \begin_layout Enumerate
@@ -919,7 +1110,7 @@ http://gihyo.jp/book/2010/978-4-7741-4229-6
 \end_layout
 
 \begin_layout Itemize
-[改訂第五版] LaTeX2e微分処作成入門 (
+[改訂第五版] LaTeX2e美文書作成入門 (
 \begin_inset Flex URL
 status collapsed
 
