@@ -28,7 +28,7 @@ class Mcom:
         self.mcom_mode = 0		#int型。mcomの状態
         self.button_pushing = 0		#int型。ボタン押下有無。押していれば1、押していなければ0
         self.left = 0			#int型。mcom破壊までの残り時間(ミリ秒)
-        self.disengage = 0 		#int型。mcom起動/解除までの残り時間(ミリ秒)
+        self.defuse = 0 		#int型。mcom起動/解除までの残り時間(ミリ秒)
 
         time.sleep(2)							#Arduinoの起動待ち
         self.port = serial.Serial (port, 9600, timeout=5)
@@ -68,20 +68,20 @@ class Mcom:
         else:
             self.left  = int(indata[2]) /1000
 
-        if int(indata[3]) <= 1000 :				# disengage		;	起動・解除までの残り時間
-            self.disengage = 1					#1000ミリ秒以下なら1秒を表示
+        if int(indata[3]) <= 1000 :				# defuse		;	起動・解除までの残り時間
+            self.defuse = 1					#1000ミリ秒以下なら1秒を表示
         elif  int(indata[3]) % 1000 >= 1 : 				
-            self.disengage = ( int(indata[3]) +1000) /1000	#余りがあれば、表示は + 1000ミリ秒
+            self.defuse = ( int(indata[3]) +1000) /1000	#余りがあれば、表示は + 1000ミリ秒
         else:
-            self.disengage = int(indata[3]) /1000
+            self.defuse = int(indata[3]) /1000
         return
 
-        if int(indata[3]) <= 1000 :				# disengage		;	起動・解除までの残り時間
-            self.disengage = 1					#1000ミリ秒以下なら1秒を表示
+        if int(indata[3]) <= 1000 :				# defuse		;	起動・解除までの残り時間
+            self.defuse = 1					#1000ミリ秒以下なら1秒を表示
         elif  int(indata[3]) % 1000 >= 1 : 				
-            self.disengage = ( int(indata[3]) +1000) /1000	#余りがあれば、表示は + 1000ミリ秒
+            self.defuse = ( int(indata[3]) +1000) /1000	#余りがあれば、表示は + 1000ミリ秒
         else:
-            self.disengage = int(indata[3]) /1000
+            self.defuse = int(indata[3]) /1000
         return
 
 

@@ -88,7 +88,7 @@ class MainWindow(wx.Frame):
         global mcom
         mcom.reset(port)
         time.sleep(1)
-        self.label_1.SetLabel( _(u"Press %d sec. until MCOM engage.") % (mcom.disengage) )
+        self.label_1.SetLabel( _(u"Press %d sec. until MCOM fuse.") % (mcom.defuse) )
         self.label_2.SetLabel("")
         self.label_3.SetLabel("")
 
@@ -116,26 +116,26 @@ class MainWindow(wx.Frame):
                 dialog_1.ShowModal()
 
             if mcom.mcom_mode == 0:
-                self.label_1.SetLabel( _(u"Press %d sec. until MCOM engage.") % (mcom.disengage) )
+                self.label_1.SetLabel( _(u"Press %d sec. until MCOM fuse.") % (mcom.defuse) )
                 self.label_2.SetLabel("")
                 if mcom.button_pushing == 1:
-                    self.label_3.SetLabel(_(u"MCOM was Engaging..."))
+                    self.label_3.SetLabel(_(u"MCOM was fusing..."))
                 else :
                     self.label_3.SetLabel("")
 
             elif mcom.mcom_mode == 1:
-                self.label_1.SetLabel( _(u"Press %d sec. until MCOM disengage.") % (mcom.disengage) )
+                self.label_1.SetLabel( _(u"Press %d sec. until MCOM defuse.") % (mcom.defuse) )
                 self.label_2.SetLabel( _(u"Until destruction %d sec. ") % (mcom.left) )
                 if mcom.button_pushing == 1:
-                    self.label_3.SetLabel( _(u"MCOM was Disengaging..."))
+                    self.label_3.SetLabel( _(u"MCOM was defusing..."))
                 else :
                     self.label_3.SetLabel("")
 
             elif mcom.mcom_mode == 2:
-                self.label_1.SetLabel( _(u"Press %d sec. until MCOM disengage.") % (mcom.disengage) )
+                self.label_1.SetLabel( _(u"Press %d sec. until MCOM defuse.") % (mcom.defuse) )
                 self.label_2.SetLabel( _(u"Until destruction %d sec. ") % (mcom.left) )
                 if mcom.button_pushing == 1:
-                    self.label_3.SetLabel(_(u"MCOM was Disengaging..."))
+                    self.label_3.SetLabel(_(u"MCOM was defusing..."))
                 else :
                     self.label_3.SetLabel("")
 
