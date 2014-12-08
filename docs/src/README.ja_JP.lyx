@@ -640,7 +640,11 @@ STAGE2.TIME
 \end_layout
 
 \begin_layout Enumerate
-ゲーム開始前にPCとXBeeを接続し、Arduinoの電源を入れる。
+ゲーム開始前にPCとXBeeを接続する。
+\end_layout
+
+\begin_layout Enumerate
+Arduinoの電源を入れる。
 \end_layout
 
 \begin_layout Enumerate
@@ -777,12 +781,48 @@ Windows環境のみ
 \end_layout
 
 \begin_layout Itemize
-遠隔監視時に、いつもと違うUSBポートにXBeeを接続した場合、COMポートを正しく選択していても、正常に認識しない事がある
+先にMCOMの電源が入の状態でXBeeをPCに接続すると、カチカチとMCOMが暴走する。
+\end_layout
+
+\begin_layout Itemize
+COMポートを正しく選択していても、monitor.pyが正常に認識しない。
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 デバイスマネージャーで、「デバイスを削除」を実行後、一旦XBeeをPCから取り外して装着しなおすと改善される事がある。
+\end_layout
+
+\begin_layout Itemize
+デバイスマネージャーで
+\begin_inset Quotes erd
+\end_inset
+
+マウスとそのほかのポインティング デバイス
+\begin_inset Quotes erd
+\end_inset
+
+を開き、
+\begin_inset Quotes erd
+\end_inset
+
+Microsoft Serial BallPoint
+\begin_inset Quotes erd
+\end_inset
+
+を
+\begin_inset Quotes erd
+\end_inset
+
+無効
+\begin_inset Quotes erd
+\end_inset
+
+に設定する。
+\end_layout
+
+\begin_layout Itemize
+レジストリを操作する方法もあるようだが、当面は本書では触れない予定。(私の環境では、上記2つで改善されたため)
 \end_layout
 
 \end_deeper
@@ -854,7 +894,7 @@ freemcom/freemcom.inoが正しく書き込まれているか確認する。書�
 \end_layout
 
 \begin_layout Enumerate
-正しいポートを指定しているか(未使用ポートならば、
+正しいポートを指定しているか。(未使用ポートならば、
 \begin_inset Quotes eld
 \end_inset
 
@@ -866,9 +906,15 @@ freemcom/freemcom.inoが正しく書き込まれているか確認する。書�
 \begin_inset Quotes eld
 \end_inset
 
-と表示されますが、不運にも何らかの機器がそのポートを使用していた場合、正常に表示されないでしょう)。
+と表示されます)
 \end_layout
 
+\begin_deeper
+\begin_layout Enumerate
+不運にも何らかの機器がそのポートを使用していた場合や、Windows環境で「シリアルマウス」と検出されてしまっている場合は、正常に表示されないでしょう。
+\end_layout
+
+\end_deeper
 \begin_layout Enumerate
 Arduinoに正しくスケッチを書き込んでいるか(ArduinoにUSBケーブル経由でのスケッチ書込時には、ワイヤレスプロトシールドのSERIAL
  SELECTスイッチをUSB側にしなければなりません)。
