@@ -5,120 +5,157 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-11-29 20:22+JST\n"
+"POT-Creation-Date: 2014-12-08 01:02+JST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: ENCODING\n"
 "Generated-By: pygettext.py 1.5\n"
 
 
-	#class MainWindow()
-	#__init()
+#: monitor.py:35
 msgid "Connecting..."
 msgstr ""
 
+#: monitor.py:38
 msgid "Reset"
 msgstr ""
 
+#: monitor.py:39
 msgid "Config"
 msgstr ""
 
+#: monitor.py:40
 msgid "Exit"
 msgstr ""
 
-
-	#__set_properties()
+#: monitor.py:56
 msgid "MCOM Monitor"
 msgstr ""
 
-
-	#reset_button()
-msgid "Press %d sec. until MCOM engage."
-msgstr　""
-
-	#refresh()
-msgid "Communication error occurred. Please do following checklist :\n\n"
-msgstr　""
-
-msgid "- Designate correctly port ?\n"
-msgstr　""
-
-msgid "- MCOM power are turned on? \n"
-msgstr　""
-
-msgid "- Correctly connect between Arduino and XBee ?\n"
-msgstr　""
-
-msgid "- SERIAL SELECT switch (on wireless proto shield) is choose MICRO ? \n\n"
-msgstr　""
-
-msgid "Error occurred if when above are good, possibility PC cannot recive radio wave from MCOM. \n"
-msgstr　""
-
-msgid "You have to remove interrupt object, move MCOM to more near from PC, and etc... \n"
+#: monitor.py:91 monitor.py:119
+msgid "Press %d sec. until MCOM fuse."
 msgstr ""
 
+#: monitor.py:103
+msgid ""
+"Communication error occurred. Please do following checklist :\n"
+"\n"
+msgstr ""
+
+#: monitor.py:104
+msgid ""
+"- Designate correctly port ?\n"
+msgstr ""
+
+#: monitor.py:105
+msgid ""
+"- MCOM power are turned on? \n"
+msgstr ""
+
+#: monitor.py:106
+msgid ""
+"- Correctly connect between Arduino and XBee ?\n"
+msgstr ""
+
+#: monitor.py:107
+msgid ""
+"- SERIAL SELECT switch (on wireless proto shield) is choose MICRO ? \n"
+"\n"
+msgstr ""
+
+#: monitor.py:108
+msgid ""
+"Error occurred if when above are good, possibility PC cannot recive radio wave from MCOM. \n"
+msgstr ""
+
+#: monitor.py:109
+msgid ""
+"You have to remove interrupt object, move MCOM to more near from PC, and etc... \n"
+msgstr ""
+
+#: monitor.py:115
 msgid "Can not receive data from MCOM!!"
-msgstr　""
+msgstr ""
 
-msgid "MCOM was Engaging..."
-msgstr　""
+#: monitor.py:122
+msgid "MCOM was fusing..."
+msgstr ""
 
-msgid "Press %d sec. until MCOM disengage."
-msgstr　""
+#: monitor.py:127 monitor.py:135
+msgid "Press %d sec. until MCOM defuse."
+msgstr ""
 
+#: monitor.py:128 monitor.py:136
 msgid "Until destruction %d sec. "
 msgstr ""
 
-msgid "MCOM was Disengaging..."
-msgstr　""
+#: monitor.py:130 monitor.py:138
+msgid "MCOM was defusing..."
+msgstr ""
 
+#: monitor.py:143
 msgid "MCOM was Destroyed!!"
-msgstr　""
+msgstr ""
 
-
-	#class MCOM_CONFIG()
+#: monitor.py:160
 msgid "Input port name correctly."
-msgstr　""
+msgstr ""
 
+#: monitor.py:162
 msgid "OK"
-msgstr　""
+msgstr ""
 
+#: monitor.py:174
 msgid "MCOM CONFIG"
-msgstr　""
+msgstr ""
 
-msgid "Use port %s . \n"
-msgstr　""
+#: monitor.py:236
+msgid ""
+"Use port %s . \n"
+msgstr ""
 
-msgid "Not found %s . \n"
-msgstr　""
-
+#: monitor.py:237
 msgid "MCOM Monitor - %s"
-msgstr　""
-
-
-	#HowToUse() in monitor.py
-
-msgid "Normally, port name is like below. \n\n"
 msgstr ""
 
-msgid "Windows - COMx \n"
+#: monitor.py:239
+msgid ""
+"Not found %s . \n"
 msgstr ""
 
-msgid "Linux - /dev/ttyACMx \n\n"
+#: monitor.py:247
+msgid ""
+"Normally, port name is like below. \n"
+"\n"
 msgstr ""
 
+#: monitor.py:248
+msgid ""
+"Windows - COMx \n"
+msgstr ""
+
+#: monitor.py:249
+msgid ""
+"Linux - /dev/ttyACMx \n"
+"\n"
+msgstr ""
+
+#: monitor.py:250
 msgid "default are %s ."
 msgstr ""
 
+#: monitor.py:252
 msgid "Usage :"
-msgstr　""
+msgstr ""
 
+#: monitor.py:253
 msgid " %s  <port name> "
-msgstr　""
+msgstr ""
 
+#: monitor.py:257
 msgid "Port not found!"
-msgstr　""
+msgstr ""
+
