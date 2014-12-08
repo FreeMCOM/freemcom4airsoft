@@ -91,6 +91,7 @@ class MainWindow(wx.Frame):
         self.label_1.SetLabel( _(u"Press %d sec. until MCOM fuse.") % (mcom.defuse) )
         self.label_2.SetLabel("")
         self.label_3.SetLabel("")
+        self.timer.Start(500)
 
     def exit_button(self, event):  # wxGlade: MainWindow.<event_handler>
         exit()
@@ -98,55 +99,52 @@ class MainWindow(wx.Frame):
 
     def refresh(self, event):
         global mcom
-        try :
-            if mcom.getdata() == -1 :
-                errormsg = _(u"Communication error occurred. Please do following checklist :\n\n")
-                errormsg += _(u"- Designate correctly port ?\n")
-                errormsg += _(u"- MCOM power are turned on? \n")
-                errormsg += _(u"- Correctly connect between Arduino and XBee ?\n")
-                errormsg += _(u"- SERIAL SELECT switch (on wireless proto shield) is choose MICRO ? \n\n")
-                errormsg += _(u"Error occurred if when above are good, possibility PC cannot recive radio wave from MCOM. \n")
-                errormsg += _(u"You have to remove interrupt object, move MCOM to more near from PC, and etc... \n")
+        if mcom.getdata() == -1 :
+            errormsg = _(u"Communication error occurred. Please do following checklist :\n\n")
+            errormsg += _(u"- Designate correctly port ?\n")
+            errormsg += _(u"- MCOM power are turned on? \n")
+            errormsg += _(u"- Correctly connect between Arduino and XBee ?\n")
+            errormsg += _(u"- SERIAL SELECT switch (on wireless proto shield) is choose MICRO ? \n\n")
+            errormsg += _(u"Error occurred if when above are good, possibility PC cannot recive radio wave from MCOM. \n")
+            errormsg += _(u"You have to remove interrupt object, move MCOM to more near from PC, and etc... \n")
 
-                print errormsg
-                self.timer.Stop()
-                frame_2.Show(True)
+            print errormsg
+            self.timer.Stop()
+            frame_2.Show(True)
 
-                dialog_1 = wx.MessageDialog(None, errormsg  , _(u"Can not receive data from MCOM!!"), wx.OK | wx.ICON_ERROR)
-                dialog_1.ShowModal()
+            dialog_1 = wx.MessageDialog(None, errormsg  , _(u"Can not receive data from MCOM!!"), wx.OK | wx.ICON_ERROR)
+            dialog_1.ShowModal()
 
-            if mcom.mcom_mode == 0:
-                self.label_1.SetLabel( _(u"Press %d sec. until MCOM fuse.") % (mcom.defuse) )
-                self.label_2.SetLabel("")
-                if mcom.button_pushing == 1:
-                    self.label_3.SetLabel(_(u"MCOM was fusing..."))
-                else :
-                    self.label_3.SetLabel("")
-
-            elif mcom.mcom_mode == 1:
-                self.label_1.SetLabel( _(u"Press %d sec. until MCOM defuse.") % (mcom.defuse) )
-                self.label_2.SetLabel( _(u"Until destruction %d sec. ") % (mcom.left) )
-                if mcom.button_pushing == 1:
-                    self.label_3.SetLabel( _(u"MCOM was defusing..."))
-                else :
-                    self.label_3.SetLabel("")
-
-            elif mcom.mcom_mode == 2:
-                self.label_1.SetLabel( _(u"Press %d sec. until MCOM defuse.") % (mcom.defuse) )
-                self.label_2.SetLabel( _(u"Until destruction %d sec. ") % (mcom.left) )
-                if mcom.button_pushing == 1:
-                    self.label_3.SetLabel(_(u"MCOM was defusing..."))
-                else :
-                    self.label_3.SetLabel("")
-
-            elif mcom.mcom_mode == 3:
-                self.label_1.SetLabel(_(u"MCOM was Destroyed!!"))
-                self.label_2.SetLabel("")
+        if mcom.mcom_mode == 0:
+            self.label_1.SetLabel( _(u"Press %d sec. until MCOM fuse.") % (mcom.defuse) )
+            self.label_2.SetLabel("")
+            if mcom.button_pushing == 1:
+                self.label_3.SetLabel(_(u"MCOM was fusing..."))
+            else :
                 self.label_3.SetLabel("")
 
-        except :
-            self.timer.Stop()
+        elif mcom.mcom_mode == 1:
+            self.label_1.SetLabel( _(u"Press %d sec. until MCOM defuse.") % (mcom.defuse) )
+            self.label_2.SetLabel( _(u"Until destruction %d sec. ") % (mcom.left) )
+            if mcom.button_pushing == 1:
+                self.label_3.SetLabel( _(u"MCOM was defusing..."))
+            else :
+                self.label_3.SetLabel("")
 
+        elif mcom.mcom_mode == 2:
+            self.label_1.SetLabel( _(u"Press %d sec. until MCOM defuse.") % (mcom.defuse) )
+            self.label_2.SetLabel( _(u"Until destruction %d sec. ") % (mcom.left) )
+            if mcom.button_pushing == 1:
+                self.label_3.SetLabel(_(u"MCOM was defusing..."))
+            else :
+                self.label_3.SetLabel("")
+
+        elif mcom.mcom_mode == 3:
+            self.label_1.SetLabel(_(u"MCOM was Destroyed!!"))
+            self.label_2.SetLabel("")
+            self.label_3.SetLabel("")
+
+     
 
 # end of class MainWindow
 
@@ -236,8 +234,10 @@ class MCOM_CONFIG(wx.Frame):
             print _(u"Use port %s . \n") % (portname)
             frame_1.SetTitle( _(u"MCOM Monitor - %s") % (portname) )
         except serial.serialutil.SerialException :
+            frame_1.timer.Stop()
             print _(u"Not found %s . \n" ) % (portname)
             HowToUse()
+
 
 # end of class MCOM_CONFIG
 
@@ -253,7 +253,6 @@ def HowToUse():					#ポートが見つからない時の処理サブルーチ�
     print _(u" %s  <port name> ")  % os.path.basename(__file__)
     print errormsg
 
-    frame_1.timer.Stop()
     dialog_1 = wx.MessageDialog(None, errormsg  , _(u"Port not found!"), wx.OK | wx.ICON_ERROR)
     frame_2.Show()
     dialog_1.ShowModal()
