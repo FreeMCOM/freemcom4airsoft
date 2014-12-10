@@ -319,7 +319,7 @@ X-CTU
 \end_layout
 
 \begin_layout Enumerate
-好みに合わせ、freemcom/freemcom.inoの26行〜29行辺りのグローバルな変数・定数を変更します。これは、
+好みに合わせ、sketch/sketch.inoの26行〜29行辺りのグローバルな変数・定数を変更します。これは、
 \family typewriter
 \shape slanted
 struct TIMER { const long LIMIT , const long STEP , long TIME } 
@@ -352,11 +352,11 @@ struct TIMER STAGE2_DEFAULT = {2, 1, 10} ; //ステージ2(早く点滅)のLIMIT
 \end_layout
 
 \begin_layout Plain Layout
-struct TIMER ENGAGE_DEFFAULT = {1, 1, 5}; //MCOM起動のLIMIT, STEP, TIME
+struct TIMER FUSE_DEFFAULT = {1, 1, 5}; //MCOM起動のLIMIT, STEP, TIME
 \end_layout
 
 \begin_layout Plain Layout
-struct TIMER DISENGAGE_DEFAULT = {10, 1, 5}; //MCOM解除のLIMIT, STEP, TIME
+struct TIMER DEFUSE_DEFAULT = {10, 1, 5}; //MCOM解除のLIMIT, STEP, TIME
 \end_layout
 
 \end_inset
@@ -393,7 +393,7 @@ TIME
 \end_layout
 
 \begin_layout Enumerate
-freemcom/freemcom.inoをarduinoに書き込みます。
+sketch/sketch.inoをarduinoに書き込みます。
 \end_layout
 
 \begin_layout Enumerate
@@ -574,7 +574,7 @@ http://mag.switch-science.com/2012/08/01/startup_xbee_zb
 \begin_layout Enumerate
 起動/解除ボタンを
 \shape slanted
-ENGAGE.TIME
+FUSE.TIME
 \shape default
 で指定した時間押し続けると、断続的にブザーが鳴り、LEDが点滅を初めます。
 \end_layout
@@ -594,7 +594,7 @@ STAGE2.TIME
 \begin_layout Enumerate
 2〜3の間に起動/解除ボタンを
 \shape slanted
-DISENGAGE_TIME
+DEFUSE_TIME
 \shape default
 で指定された時間押し続けると、ブザーが短く鳴る&LEDが2回点滅し、待機状態に戻ります。(この時、
 \shape slanted
@@ -648,19 +648,56 @@ Arduinoの電源を入れる。
 \end_layout
 
 \begin_layout Enumerate
-monitor/monitor.pyを起動します。コマンドラインオプションでポートを指定することができます。また、monitor.monitor.pyの
+monitor/monitor.pyを起動します。コマンドラインオプションでポート及び言語(翻訳ファイルが存在する場合)を指定することができます。
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+monitor.monitor.pyの
 \shape slanted
 port_default
 \shape default
-の値を書き換えたり、コマンドラインオプション入りのショートカットを作成することで、この手順を省く事ができます。
+及び
+\shape slanted
+lang
+\shape default
+の値を書き換える、あるいはコマンドラインオプション込みでショートカットを作成する、等の方法で楽をすることができます。
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
-例: $./monitor.py 
-\family typewriter
+コマンドラインオプションは以下の2つが利用可能です。
+\end_layout
+
+\begin_layout Quotation
+-p 
+\shape slanted
+<ポート名>
+\end_layout
+
+\begin_layout Quotation
+-l 
+\shape slanted
+<言語>
+\end_layout
+
+\begin_layout Standard
+COM3を使用し、日本語表示する場合は、以下のようになります:
+\end_layout
+
+\begin_layout Quotation
+$./monitor.py -p 
 \shape slanted
 COM3
+\shape default
+ -l 
+\shape slanted
+ja
 \end_layout
 
 \end_deeper
@@ -668,13 +705,11 @@ COM3
 \begin_inset Quotes eld
 \end_inset
 
-起動まで 
-\family typewriter
-\shape italic
-5
-\family default
+起動まで
+\shape slanted
+ 5 
 \shape default
- 秒長押し
+秒長押し
 \begin_inset Quotes eld
 \end_inset
 
@@ -684,7 +719,7 @@ COM3
 \begin_layout Enumerate
 起動/解除ボタンを
 \shape slanted
-ENGAGE.TIME
+FUSE.TIME
 \shape default
 で指定した時間押し続けると、断続的にブザーが鳴り、LEDが点滅を初めます。
 \end_layout
@@ -702,9 +737,9 @@ STAGE2.TIME
 \end_layout
 
 \begin_layout Enumerate
-2〜3の間に起動/解除ボタンを
+5〜6の間に起動/解除ボタンを
 \shape slanted
-DISENGAGE_TIME
+DEFUSE_TIME
 \shape default
 で指定された時間押し続けると、ブザーが短く鳴る&LEDが2回点滅し、待機状態に戻ります。(この時、
 \shape slanted
@@ -773,9 +808,16 @@ status open
 \end_layout
 
 \begin_layout Itemize
-設定ダイアログを開いている時には、主ウインドウの内容が更新されません。
+MCOMを解除した直後、2秒経過する前に再び長押しをすると、すぐに起爆準備状態になってしまう。
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+過剰な長押し対策として2秒のスリープを入れているが、loop()関数に戻った直後に再びボタン長押し検出で引っかかってmcom_stage1()
+ 関数に進んでしまう。
+\end_layout
+
+\end_deeper
 \begin_layout Subsection
 Windows環境のみ
 \end_layout
@@ -826,38 +868,6 @@ Microsoft Serial BallPoint
 \end_layout
 
 \end_deeper
-\begin_layout Itemize
-正常にOS側で設定されている言語での表示ができない
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-暫定対策として、monitor.pyの8行目辺りの「lang = [""]」行で言語指定をできるようにしています。
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-日本語を指定する場合は、 lang = [
-\shape slanted
-
-\begin_inset Quotes eld
-\end_inset
-
-ja
-\begin_inset Quotes erd
-\end_inset
-
-
-\shape default
-] となります。
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_deeper
 \begin_layout Section
 うまく動かない時は
 \end_layout
@@ -867,7 +877,7 @@ ja
 \end_layout
 
 \begin_layout Enumerate
-freemcom/freemcom.inoが正しく書き込まれているか確認する。書き込み時に何かエラーメッセージが出ている場合、書き込めていません。
+sketch/sketch.inoが正しく書き込まれているか確認する。書き込み時に何かエラーメッセージが出ている場合、書き込めていません。
 \end_layout
 
 \begin_layout Enumerate
