@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-12-08 01:02+JST\n"
+"POT-Creation-Date: 2014-12-10 00:51+JST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,116 +14,145 @@ msgstr ""
 "Content-Transfer-Encoding: ENCODING\n"
 "Generated-By: pygettext.py 1.5\n"
 
+#: mcom.py:100
+msgid "This file is Define a class. aborting."
+msgstr ""
 
-#: monitor.py:35
+#: monitor.py:30
 msgid "Connecting..."
 msgstr ""
 
-#: monitor.py:38
+#: monitor.py:33
 msgid "Reset"
 msgstr ""
 
-#: monitor.py:39
+#: monitor.py:34
 msgid "Config"
 msgstr ""
 
-#: monitor.py:40
+#: monitor.py:35
 msgid "Exit"
 msgstr ""
 
-#: monitor.py:56
+#: monitor.py:51
 msgid "MCOM Monitor"
 msgstr ""
 
-#: monitor.py:91 monitor.py:119
+#: monitor.py:86 monitor.py:114
 msgid "Press %d sec. until MCOM fuse."
 msgstr ""
 
-#: monitor.py:103
+#: monitor.py:98
 msgid ""
 "Communication error occurred. Please do following checklist :\n"
 "\n"
 msgstr ""
 
-#: monitor.py:104
+#: monitor.py:99
 msgid ""
 "- Designate correctly port ?\n"
 msgstr ""
 
-#: monitor.py:105
+#: monitor.py:100
 msgid ""
 "- MCOM power are turned on? \n"
 msgstr ""
 
-#: monitor.py:106
+#: monitor.py:101
 msgid ""
 "- Correctly connect between Arduino and XBee ?\n"
 msgstr ""
 
-#: monitor.py:107
+#: monitor.py:102
 msgid ""
 "- SERIAL SELECT switch (on wireless proto shield) is choose MICRO ? \n"
 "\n"
 msgstr ""
 
-#: monitor.py:108
+#: monitor.py:103
 msgid ""
 "Error occurred if when above are good, possibility PC cannot recive radio wave from MCOM. \n"
 msgstr ""
 
-#: monitor.py:109
+#: monitor.py:104
 msgid ""
 "You have to remove interrupt object, move MCOM to more near from PC, and etc... \n"
 msgstr ""
 
-#: monitor.py:115
+#: monitor.py:110
 msgid "Can not receive data from MCOM!!"
 msgstr ""
 
-#: monitor.py:122
+#: monitor.py:117
 msgid "MCOM was fusing..."
 msgstr ""
 
-#: monitor.py:127 monitor.py:135
+#: monitor.py:122 monitor.py:130
 msgid "Press %d sec. until MCOM defuse."
 msgstr ""
 
-#: monitor.py:128 monitor.py:136
+#: monitor.py:123 monitor.py:131
 msgid "Until destruction %d sec. "
 msgstr ""
 
-#: monitor.py:130 monitor.py:138
+#: monitor.py:125 monitor.py:133
 msgid "MCOM was defusing..."
 msgstr ""
 
-#: monitor.py:143
+#: monitor.py:138
 msgid "MCOM was Destroyed!!"
 msgstr ""
 
-#: monitor.py:160
+#: monitor.py:153
 msgid "Input port name correctly."
 msgstr ""
 
-#: monitor.py:162
+#: monitor.py:155
 msgid "OK"
 msgstr ""
 
-#: monitor.py:174
+#: monitor.py:167
 msgid "MCOM CONFIG"
 msgstr ""
 
-#: monitor.py:236
+#: monitor.py:228
 msgid ""
 "Use port %s . \n"
 msgstr ""
 
-#: monitor.py:237
+#: monitor.py:229
 msgid "MCOM Monitor - %s"
 msgstr ""
 
-#: monitor.py:239
+#: monitor.py:232
 msgid ""
 "Not found %s . \n"
+msgstr ""
+
+#: monitor.py:241
+msgid ""
+"Usage :\n"
+msgstr ""
+
+#: monitor.py:242
+msgid ""
+" %s  <option(s)> \n"
+msgstr ""
+
+#: monitor.py:243
+msgid ""
+"Options:\n"
+msgstr ""
+
+#: monitor.py:244
+msgid ""
+" -p  <port name>\n"
+msgstr ""
+
+#: monitor.py:245
+msgid ""
+" -l  <language>\n"
+"\n"
 msgstr ""
 
 #: monitor.py:247
@@ -147,15 +176,7 @@ msgstr ""
 msgid "default are %s ."
 msgstr ""
 
-#: monitor.py:252
-msgid "Usage :"
-msgstr ""
-
-#: monitor.py:253
-msgid " %s  <port name> "
-msgstr ""
-
-#: monitor.py:257
+#: monitor.py:254
 msgid "Port not found!"
 msgstr ""
 

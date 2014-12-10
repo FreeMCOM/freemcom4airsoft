@@ -5,8 +5,8 @@
 #
 
 portname_default = "COM3"					#デフォルトのシリアルポートを指定
-lang = [""]						#言語の強制指定
-#lang = ["ja"]						#日本語を指定する例
+lang = [""]							#言語の強制指定
+#lang = ["ja"]							#日本語を指定する例
 
 import sys
 import os.path
@@ -14,16 +14,11 @@ import string
 import wx							# begin wxGlade: dependencies
 import gettext							# end wxGlade
 from mcom import  *						#mcomのクラス定義ファイルをインポート
+import locale
 
 
 
-if sys.platform == "win32" :
-    localedir = os.path.abspath(os.path.dirname(__file__))+'\\locale'
-    _ = gettext.translation("messages", localedir, lang, fallback=True  ).ugettext
 
-else :
-    localedir = os.path.abspath(os.path.dirname(__file__))+'/locale'
-    _ = gettext.translation("messages", localedir , fallback=True  ).ugettext
 
 
 class MainWindow(wx.Frame):
@@ -243,13 +238,17 @@ class MCOM_CONFIG(wx.Frame):
 
 def HowToUse():					#ポートが見つからない時の処理サブルーチン
 
-    errormsg = _(u"Normally, port name is like below. \n\n")
+    errormsg = _(u"Usage :\n")
+    errormsg += _(u" %s  <option(s)> \n")  % os.path.basename(__file__)
+    errormsg += _(u"Options:\n")
+    errormsg += _(u" -p  <port name>\n")
+    errormsg += _(u" -l  <language>\n\n")
+
+    errormsg += _(u"Normally, port name is like below. \n\n")
     errormsg += _(u"Windows - COMx \n")
     errormsg += _(u"Linux - /dev/ttyACMx \n\n")
     errormsg += _(u"default are %s .") % (portname_default) 
 
-    print _(u"Usage :")
-    print _(u" %s  <port name> ")  % os.path.basename(__file__)
     print errormsg
 
     dialog_1 = wx.MessageDialog(None, errormsg  , _(u"Port not found!"), wx.OK | wx.ICON_ERROR)
@@ -257,30 +256,46 @@ def HowToUse():					#ポートが見つからない時の処理サブルーチ�
     dialog_1.ShowModal()
 
 
-if __name__ == "__main__":
-#    print os.path.abspath(os.path.dirname(__file__))
+def setenvs():
+    ####シリアルポートの指定
+    cnt = 0	#コマンドライン引数を数えるカウンタ
+    global portname
+    global _
+    portname = ""
+    while cnt < len(sys.argv) :
+        if sys.argv[cnt] == "-p":
+            cnt += 1
+            portname = sys.argv[cnt]
+        if sys.argv[cnt] == "-l":
+            cnt += 1
+            lang.insert(0 , sys.argv[cnt])
+        cnt += 1
 
+    else:
+        if portname == "" :
+            portname = portname_default
+        if lang == [""] :
+            lang.insert(0, locale.getdefaultlocale()[0] )
+
+    if sys.platform == "win32" :
+        localedir = os.path.abspath(os.path.dirname(__file__))+'\\locale'
+        _ = gettext.translation("messages", localedir, lang, fallback=True  ).ugettext
+
+    else :
+        localedir = os.path.abspath(os.path.dirname(__file__))+'/locale'
+        _ = gettext.translation("messages", localedir , lang, fallback=True  ).ugettext
+
+
+
+if __name__ == "__main__":
+    setenvs()
     app = wx.PySimpleApp(0)
     wx.InitAllImageHandlers()
     frame_1 = MainWindow(None, wx.ID_ANY, "")
     frame_2 = MCOM_CONFIG(frame_1, wx.ID_ANY, "")
 
-    ####シリアルポートの指定
-    if len(sys.argv) == 1 :
-        portname = portname_default
-    elif sys.argv[1] == "help" :
-        HowToUse()
-    elif sys.argv[1] == "--help" :
-        HowToUse()
-    elif sys.argv[1] == "-h" :
-        HowToUse()
-    elif sys.argv[1] == "/?" :
-        HowToUse()
-
-    else:
-        portname = sys.argv[1]
-
     app.SetTopWindow(frame_1)
     frame_1.Show()
     frame_2.GetPort()
+
     app.MainLoop()

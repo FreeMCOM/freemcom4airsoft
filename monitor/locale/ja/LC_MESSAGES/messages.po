@@ -4,65 +4,70 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-12-08 00:49+JST\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: FreeMCOM for Airsoft - 1.10.0\n"
+"POT-Creation-Date: 2014-12-10 00:13+JST\n"
+"PO-Revision-Date: 2014-12-10 00:28+JST\n"
+"Last-Translator: Kiyohito AOKI <sambar.fgfs@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: ENCODING\n"
 "Generated-By: pygettext.py 1.5\n"
 
+#: mcom.py:100
+msgid "This file is Define a class. aborting."
+msgstr "これはクラス定義ファイルです。終了します。"
 
-#: monitor.py:35
+
+#: monitor.py:30
 msgid "Connecting..."
-msgstr "接続待ち"
+msgstr "接続待ち・・・"
 
-#: monitor.py:38
+#: monitor.py:33
 msgid "Reset"
 msgstr "リセット"
 
-#: monitor.py:39
+#: monitor.py:34
 msgid "Config"
 msgstr "設定"
 
-#: monitor.py:40
+#: monitor.py:35
 msgid "Exit"
 msgstr "終了"
 
-#: monitor.py:56
+#: monitor.py:51
 msgid "MCOM Monitor"
 msgstr "MCOM監視"
 
-#: monitor.py:91 monitor.py:119
+#: monitor.py:86 monitor.py:114
 msgid "Press %d sec. until MCOM fuse."
 msgstr "起爆まで %d 秒長押し"
 
-#: monitor.py:103
+#: monitor.py:98
 msgid ""
 "Communication error occurred. Please do following checklist :\n"
 "\n"
 msgstr ""
 "通信エラーが発生した。以下のチェックリストを実施せよ。"
 "\n"
-#: monitor.py:104
+
+#: monitor.py:99
 msgid ""
 "- Designate correctly port ?\n"
 msgstr ""
 "正しいポートを指定しているか？\n"
 
-#: monitor.py:105
+#: monitor.py:100
 msgid ""
 "- MCOM power are turned on? \n"
-msgstr "MCOMの電源は入か？\n"
+msgstr "MCOMの電源は入っているか？\n"
 
-#: monitor.py:106
+#: monitor.py:101
 msgid ""
 "- Correctly connect between Arduino and XBee ?\n"
 msgstr "ArduinoとXBeeの接続は正しいか？\n"
 
-#: monitor.py:107
+#: monitor.py:102
 msgid ""
 "- SERIAL SELECT switch (on wireless proto shield) is choose MICRO ? \n"
 "\n"
@@ -70,68 +75,100 @@ msgstr ""
 "・ワイヤレスプロトシールド上のSERIAL SELECTスイッチはMICROを選択しているか？\n"
 "\n"
 
-#: monitor.py:108
+#: monitor.py:103
 msgid ""
 "Error occurred if when above are good, possibility PC cannot recive radio wave from MCOM. \n"
 msgstr ""
 "これらが全て正常でもこのエラーが発生する場合、PCがMCOMからの電波を受信できていないようだ。\n"
 
-#: monitor.py:109
+#: monitor.py:104
 msgid ""
 "You have to remove interrupt object, move MCOM to more near from PC, and etc... \n"
 msgstr ""
-"もっとPCの近くにMCOMを移動する、遮蔽物を取り除く等の措置が必要だ。\n"
+"遮蔽物を取り除く、もっとPCの近くにMCOMを移動する等の措置が必要だ。\n"
 
-#: monitor.py:115
+#: monitor.py:110
 msgid "Can not receive data from MCOM!!"
 msgstr "MCOMからのデータを受信できない!!"
 
-#: monitor.py:122
+#: monitor.py:117
 msgid "MCOM was fusing..."
 msgstr "MCOM起動作業中..."
 
-#: monitor.py:127 monitor.py:135
+#: monitor.py:122 monitor.py:130
 msgid "Press %d sec. until MCOM defuse."
 msgstr "解除まで %d 秒長押し"
 
-#: monitor.py:128 monitor.py:136
+#: monitor.py:123 monitor.py:131
 msgid "Until destruction %d sec. "
 msgstr "破壊まで %d 秒"
 
-#: monitor.py:130 monitor.py:138
+#: monitor.py:125 monitor.py:133
 msgid "MCOM was defusing..."
 msgstr "MCOM解除作業中..."
 
-#: monitor.py:143
+#: monitor.py:138
 msgid "MCOM was Destroyed!!"
 msgstr "MCOMは破壊された!!"
 
-#: monitor.py:160
+#: monitor.py:153
 msgid "Input port name correctly."
 msgstr "ポート名を正確に入力せよ。"
 
-#: monitor.py:162
+#: monitor.py:155
 msgid "OK"
 msgstr ""
 
-#: monitor.py:174
+#: monitor.py:167
 msgid "MCOM CONFIG"
 msgstr "MCOMの設定"
 
-#: monitor.py:236
+#: monitor.py:228
 msgid ""
 "Use port %s . \n"
 msgstr ""
 "ポート %s を使用する。\n"
 
-#: monitor.py:237
+#: monitor.py:229
 msgid "MCOM Monitor - %s"
 msgstr "MCOM 監視 -%s"
 
-#: monitor.py:239
+#: monitor.py:232
 msgid ""
 "Not found %s . \n"
 msgstr " %s が見つからない。\n"
+
+#: monitor.py:241
+msgid ""
+"Usage :\n"
+msgstr ""
+"使用法:\n"
+
+#: monitor.py:242
+msgid ""
+" %s  <option(s)> \n"
+msgstr ""
+" %s <オプション> \n"
+
+#: monitor.py:243
+msgid ""
+"Options:\n"
+msgstr ""
+"オプション:\n"
+
+#: monitor.py:244
+msgid ""
+" -p  <port name>\n"
+msgstr ""
+" -p  <ポート名>\n"
+
+#: monitor.py:245
+msgid ""
+" -l  <language>\n"
+"\n"
+msgstr ""
+" -l  <言語>\n"
+"\n"
 
 #: monitor.py:247
 msgid ""
@@ -156,15 +193,6 @@ msgstr ""
 msgid "default are %s ."
 msgstr "デフォルトは %s だ。"
 
-#: monitor.py:252
-msgid "Usage :"
-msgstr "使用法"
-
-#: monitor.py:253
-msgid " %s  <port name> "
-msgstr " %s  <ポート名> "
-
-#: monitor.py:257
+#: monitor.py:254
 msgid "Port not found!"
 msgstr "ポートが見つからない!"
-

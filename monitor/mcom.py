@@ -21,6 +21,12 @@ import time
 import serial
 from struct import *
 
+import sys
+import os.path
+import string
+import gettext
+import locale
+
 
 
 class Mcom:
@@ -86,6 +92,17 @@ class Mcom:
 
 
 if __name__ == "__main__":
-    print (u"このファイルはクラスファイルです。終了します。")
+    lang = [""] 
+    lang.insert(0, locale.getdefaultlocale()[0] )
+
+    if sys.platform == "win32" :
+        localedir = os.path.abspath(os.path.dirname(__file__))+'\\locale'
+        _ = gettext.translation("messages", localedir, lang, fallback=True  ).ugettext
+
+    else :
+        localedir = os.path.abspath(os.path.dirname(__file__))+'/locale'
+        _ = gettext.translation("messages", localedir , lang, fallback=True  ).ugettext
+
+    print _(u"This file is Define a class. aborting.")
     exit()
 
