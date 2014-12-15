@@ -444,8 +444,8 @@ status open
 \begin_inset Graphics
 	filename freemcom_circuit.png
 	lyxscale 10
-	width 70page%
-	height 70pheight%
+	width 80page%
+	height 80pheight%
 	rotateAngle 90
 
 \end_inset
