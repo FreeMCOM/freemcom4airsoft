@@ -256,7 +256,7 @@ def HowToUse():					#ポートが見つからない時の処理サブルーチ�
     dialog_1.ShowModal()
 
 
-def setenvs():
+def SetLang():
     ####シリアルポートの指定
     cnt = 0	#コマンドライン引数を数えるカウンタ
     global portname
@@ -279,16 +279,15 @@ def setenvs():
 
     if sys.platform == "win32" :
         localedir = os.path.abspath(os.path.dirname(__file__))+'\\locale'
-        _ = gettext.translation("messages", localedir, lang, fallback=True  ).ugettext
-
     else :
         localedir = os.path.abspath(os.path.dirname(__file__))+'/locale'
-        _ = gettext.translation("messages", localedir , lang, fallback=True  ).ugettext
+
+    _ = gettext.translation("messages", localedir , lang, fallback=True  ).ugettext
 
 
 
 if __name__ == "__main__":
-    setenvs()
+    SetLang()
     app = wx.PySimpleApp(0)
     wx.InitAllImageHandlers()
     frame_1 = MainWindow(None, wx.ID_ANY, "")
