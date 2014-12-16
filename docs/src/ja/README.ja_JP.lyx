@@ -201,7 +201,7 @@ status open
 \end_layout
 
 \begin_layout Enumerate
-押ボタンスイッチ(モーメンタリ) ×1 (起動/解除用)
+押ボタンスイッチ(モーメンタリ) ×1 (起爆/解除用)
 \end_layout
 
 \begin_layout Enumerate
@@ -352,7 +352,7 @@ struct TIMER STAGE2_DEFAULT = {2, 1, 10} ; //ステージ2(早く点滅)のLIMIT
 \end_layout
 
 \begin_layout Plain Layout
-struct TIMER FUSE_DEFFAULT = {1, 1, 5}; //MCOM起動のLIMIT, STEP, TIME
+struct TIMER FUSE_DEFFAULT = {1, 1, 5}; //MCOM起爆のLIMIT, STEP, TIME
 \end_layout
 
 \begin_layout Plain Layout
@@ -373,7 +373,7 @@ LIMIT
 \shape slanted
 STEP
 \shape default
-はMCOM解除毎にどれだけTIME(後述)を増減するかを表しており、正の値だと各ステージ及び起動長押しは解除毎に
+はMCOM解除毎にどれだけTIME(後述)を増減するかを表しており、正の値だと各ステージ及び起爆長押しは解除毎に
 \shape slanted
 STEP
 \shape default
@@ -401,7 +401,7 @@ sketch/sketch.inoをarduinoに書き込みます。
 \end_layout
 
 \begin_layout Enumerate
-下記回路図に従い、D2ピンを起動/解除用押ボタンに接続します。
+下記回路図に従い、D2ピンを起爆/解除用押ボタンに接続します。
 \begin_inset Foot
 status open
 
@@ -442,7 +442,7 @@ status open
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename freemcom_circuit.png
+	filename /home/aoki-kiyohito/デスクトップ/sketchbook/freemcom4airsoft/docs/src/freemcom_circuit.png
 	lyxscale 10
 	width 80page%
 	height 80pheight%
@@ -572,7 +572,7 @@ http://mag.switch-science.com/2012/08/01/startup_xbee_zb
 \end_layout
 
 \begin_layout Enumerate
-起動/解除ボタンを
+起爆/解除ボタンを
 \shape slanted
 FUSE.TIME
 \shape default
@@ -592,7 +592,7 @@ STAGE2.TIME
 \end_layout
 
 \begin_layout Enumerate
-2〜3の間に起動/解除ボタンを
+2〜3の間に起爆/解除ボタンを
 \shape slanted
 DEFUSE_TIME
 \shape default
@@ -628,7 +628,7 @@ STAGE2.TIME
 \begin_inset Quotes eld
 \end_inset
 
-します。(これ以降、起動/解除ボタンを押しても初期状態には戻せません)
+します。(これ以降、起爆/解除ボタンを押しても初期状態には戻せません)
 \end_layout
 
 \begin_layout Enumerate
@@ -705,7 +705,7 @@ ja
 \begin_inset Quotes eld
 \end_inset
 
-起動まで
+起爆まで
 \shape slanted
  5 
 \shape default
@@ -716,14 +716,80 @@ ja
 と表示されたのを確認後、ゲームを開始してください。
 \end_layout
 
+\begin_deeper
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename wait_fuse.png
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+monitor.pyを起動してゲーム開始準備が整った状態
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout Enumerate
-起動/解除ボタンを
+起爆/解除ボタンを
 \shape slanted
 FUSE.TIME
 \shape default
 で指定した時間押し続けると、断続的にブザーが鳴り、LEDが点滅を初めます。
 \end_layout
 
+\begin_deeper
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename countdown.png
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+カウントダウン中。MCOMの起爆・解除作業中はこのように作業中の旨表示される。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout Enumerate
 
 \shape slanted
@@ -737,7 +803,7 @@ STAGE2.TIME
 \end_layout
 
 \begin_layout Enumerate
-5〜6の間に起動/解除ボタンを
+5〜6の間に起爆/解除ボタンを
 \shape slanted
 DEFUSE_TIME
 \shape default
@@ -778,7 +844,7 @@ STAGE2.TIME
 status open
 
 \begin_layout Plain Layout
-これ以降、起動/解除ボタンを押しても初期状態には戻せません。
+これ以降、起爆/解除ボタンを押しても初期状態には戻せません。
 \end_layout
 
 \end_inset
@@ -786,6 +852,39 @@ status open
 
 \end_layout
 
+\begin_deeper
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename destroyed.png
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+MCOMが破壊済の状態を表示
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout Enumerate
 ゲームの勝敗が決する、あるいは時間切れでゲームが終了したら、本体のリセットボタンを押すか、監視ソフトのリセットボタンをクリックして初期状態に戻してください。
  
