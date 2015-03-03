@@ -87,10 +87,12 @@ void reset(int &mcom_mode){
 
 }
 
-void mcom_defuse(int obliteration_mode, int &mcom_mode) {
+void mcom_defuse(int &obliteration_mode, int &mcom_mode) {
 	int cnt_frick = 0  ; 					//点滅カウンタ
 	int cnt_disable_button = 0 ;			//送信タイミング維持したままの長押し過剰対策用カウンタ
 	mcom_mode = 0;
+
+	check_obliteration_mode (obliteration_mode);
 
 
 	//200msで2回点滅
@@ -187,7 +189,7 @@ void send_data(int obliteration_mode, int &mcom_mode, boolean button_pushing, lo
 }
 
 
-long mcom_stage1(int obliteration_mode, int &mcom_mode , long boot_time ){	//長断続音モード。　boot_time : mcomを起動した時間。 &mcom_mode :mcomの状態(参照)
+long mcom_stage1(int &obliteration_mode, int &mcom_mode , long boot_time ){	//長断続音モード。　boot_time : mcomを起動した時間。 &mcom_mode :mcomの状態(参照)
 	//mcomカウントダウン
 	long push_time ;								//ボタン押下開始した時間
 	long release_time ;								//ボタンを離した時間
@@ -239,7 +241,7 @@ long mcom_stage1(int obliteration_mode, int &mcom_mode , long boot_time ){	//長
 	return 0 ;
 }
 
-void mcom_stage2(int obliteration_mode, int &mcom_mode ,long boot_time , long pushing_time ){	//短断続音モード。 boot_time : mcomが短断続音モードになった時間  &mcom_mode :mcomの状態(参照)
+void mcom_stage2(int &obliteration_mode, int &mcom_mode ,long boot_time , long pushing_time ){	//短断続音モード。 boot_time : mcomが短断続音モードになった時間  &mcom_mode :mcomの状態(参照)
 	//mcomカウントダウン
 	long push_time ;							//ボタン押下開始した時間
 	long release_time  ;							//ボタンを離した時間
@@ -313,31 +315,7 @@ void mcom_stage3(int obliteration_mode, int &mcom_mode){
 }
 
 
-void loop( ) {
-	
-  
-	long push_time	 ;		//ボタン押下開始した時間
-	long release_time 	 ;		//ボタンを離した時間
-	long pushing_time	 ;		//ボタンを押していた時間
-	int mcom_mode ;			//0=待機中、 1=ステージ1(低速で点滅) , 2=ステージ2(早い点滅) , 3=破壊済み(無限ループになり解除不能になる)
-	int obliteration_mode ; 		//0=ラッシュ、1=オブリタレーション(この場合ボタン操作を無視) 2=キー1がオン 3=キー2がオン
-
-//MCOM初期化
-        if (mcom_mode >= 4 ){
-		push_time = 0;
-		release_time = 0;
-		pushing_time = 0;
-		mcom_mode = 0;
-		
-        } else if (mcom_mode <= -1){
-		mcom_mode = 0;
-		push_time = 0;
-		release_time = 0;
-		pushing_time = 0;
-	}
-
-
-
+void check_obliteration_mode (int &obliteration_mode){
 //オブリタレーションモードか否かの判定及びキースイッチの状態をチェック
 
 	if (digitalRead(PIN.DIP_SW) == LOW){
@@ -349,7 +327,27 @@ void loop( ) {
 	}else if ( digitalRead(PIN.KEY_SW1) == LOW && digitalRead(PIN.KEY_SW2) == HIGH ) {
 			obliteration_mode = 3;
 	}
+}
 
+void loop( ) {
+	
+  
+	long push_time	 ;		//ボタン押下開始した時間
+	long release_time 	 ;		//ボタンを離した時間
+	long pushing_time	 ;		//ボタンを押していた時間
+	int mcom_mode ;			//0=待機中、 1=ステージ1(低速で点滅) , 2=ステージ2(早い点滅) , 3=破壊済み(無限ループになり解除不能になる)
+	int obliteration_mode ; 		//0=ラッシュ、1=オブリタレーション(この場合ボタン操作を無視) 2=キー1がオン 3=キー2がオン
+
+//MCOM初期化
+        if (mcom_mode <= -1 || mcom_mode >= 4 ){
+		push_time = 0;
+		release_time = 0;
+		pushing_time = 0;
+		mcom_mode = 0;
+		
+        }
+
+	check_obliteration_mode (obliteration_mode);
 
 
 	send_data(obliteration_mode, mcom_mode, false , 0 , FUSE.TIME * 1000 );
@@ -360,10 +358,10 @@ void loop( ) {
 	delay (500);
 
 
-	if (digitalRead(PIN.PUSH_SW) == HIGH){
+	if (digitalRead(PIN.PUSH_SW) == HIGH ){
 
   		push_time = millis();
-		while (digitalRead(PIN.PUSH_SW) ==HIGH ){
+		while (digitalRead(PIN.PUSH_SW) ==HIGH && obliteration_mode != 1 ){
 			release_time = millis();
 
 			send_data( obliteration_mode,mcom_mode, true , 0 , (FUSE.TIME *1000 - (release_time -push_time) ) );
