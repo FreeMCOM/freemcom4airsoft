@@ -50,12 +50,12 @@ msgstr ""
 
 #: monitor.py:99
 msgid ""
-"- Designate correctly port ?\n"
+"- Designated port was correctly ?\n"
 msgstr ""
 
 #: monitor.py:100
 msgid ""
-"- MCOM power are turned on? \n"
+"- MCOM power was turned on? \n"
 msgstr ""
 
 #: monitor.py:101

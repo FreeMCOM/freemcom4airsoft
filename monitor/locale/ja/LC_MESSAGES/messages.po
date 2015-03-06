@@ -53,13 +53,13 @@ msgstr ""
 
 #: monitor.py:99
 msgid ""
-"- Designate correctly port ?\n"
+"- Designated port was correctly ?\n"
 msgstr ""
 "正しいポートを指定しているか？\n"
 
 #: monitor.py:100
 msgid ""
-"- MCOM power are turned on? \n"
+"- MCOM power was turned on? \n"
 msgstr "MCOMの電源は入っているか？\n"
 
 #: monitor.py:101
@@ -69,7 +69,7 @@ msgstr "ArduinoとXBeeの接続は正しいか？\n"
 
 #: monitor.py:102
 msgid ""
-"- SERIAL SELECT switch (on wireless proto shield) is choose MICRO ? \n"
+"- SERIAL SELECT switch (on wireless proto shield) was choose MICRO ? \n"
 "\n"
 msgstr ""
 "・ワイヤレスプロトシールド上のSERIAL SELECTスイッチはMICROを選択しているか？\n"
