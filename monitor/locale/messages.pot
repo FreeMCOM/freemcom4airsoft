@@ -19,6 +19,10 @@ msgid "This file is Define a class. aborting."
 msgstr ""
 
 #: monitor.py:30
+msgid "Game Mode"
+msgstr ""
+
+#: monitor.py:30
 msgid "Connecting..."
 msgstr ""
 
@@ -85,6 +89,14 @@ msgstr ""
 
 #: monitor.py:117
 msgid "MCOM was fusing..."
+msgstr ""
+
+#: monitor.py:117
+msgid "Rush mode."
+msgstr ""
+
+#: monitor.py:119
+msgid "Obliteration mode."
 msgstr ""
 
 #: monitor.py:122 monitor.py:130

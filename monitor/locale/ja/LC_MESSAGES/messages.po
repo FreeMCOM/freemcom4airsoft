@@ -18,6 +18,9 @@ msgstr ""
 msgid "This file is Define a class. aborting."
 msgstr "これはクラス定義ファイルです。終了します。"
 
+#: monitor.py:30
+msgid "Game Mode"
+msgstr "ゲームモード"
 
 #: monitor.py:30
 msgid "Connecting..."
@@ -94,6 +97,14 @@ msgstr "MCOMからのデータを受信できない!!"
 #: monitor.py:117
 msgid "MCOM was fusing..."
 msgstr "MCOM起動作業中..."
+
+#: monitor.py:117
+msgid "Rush mode."
+msgstr "ラッシュ"
+
+#: monitor.py:119
+msgid "Obliteration mode."
+msgstr "オブリタレーション"
 
 #: monitor.py:122 monitor.py:130
 msgid "Press %d sec. until MCOM defuse."

@@ -27,6 +27,7 @@ class MainWindow(wx.Frame):
         kwds["style"] = wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
         self.panel_1 = wx.Panel(self, wx.ID_ANY)
+        self.label_4 = wx.StaticText(self.panel_1, wx.ID_ANY, _("Game Mode"))
         self.label_1 = wx.StaticText(self.panel_1, wx.ID_ANY, _(u"Connecting..."))
         self.label_2 = wx.StaticText(self.panel_1, wx.ID_ANY, "")
         self.label_3 = wx.StaticText(self.panel_1, wx.ID_ANY, "")
@@ -52,6 +53,7 @@ class MainWindow(wx.Frame):
         self.label_1.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.label_2.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.label_3.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        self.label_4.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.button_1.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.button_2.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.button_3.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
@@ -62,6 +64,7 @@ class MainWindow(wx.Frame):
         # begin wxGlade: MainWindow.__do_layout
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
         grid_sizer_1 = wx.GridSizer(6, 1, 0, 0)
+        grid_sizer_1.Add(self.label_4, 0, wx.ALIGN_CENTER_HORIZONTAL, 0)
         grid_sizer_1.Add(self.label_1, 0, 0, 0)
         grid_sizer_1.Add(self.label_2, 0, 0, 0)
         grid_sizer_1.Add(self.label_3, 0, 0, 0)
@@ -96,8 +99,8 @@ class MainWindow(wx.Frame):
         global mcom
         if mcom.getdata() == -1 :
             errormsg = _(u"Communication error occurred. Please do following checklist :\n\n")
-            errormsg += _(u"- Designate correctly port ?\n")
-            errormsg += _(u"- MCOM power are turned on? \n")
+            errormsg += _(u"- Designated port was correctly ?\n")
+            errormsg += _(u"- MCOM power was turned on? \n")
             errormsg += _(u"- Correctly connect between Arduino and XBee ?\n")
             errormsg += _(u"- SERIAL SELECT switch (on wireless proto shield) is choose MICRO ? \n\n")
             errormsg += _(u"Error occurred if when above are good, possibility PC cannot recive radio wave from MCOM. \n")
@@ -109,6 +112,12 @@ class MainWindow(wx.Frame):
 
             dialog_1 = wx.MessageDialog(None, errormsg  , _(u"Can not receive data from MCOM!!"), wx.OK | wx.ICON_ERROR)
             dialog_1.ShowModal()
+
+        if mcom.obliteration_mode == 0:
+            self.label_4.SetLabel(_(u"Rush mode."))
+        else :
+            self.label_4.SetLabel(_(u"Obliteration mode."))
+
 
         if mcom.mcom_mode == 0:
             self.label_1.SetLabel( _(u"Press %d sec. until MCOM fuse.") % (mcom.defuse) )
