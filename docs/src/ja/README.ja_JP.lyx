@@ -81,7 +81,7 @@ logicalmkup
 \begin_body
 
 \begin_layout Title
-FreeMCOM for Airsoft v1.1.0 導入説明書
+FreeMCOM for Airsoft v2.0.0 導入説明書
 \end_layout
 
 \begin_layout Author
@@ -111,30 +111,79 @@ LatexCommand tableofcontents
 
 \begin_layout Standard
 サバゲ・ペイントボール等で、Battlefield(R)シリーズの
-\begin_inset Quotes eld
-\end_inset
-
+\emph on
 ラッシュ
-\begin_inset Quotes eld
-\end_inset
+\emph default
+もしくは
+\emph on
+オブリタレーション
+\emph default
+に準じたルールで遊ぶための、Arduinoを使用したM-COM/爆弾(本説明書中ではM-COMで統一)のクローンを製作するためのソフトウェアです。従って、ゲーム
+の前に予めArduinoに本ソフトウェアを書き込み、ボタン・ブザー・赤色灯、スライドスイッチ及びキースイッチを接続しておく必要があります。
+\end_layout
 
-に準じたルールで遊ぶための、Arduinoを使用したM-COMのクローンを製作するためのソフトウェアです。要するに、
+\begin_layout Subparagraph*
+要するに、
+\emph on
+ラッシュ
+\emph default
+モードでの利用法は、
 \end_layout
 
 \begin_layout Itemize
-予めArduinoに本ソフトウェアを書き込んだ上で、ボタン・ブザー・赤色灯を接続しておく
+攻撃チームと防衛チームに分かれる。
 \end_layout
 
 \begin_layout Itemize
-攻撃チームと防衛チームに分かれる
+攻撃チームはM-COMを破壊するために、ボタンを長押しして起動し、破壊されるまで防衛チームに解除されないように守らなくてはなりません。
 \end_layout
 
 \begin_layout Itemize
-攻撃チームはM-COMを破壊するために、ボタンを長押しして起爆の準備をし、爆発まで防衛チームに解除されないように守らなくてはなりません。
+防衛チームは攻撃チームを排除すると共に、万が一起動されてしまった場合、ボタンを長押ししてそれを解除しなくてはなりません。
+\end_layout
+
+\begin_layout Subparagraph*
+要するに、
+\emph on
+オブリタレーション
+\emph default
+モードでの利用法は、
 \end_layout
 
 \begin_layout Itemize
-防衛チームは攻撃チームを排除すると共に、万が一起爆準備をされてしまった場合、ボタンを長押ししてそれを解除しなくてはなりません。
+2チームに分かれる。
+\end_layout
+
+\begin_layout Itemize
+各チームのフラッグの下に鍵を置く。紛失防止のために紐でフラッグに結わえるといいでしょう。
+\end_layout
+
+\begin_layout Itemize
+フィールドの中央辺りにM-COMを置く。
+\end_layout
+
+\begin_layout Itemize
+ゲームが開始されたら、M-COMを相手チームより先に確保したら、相手チームのフラッグまで運びます。
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+途中でヒットされたら、ヒットコールと共にM-COMをその場に置いてセーフティーゾーンに帰ってください。
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+無事相手チームのフラッグまで辿り着いたら、そこにある鍵でキースイッチの一方を「ON」に切り替えてから、ボタンを長押しして起動してください。もちろん、破壊されるま
+では相手に解除されないようにする必要があります。
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+もちろん、M-COMを起動されてしまった側は、解除する必要があります。(キースイッチの一方が「ON」のままでも解除は可能です。)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
 \begin_inset Newpage pagebreak
 \end_inset
 
@@ -205,6 +254,14 @@ status open
 \end_layout
 
 \begin_layout Enumerate
+スライドスイッチ ×1 (ゲームルール切替用)
+\end_layout
+
+\begin_layout Enumerate
+キースイッチ ×2 (オブリタレーションモードで使用。)
+\end_layout
+
+\begin_layout Enumerate
 タクトスイッチ ×1 (リセットボタン用)
 \end_layout
 
@@ -213,7 +270,7 @@ status open
 \begin_inset Formula $\Omega$
 \end_inset
 
-抵抗(プルダウン抵抗) ×1
+抵抗(プルダウン抵抗) ×3
 \end_layout
 
 \begin_layout Enumerate
@@ -415,6 +472,34 @@ status open
 \end_layout
 
 \begin_layout Enumerate
+同様に、D8・D9ピンをキースイッチに接続します。
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+ラッシュモードのみの場合、GNDに落としてください。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+更に、D10ピンをスライドスイッチに接続します。
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+ラッシュモードのみの場合、やはりGNDに落としてください。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
 リレーシールドのNO2・COM2を大音量ブザーに接続します。
 \end_layout
 
@@ -444,8 +529,8 @@ status open
 \begin_inset Graphics
 	filename /home/aoki-kiyohito/デスクトップ/sketchbook/freemcom4airsoft/docs/src/freemcom_circuit.png
 	lyxscale 10
-	width 80page%
-	height 80pheight%
+	width 75page%
+	height 75pheight%
 	rotateAngle 90
 
 \end_inset
@@ -569,6 +654,10 @@ http://mag.switch-science.com/2012/08/01/startup_xbee_zb
 
 \begin_layout Enumerate
 ゲーム開始前にArduinoの電源を入れ、リセットボタンを押す。
+\end_layout
+
+\begin_layout Enumerate
+オブリタレーションの場合は、相手フラッグの下に設置した鍵を使って、キースイッチの一方をONにします。
 \end_layout
 
 \begin_layout Enumerate
@@ -750,6 +839,10 @@ monitor.pyを起動してゲーム開始準備が整った状態
 
 \end_deeper
 \begin_layout Enumerate
+オブリタレーションの場合は、相手フラッグの下に設置した鍵を使って、キースイッチの一方をONにします。
+\end_layout
+
+\begin_layout Enumerate
 起爆/解除ボタンを
 \shape slanted
 FUSE.TIME
@@ -803,7 +896,7 @@ STAGE2.TIME
 \end_layout
 
 \begin_layout Enumerate
-5〜6の間に起爆/解除ボタンを
+6〜7の間に起爆/解除ボタンを
 \shape slanted
 DEFUSE_TIME
 \shape default
@@ -976,6 +1069,14 @@ Microsoft Serial BallPoint
 \end_layout
 
 \begin_layout Enumerate
+電源が供給されているか。Arduinoとリレーシールドを動かすための電源と、LED赤色灯やブザーを動かすための電源の両方が必要です。
+\end_layout
+
+\begin_layout Enumerate
+モード設定が正しいか。
+\end_layout
+
+\begin_layout Enumerate
 sketch/sketch.inoが正しく書き込まれているか確認する。書き込み時に何かエラーメッセージが出ている場合、書き込めていません。
 \end_layout
 
@@ -994,10 +1095,6 @@ sketch/sketch.inoが正しく書き込まれているか確認する。書き込
 \end_layout
 
 \end_deeper
-\begin_layout Enumerate
-電源が供給されているか。Arduinoとリレーシールドを動かすための電源と、LED赤色灯やブザーを動かすための電源の両方が必要です。
-\end_layout
-
 \begin_layout Subsection
 遠隔監視を使用する場合の追加の確認事項
 \end_layout
@@ -1069,12 +1166,35 @@ XBeeをU.FLコネクタ型に交換し外部アンテナを取り付ける
 \end_layout
 
 \begin_layout Itemize
-Copyright (c) 2014 AOKI Kiyohito, FreeMCOM for Airsoft develop squatron
+Copyright (c) 2014-2015 FreeMCOM for Airsoft develop squatron
 \end_layout
 
 \begin_layout Standard
 本プログラムは上記が著作権を保有し、GNU GENERAL PUBLIC LICENSE Version 3 (or lator) により提供されています。ライ
 センスの全文はCOPYINGを参照ください。
+\end_layout
+
+\begin_layout Subsection
+FreeMCOM for Airsoft develop squatron メンバー紹介(敬称略)
+\end_layout
+
+\begin_layout Itemize
+AOKI 'sambar' Kiyohito
+\end_layout
+
+\begin_layout Standard
+現在AOKI Kiyohito一名につき、開発メンバーを募集しています。
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+https://groups.google.com/forum/#!forum/freemcom-project
+\end_layout
+
+\end_inset
+
+まで連絡下さい。
 \end_layout
 
 \begin_layout Subsection
