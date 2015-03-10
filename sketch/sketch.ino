@@ -40,6 +40,8 @@ Copyright 2014 Kiyohito AOKI (sambar.fgfs@gmail.com)
 
 	}LED_CYCLE;
 
+	boolean firstrun = true;			//HWリセット直後の起動か否か。
+
 
 	struct PIN{
 		const int PUSH_SW =  2;	 			//プッシュスイッチを接続するピン(起動・解除用。入力)
@@ -67,14 +69,30 @@ void setup( ) {
 	  }
 
 
+int check_obliteration_mode (){
+//オブリタレーションモードか否かの判定及びキースイッチの状態をチェック
 
-void reset(int &mcom_mode){
+	if (digitalRead(PIN.DIP_SW) == LOW){
+		return  0;
+	}else if (digitalRead(PIN.KEY_SW1) == digitalRead(PIN.KEY_SW2) ){
+		return 1;
+	}else if ( digitalRead(PIN.KEY_SW1) == HIGH && digitalRead(PIN.KEY_SW2) == LOW ){
+			return 2;
+	}else if ( digitalRead(PIN.KEY_SW1) == LOW && digitalRead(PIN.KEY_SW2) == HIGH ) {
+			return 3;
+	}else {
+	return 0;
+	}
+}
+
+void reset(int &obliteration_mode, int &mcom_mode){
 	Serial.flush();
 	STAGE1.TIME = STAGE1_DEFAULT.TIME ;
 	STAGE2.TIME = STAGE2_DEFAULT.TIME ;
 	FUSE.TIME = FUSE_DEFAULT.TIME ;
 	DEFUSE.TIME = DEFUSE_DEFAULT.TIME ;
 
+	obliteration_mode = check_obliteration_mode();
 	mcom_mode = 0;
 
 	digitalWrite(PIN.LED,HIGH);
@@ -92,7 +110,7 @@ void mcom_defuse(int &obliteration_mode, int &mcom_mode) {
 	int cnt_disable_button = 0 ;			//送信タイミング維持したままの長押し過剰対策用カウンタ
 	mcom_mode = 0;
 
-	check_obliteration_mode (obliteration_mode);
+	obliteration_mode = check_obliteration_mode ();
 
 
 	//200msで2回点滅
@@ -205,7 +223,7 @@ long mcom_stage1(int &obliteration_mode, int &mcom_mode , long boot_time ){	//�
 			pushing_time = release_time - push_time ;
 
 			if (Serial.read() != -1 ){			//シリアル入力が空でなければリセット
-				reset (mcom_mode);
+				reset (obliteration_mode, mcom_mode);
 				return 0;
 			}
 			send_data(obliteration_mode, mcom_mode,  false , ((STAGE1.TIME + STAGE2.TIME) * 1000 + boot_time - millis() ) , DEFUSE.TIME * 1000 );
@@ -257,7 +275,7 @@ void mcom_stage2(int &obliteration_mode, int &mcom_mode ,long boot_time , long p
 			pushing_time = 0 ;
 
 			if (Serial.read() != -1 ){			//シリアル入力が空でなければリセット
-				reset (mcom_mode);
+				reset (obliteration_mode, mcom_mode);
 				return;
 			}
 			send_data(obliteration_mode, mcom_mode,  false , (STAGE2.TIME * 1000 + boot_time - millis() ) , (DEFUSE.TIME * 1000) );
@@ -296,7 +314,7 @@ void mcom_stage3(int obliteration_mode, int &mcom_mode){
 		send_data(obliteration_mode, mcom_mode, false , 0 , 0);
 		delay(500);
 		if (Serial.read() != -1 ){
-			reset (mcom_mode);
+			reset (obliteration_mode, mcom_mode);
 			return;
 		}
 	}
@@ -309,26 +327,14 @@ void mcom_stage3(int obliteration_mode, int &mcom_mode){
 		delay(500);
 
 		if (Serial.read() != -1 ){
-			reset (mcom_mode);
+			reset (obliteration_mode, mcom_mode);
 			return;
 		}
 	goto frozen;	
 }
 
 
-void check_obliteration_mode (int &obliteration_mode){
-//オブリタレーションモードか否かの判定及びキースイッチの状態をチェック
 
-	if (digitalRead(PIN.DIP_SW) == LOW){
-		obliteration_mode = 0;
-	}else if (digitalRead(PIN.KEY_SW1) == digitalRead(PIN.KEY_SW2) ){
-		obliteration_mode = 1;
-	}else if ( digitalRead(PIN.KEY_SW1) == HIGH && digitalRead(PIN.KEY_SW2) == LOW ){
-			obliteration_mode = 2;
-	}else if ( digitalRead(PIN.KEY_SW1) == LOW && digitalRead(PIN.KEY_SW2) == HIGH ) {
-			obliteration_mode = 3;
-	}
-}
 
 void loop( ) {
 	
@@ -340,20 +346,20 @@ void loop( ) {
 	int obliteration_mode ; 		//0=ラッシュ、1=オブリタレーション(この場合ボタン操作を無視) 2=キー1がオン 3=キー2がオン
 
 //MCOM初期化
-        if (mcom_mode <= -1 || mcom_mode >= 4 ){
+        if (firstrun == true){
 		push_time = 0;
 		release_time = 0;
 		pushing_time = 0;
-		mcom_mode = 0;
-		
+		reset (obliteration_mode, mcom_mode);
         }
 
-	check_obliteration_mode (obliteration_mode);
+
+	obliteration_mode = check_obliteration_mode ();
 
 
 	send_data(obliteration_mode, mcom_mode, false , 0 , FUSE.TIME * 1000 );
 	if (Serial.read() != -1 ){			//シリアル入力が空でなければリセット
-		reset (mcom_mode);
+		reset (obliteration_mode, mcom_mode);
 	}
 
 	delay (500);
@@ -392,5 +398,6 @@ void loop( ) {
 		if (mcom_mode == 2){
 			mcom_stage3(obliteration_mode,mcom_mode);
 		}
-	} 
+	}
+	firstrun = false; 
 }
