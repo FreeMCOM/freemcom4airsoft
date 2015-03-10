@@ -57,14 +57,14 @@ class MainWindow(wx.Frame):
         self.button_1.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.button_2.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.button_3.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
-        self.panel_1.SetMinSize((330, 197))
+        self.panel_1.SetMinSize((400, 197))
         # end wxGlade
 
     def __do_layout(self):
         # begin wxGlade: MainWindow.__do_layout
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
         grid_sizer_1 = wx.GridSizer(6, 1, 0, 0)
-        grid_sizer_1.Add(self.label_4, 0, wx.ALIGN_CENTER_HORIZONTAL, 0)
+        grid_sizer_1.Add(self.label_4, 0, 0, 0)
         grid_sizer_1.Add(self.label_1, 0, 0, 0)
         grid_sizer_1.Add(self.label_2, 0, 0, 0)
         grid_sizer_1.Add(self.label_3, 0, 0, 0)
@@ -113,11 +113,15 @@ class MainWindow(wx.Frame):
             dialog_1 = wx.MessageDialog(None, errormsg  , _(u"Can not receive data from MCOM!!"), wx.OK | wx.ICON_ERROR)
             dialog_1.ShowModal()
 
-        if mcom.obliteration_mode == 0:
-            self.label_4.SetLabel(_(u"Rush mode."))
-        else :
+        if mcom.obliteration_mode == 1:
+            self.label_1.SetLabel("")
             self.label_4.SetLabel(_(u"Obliteration mode."))
-
+        elif mcom.obliteration_mode == 2:
+            self.label_4.SetLabel(_(u"Obliteration mode -- attacking by ALPHA team ."))
+        elif mcom.obliteration_mode == 3:
+            self.label_4.SetLabel(_(u"Obliteration mode -- attacking by BRAVO team ."))
+        else :
+            self.label_4.SetLabel(_(u"Rush mode."))
 
         if mcom.mcom_mode == 0:
             self.label_1.SetLabel( _(u"Press %d sec. until MCOM fuse.") % (mcom.defuse) )
@@ -127,23 +131,14 @@ class MainWindow(wx.Frame):
             else :
                 self.label_3.SetLabel("")
 
-        elif mcom.mcom_mode == 1:
+        elif mcom.mcom_mode ==1 or mcom.mcom_mode ==2 :
             self.label_1.SetLabel( _(u"Press %d sec. until MCOM defuse.") % (mcom.defuse) )
             self.label_2.SetLabel( _(u"Until destruction %d sec. ") % (mcom.left) )
             if mcom.button_pushing == 1:
                 self.label_3.SetLabel( _(u"MCOM was defusing..."))
             else :
                 self.label_3.SetLabel("")
-
-        elif mcom.mcom_mode == 2:
-            self.label_1.SetLabel( _(u"Press %d sec. until MCOM defuse.") % (mcom.defuse) )
-            self.label_2.SetLabel( _(u"Until destruction %d sec. ") % (mcom.left) )
-            if mcom.button_pushing == 1:
-                self.label_3.SetLabel(_(u"MCOM was defusing..."))
-            else :
-                self.label_3.SetLabel("")
-
-        elif mcom.mcom_mode == 3:
+        else:
             self.label_1.SetLabel(_(u"MCOM was Destroyed!!"))
             self.label_2.SetLabel("")
             self.label_3.SetLabel("")

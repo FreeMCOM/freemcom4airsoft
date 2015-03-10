@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-12-10 00:51+JST\n"
+"POT-Creation-Date: 2015-03-10 23:45+JST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,181 +14,186 @@ msgstr ""
 "Content-Transfer-Encoding: ENCODING\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: mcom.py:100
-msgid "This file is Define a class. aborting."
-msgstr ""
 
 #: monitor.py:30
 msgid "Game Mode"
 msgstr ""
 
-#: monitor.py:30
+#: monitor.py:31
 msgid "Connecting..."
 msgstr ""
 
-#: monitor.py:33
+#: monitor.py:34
 msgid "Reset"
 msgstr ""
 
-#: monitor.py:34
+#: monitor.py:35
 msgid "Config"
 msgstr ""
 
-#: monitor.py:35
+#: monitor.py:36
 msgid "Exit"
 msgstr ""
 
-#: monitor.py:51
+#: monitor.py:52
 msgid "MCOM Monitor"
 msgstr ""
 
-#: monitor.py:86 monitor.py:114
+#: monitor.py:89 monitor.py:126
 msgid "Press %d sec. until MCOM fuse."
 msgstr ""
 
-#: monitor.py:98
+#: monitor.py:101
 msgid ""
 "Communication error occurred. Please do following checklist :\n"
 "\n"
 msgstr ""
 
-#: monitor.py:99
+#: monitor.py:102
 msgid ""
 "- Designated port was correctly ?\n"
 msgstr ""
 
-#: monitor.py:100
+#: monitor.py:103
 msgid ""
 "- MCOM power was turned on? \n"
 msgstr ""
 
-#: monitor.py:101
+#: monitor.py:104
 msgid ""
 "- Correctly connect between Arduino and XBee ?\n"
 msgstr ""
 
-#: monitor.py:102
+#: monitor.py:105
 msgid ""
 "- SERIAL SELECT switch (on wireless proto shield) is choose MICRO ? \n"
 "\n"
 msgstr ""
 
-#: monitor.py:103
+#: monitor.py:106
 msgid ""
 "Error occurred if when above are good, possibility PC cannot recive radio wave from MCOM. \n"
 msgstr ""
 
-#: monitor.py:104
+#: monitor.py:107
 msgid ""
 "You have to remove interrupt object, move MCOM to more near from PC, and etc... \n"
 msgstr ""
 
-#: monitor.py:110
+#: monitor.py:113
 msgid "Can not receive data from MCOM!!"
 msgstr ""
 
 #: monitor.py:117
-msgid "MCOM was fusing..."
-msgstr ""
-
-#: monitor.py:117
-msgid "Rush mode."
-msgstr ""
-
-#: monitor.py:119
 msgid "Obliteration mode."
 msgstr ""
 
-#: monitor.py:122 monitor.py:130
+#: monitor.py:119
+msgid "Obliteration mode -- attacking by ALPHA team ."
+msgstr ""
+
+#: monitor.py:121
+msgid "Obliteration mode -- attacking by BRAVO team ."
+msgstr ""
+
+#: monitor.py:123
+msgid "Rush mode."
+msgstr ""
+
+#: monitor.py:129
+msgid "MCOM was fusing..."
+msgstr ""
+
+#: monitor.py:134
 msgid "Press %d sec. until MCOM defuse."
 msgstr ""
 
-#: monitor.py:123 monitor.py:131
+#: monitor.py:135
 msgid "Until destruction %d sec. "
 msgstr ""
 
-#: monitor.py:125 monitor.py:133
+#: monitor.py:137
 msgid "MCOM was defusing..."
 msgstr ""
 
-#: monitor.py:138
+#: monitor.py:141
 msgid "MCOM was Destroyed!!"
 msgstr ""
 
-#: monitor.py:153
+#: monitor.py:156
 msgid "Input port name correctly."
 msgstr ""
 
-#: monitor.py:155
+#: monitor.py:158
 msgid "OK"
 msgstr ""
 
-#: monitor.py:167
+#: monitor.py:170
 msgid "MCOM CONFIG"
 msgstr ""
 
-#: monitor.py:228
+#: monitor.py:231
 msgid ""
 "Use port %s . \n"
 msgstr ""
 
-#: monitor.py:229
+#: monitor.py:232
 msgid "MCOM Monitor - %s"
 msgstr ""
 
-#: monitor.py:232
+#: monitor.py:235
 msgid ""
 "Not found %s . \n"
 msgstr ""
 
-#: monitor.py:241
+#: monitor.py:244
 msgid ""
 "Usage :\n"
 msgstr ""
 
-#: monitor.py:242
+#: monitor.py:245
 msgid ""
 " %s  <option(s)> \n"
 msgstr ""
 
-#: monitor.py:243
+#: monitor.py:246
 msgid ""
 "Options:\n"
 msgstr ""
 
-#: monitor.py:244
+#: monitor.py:247
 msgid ""
 " -p  <port name>\n"
 msgstr ""
 
-#: monitor.py:245
+#: monitor.py:248
 msgid ""
 " -l  <language>\n"
 "\n"
 msgstr ""
 
-#: monitor.py:247
+#: monitor.py:250
 msgid ""
 "Normally, port name is like below. \n"
 "\n"
 msgstr ""
 
-#: monitor.py:248
+#: monitor.py:251
 msgid ""
 "Windows - COMx \n"
 msgstr ""
 
-#: monitor.py:249
+#: monitor.py:252
 msgid ""
 "Linux - /dev/ttyACMx \n"
 "\n"
 msgstr ""
 
-#: monitor.py:250
+#: monitor.py:253
 msgid "default are %s ."
 msgstr ""
 
-#: monitor.py:254
+#: monitor.py:257
 msgid "Port not found!"
 msgstr ""
 
