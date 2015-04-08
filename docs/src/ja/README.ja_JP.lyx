@@ -824,7 +824,7 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-monitor.pyを起動してゲーム開始準備が整った状態
+monitor.pyを起動してゲーム開始準備が整った状態。ゲームモードが表示されている。
 \end_layout
 
 \end_inset
@@ -869,7 +869,7 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-カウントダウン中。MCOMの起爆・解除作業中はこのように作業中の旨表示される。
+カウントダウン中。MCOMの起爆・解除作業中はこのように作業中の旨表示される。また、オブリタレーションモード中は、どちらが攻撃中かも表示される。
 \end_layout
 
 \end_inset
@@ -1166,7 +1166,18 @@ XBeeをU.FLコネクタ型に交換し外部アンテナを取り付ける
 \end_layout
 
 \begin_layout Itemize
-Copyright (c) 2014-2015 FreeMCOM for Airsoft develop squatron
+Copyright (c) 2014-2015 FreeMCOM for Airsoft develop squatron 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+https://github.com/FreeMCOM
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1179,22 +1190,22 @@ FreeMCOM for Airsoft develop squatron メンバー紹介(敬称略)
 \end_layout
 
 \begin_layout Itemize
-AOKI 'sambar' Kiyohito
-\end_layout
-
-\begin_layout Standard
-現在AOKI Kiyohito一名につき、開発メンバーを募集しています。
+AOKI 'sambar' Kiyohito 
 \begin_inset Flex URL
 status collapsed
 
 \begin_layout Plain Layout
 
-https://groups.google.com/forum/#!forum/freemcom-project
+https://sites.google.com/site/sambarsjunkyard/
 \end_layout
 
 \end_inset
 
-まで連絡下さい。
+
+\end_layout
+
+\begin_layout Standard
+現在AOKI Kiyohito一名につき、開発メンバーを募集しています。
 \end_layout
 
 \begin_layout Subsection
