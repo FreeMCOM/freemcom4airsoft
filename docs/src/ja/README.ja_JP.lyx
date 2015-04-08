@@ -653,7 +653,17 @@ http://mag.switch-science.com/2012/08/01/startup_xbee_zb
 \end_layout
 
 \begin_layout Enumerate
-ゲーム開始前にArduinoの電源を入れ、リセットボタンを押す。
+ゲーム開始前にArduinoの電源を入れる。この時、モード切り替えスイッチの設定が正しいかチェックしてください。
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+両方のキーを抜き取った状態でボタンを長押しして起爆カウントダウンを始めたら、ラッシュモードになっています。この方法での試験後はリセットを行ってください。
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Enumerate
@@ -791,6 +801,7 @@ ja
 
 \end_deeper
 \begin_layout Enumerate
+ゲームモードが正しいか確認し、
 \begin_inset Quotes eld
 \end_inset
 
