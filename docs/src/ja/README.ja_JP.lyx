@@ -1007,21 +1007,6 @@ MCOMが破壊済の状態を表示
 \end_layout
 
 \begin_layout Subsection
-全ての環境で共通
-\end_layout
-
-\begin_layout Itemize
-MCOMを解除した直後、2秒経過する前に再び長押しをすると、すぐに起爆準備状態になってしまう。
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-過剰な長押し対策として2秒のスリープを入れているが、loop()関数に戻った直後に再びボタン長押し検出で引っかかってmcom_stage1()
- 関数に進んでしまう。
-\end_layout
-
-\end_deeper
-\begin_layout Subsection
 Windows環境のみ
 \end_layout
 

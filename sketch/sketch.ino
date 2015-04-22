@@ -210,9 +210,9 @@ void send_data(int obliteration_mode, int &mcom_mode, boolean button_pushing, lo
 
 long mcom_stage1(int &obliteration_mode, int &mcom_mode , long boot_time ){	//長断続音モード。　boot_time : mcomを起動した時間。 &mcom_mode :mcomの状態(参照)
 	//mcomカウントダウン
-	long push_time ;								//ボタン押下開始した時間
-	long release_time ;								//ボタンを離した時間
-	long pushing_time = release_time - push_time ;		//release_time - push_time
+	long push_time = 0 ;								//ボタン押下開始した時間
+	long release_time = 0 ;								//ボタンを離した時間
+	long pushing_time = 0 ;		//release_time - push_time
 
 	mcom_mode=1;
 
@@ -252,7 +252,7 @@ long mcom_stage1(int &obliteration_mode, int &mcom_mode , long boot_time ){	//�
 					return 0 ;
 				} 
 				if (millis() >= boot_time + STAGE1.TIME * 1000 ){
-					return(pushing_time);
+					return pushing_time ;
 				}
 			}
 		}
@@ -260,10 +260,10 @@ long mcom_stage1(int &obliteration_mode, int &mcom_mode , long boot_time ){	//�
 	return 0 ;
 }
 
-void mcom_stage2(int &obliteration_mode, int &mcom_mode ,long boot_time , long pushing_time ){	//短断続音モード。 boot_time : mcomが短断続音モードになった時間  &mcom_mode :mcomの状態(参照)
+long mcom_stage2(int &obliteration_mode, int &mcom_mode ,long boot_time , long pushing_time ){	//短断続音モード。 boot_time : mcomが短断続音モードになった時間  &mcom_mode :mcomの状態(参照)
 	//mcomカウントダウン
-	long push_time ;							//ボタン押下開始した時間
-	long release_time  ;							//ボタンを離した時間
+	long push_time = 0 ;							//ボタン押下開始した時間
+	long release_time = 0 ;							//ボタンを離した時間
 
   	mcom_mode=2;
 
@@ -276,7 +276,7 @@ void mcom_stage2(int &obliteration_mode, int &mcom_mode ,long boot_time , long p
 
 			if (Serial.read() != -1 ){			//シリアル入力が空でなければリセット
 				reset (obliteration_mode, mcom_mode);
-				return;
+				return 0;
 			}
 			send_data(obliteration_mode, mcom_mode,  false , (STAGE2.TIME * 1000 + boot_time - millis() ) , (DEFUSE.TIME * 1000) );
 			stage2_blink();
@@ -292,15 +292,15 @@ void mcom_stage2(int &obliteration_mode, int &mcom_mode ,long boot_time , long p
 
 				if (release_time - push_time >= DEFUSE.TIME * 1000 - pushing_time ){
 					mcom_defuse(obliteration_mode, mcom_mode );
-					return ;
+					return 0;
 				}
 				if (millis() >= (boot_time + STAGE2.TIME * 1000)) {
-						return;
+						return pushing_time;
 				}
 			  }
 		}
 	}
-	return ;
+	return 0;
 }
 
 void mcom_stage3(int obliteration_mode, int &mcom_mode){
@@ -339,10 +339,10 @@ void mcom_stage3(int obliteration_mode, int &mcom_mode){
 void loop( ) {
 	
   
-	long push_time	 ;		//ボタン押下開始した時間
-	long release_time 	 ;		//ボタンを離した時間
-	long pushing_time	 ;		//ボタンを押していた時間
-	int mcom_mode ;			//0=待機中、 1=ステージ1(低速で点滅) , 2=ステージ2(早い点滅) , 3=破壊済み(無限ループになり解除不能になる)
+	long push_time = 0	 ;		//ボタン押下開始した時間
+	long release_time = 0	 ;		//ボタンを離した時間
+	long pushing_time = 0	 ;		//ボタンを押していた時間
+	int mcom_mode = 0 ;			//0=待機中、 1=ステージ1(低速で点滅) , 2=ステージ2(早い点滅) , 3=破壊済み(無限ループになり解除不能になる)
 	int obliteration_mode ; 		//0=ラッシュ、1=オブリタレーション(この場合ボタン操作を無視) 2=キー1がオン 3=キー2がオン
 
 //MCOM初期化
@@ -370,13 +370,21 @@ void loop( ) {
   		push_time = millis();
 		while (digitalRead(PIN.PUSH_SW) ==HIGH && obliteration_mode != 1 ){
 			release_time = millis();
+			pushing_time = release_time - push_time ;
 
-			send_data( obliteration_mode,mcom_mode, true , 0 , (FUSE.TIME *1000 - (release_time -push_time) ) );
+			send_data( obliteration_mode,mcom_mode, true , 0 , (FUSE.TIME *1000 - pushing_time ) );
 
 			delay (500);
 
-			if (release_time - push_time >= FUSE.TIME * 1000 ){
+			if (pushing_time >= FUSE.TIME * 1000 ){
 				pushing_time = mcom_stage1(obliteration_mode, mcom_mode , millis() );
+				if (pushing_time == 0 ){	//MCOMが途中で解除された場合、pushing_timeは0が帰ってくる
+  					push_time = 0;
+					release_time = 0;
+					pushing_time = 0;
+					break;
+				}
+
 			} else if (digitalRead(PIN.PUSH_SW) == LOW) {
 				push_time = 0;
 				release_time = 0;
