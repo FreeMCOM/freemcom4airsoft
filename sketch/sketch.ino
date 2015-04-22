@@ -141,7 +141,7 @@ void mcom_defuse(int &obliteration_mode, int &mcom_mode) {
 	if (DEFUSE.TIME < DEFUSE.LIMIT){
 		DEFUSE.TIME += DEFUSE.STEP;		//解除に必要な長押し時間をDEFUSE.STEP秒長くする
 	}
-
+}
 
 void stage1_blink1(){
 		//LEDオン、ブザーオフ。シリアル送出サイクルを0.5秒に統一するため、点灯と点滅を分割。
