@@ -141,6 +141,8 @@ void mcom_defuse(int &obliteration_mode, int &mcom_mode) {
 	if (DEFUSE.TIME < DEFUSE.LIMIT){
 		DEFUSE.TIME += DEFUSE.STEP;		//解除に必要な長押し時間をDEFUSE.STEP秒長くする
 	}
+	
+	return;
 }
 
 void stage1_blink1(){
