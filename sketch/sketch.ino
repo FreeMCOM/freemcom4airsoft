@@ -142,16 +142,6 @@ void mcom_defuse(int &obliteration_mode, int &mcom_mode) {
 		DEFUSE.TIME += DEFUSE.STEP;		//解除に必要な長押し時間をDEFUSE.STEP秒長くする
 	}
 
-//過剰な長押し対策兼送出タイミング調整で1.5秒間はデータ送信「しか」しない
-	for (cnt_disable_button =0; cnt_disable_button <=2; cnt_disable_button++) {
-		send_data(obliteration_mode, mcom_mode, true , 0 , (FUSE.TIME *1000 ) );
-		delay(500); 
-	}
-	send_data(obliteration_mode, mcom_mode, false , 0 , (FUSE.TIME *1000 ) );
-	delay(500); 
-
-	return ;
-}
 
 void stage1_blink1(){
 		//LEDオン、ブザーオフ。シリアル送出サイクルを0.5秒に統一するため、点灯と点滅を分割。
