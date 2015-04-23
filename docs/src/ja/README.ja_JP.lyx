@@ -81,7 +81,7 @@ logicalmkup
 \begin_body
 
 \begin_layout Title
-FreeMCOM for Airsoft v2.0.0 導入説明書
+FreeMCOM for Airsoft v2.0.2 導入説明書
 \end_layout
 
 \begin_layout Author
@@ -1006,6 +1006,20 @@ MCOMが破壊済の状態を表示
 既知の制限とバグ
 \end_layout
 
+\begin_layout Subsection
+全ての環境
+\end_layout
+
+\begin_layout Itemize
+作動中のMCOMを解除した直後に起動しようとした場合、通常より時間が掛かる。
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+過剰な長押しで、「解除した後もボタンを押し続けてしまい、再び起動させてしまう」対策として1秒のスリープを入れているためです。
+\end_layout
+
+\end_deeper
 \begin_layout Subsection
 Windows環境のみ
 \end_layout
