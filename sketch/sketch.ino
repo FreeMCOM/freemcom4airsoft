@@ -141,8 +141,15 @@ void mcom_defuse(int &obliteration_mode, int &mcom_mode) {
 	if (DEFUSE.TIME < DEFUSE.LIMIT){
 		DEFUSE.TIME += DEFUSE.STEP;		//解除に必要な長押し時間をDEFUSE.STEP秒長くする
 	}
-	
-	return;
+
+
+//過剰な長押し対策兼送出タイミング調整で1秒間はデータ送信「しか」しない
+	for (cnt_disable_button =0; cnt_disable_button <=2; cnt_disable_button++) {
+		send_data(obliteration_mode, mcom_mode, false , 0 , (FUSE.TIME *1000 ) );
+		delay(500); 
+	}
+
+	return ;
 }
 
 void stage1_blink1(){
@@ -212,7 +219,7 @@ long mcom_stage1(int &obliteration_mode, int &mcom_mode , long boot_time ){	//�
 		if (digitalRead(PIN.PUSH_SW) == LOW) {
 			push_time = 0 ;
 			release_time =0 ;
-			pushing_time = release_time - push_time ;
+			pushing_time = 0 ;
 
 			if (Serial.read() != -1 ){			//シリアル入力が空でなければリセット
 				reset (obliteration_mode, mcom_mode);
@@ -282,12 +289,12 @@ long mcom_stage2(int &obliteration_mode, int &mcom_mode ,long boot_time , long p
 				send_data(obliteration_mode, mcom_mode,  true , (STAGE2.TIME * 1000 + boot_time - millis() ) , (DEFUSE.TIME*1000 - pushing_time -(release_time-push_time) )  );
 				stage2_blink();
 
-				if (release_time - push_time >= DEFUSE.TIME * 1000 - pushing_time ){
+				if (release_time - push_time >= DEFUSE.TIME * 1000 - pushing_time ){ //pushing_timeはstage1からの引き継ぎ(mcom_stage2()の引数)、push_timeとrelease_timeはmcom_stage2()内で宣言した変数なのでこうなった
 					mcom_defuse(obliteration_mode, mcom_mode );
 					return 0;
 				}
 				if (millis() >= (boot_time + STAGE2.TIME * 1000)) {
-						return pushing_time;
+						return 1; 
 				}
 			  }
 		}
@@ -390,9 +397,13 @@ void loop( ) {
 
 		if(mcom_mode == 1){
 			push_time = 0;
-			release_time = 0;			
-			mcom_stage2 (obliteration_mode,mcom_mode , millis() , pushing_time );
-			pushing_time = 0;
+			release_time = 0;
+			if (mcom_stage2(obliteration_mode,mcom_mode , millis() , pushing_time) == 0 ){	//MCOMが途中で解除された場合、0が帰ってくる。mcom_stage1と違って途中で解除されなかった場合には1を返す。
+  				push_time = 0;
+				release_time = 0;
+				pushing_time = 0;
+					}
+			
 		}
 
 		if (mcom_mode == 2){
