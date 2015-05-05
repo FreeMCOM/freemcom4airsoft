@@ -23,10 +23,10 @@ Copyright 2014 Kiyohito AOKI (sambar.fgfs@gmail.com)
 		long TIME  ;					//各ステージの動作時間or起動・解除での長押し時間
 	}  ; 
 
-	struct TIMER STAGE1_DEFAULT = {5, 2, 20} ;		//ステージ1のLIMIT, STEP, TIME
-	struct TIMER STAGE2_DEFAULT = {2, 1, 10} ;		//ステージ2のLIMIT, STEP, TIME
-	struct TIMER FUSE_DEFAULT = {1, 1, 5};		//MCOM起動のLIMIT, STEP, TIME
-	struct TIMER DEFUSE_DEFAULT = {10, 1, 5};	//MCOM解除のLIMIT, STEP, TIME
+	struct TIMER STAGE1_DEFAULT = {4, 2, 10} ;		//ステージ1のLIMIT, STEP, TIME
+	struct TIMER STAGE2_DEFAULT = {2, 1, 5} ;		//ステージ2のLIMIT, STEP, TIME
+	struct TIMER FUSE_DEFAULT = {1, 1, 3};		//MCOM起動のLIMIT, STEP, TIME
+	struct TIMER DEFUSE_DEFAULT = {6, 1, 3};	//MCOM解除のLIMIT, STEP, TIME
 
 	struct TIMER STAGE1 = STAGE1_DEFAULT;
 	struct TIMER STAGE2 = STAGE2_DEFAULT;
@@ -86,6 +86,7 @@ int check_obliteration_mode (){
 }
 
 void reset(int &obliteration_mode, int &mcom_mode){
+/*  トラブルシューティングのため一時的に無効化
 	Serial.flush();
 	STAGE1.TIME = STAGE1_DEFAULT.TIME ;
 	STAGE2.TIME = STAGE2_DEFAULT.TIME ;
@@ -100,7 +101,7 @@ void reset(int &obliteration_mode, int &mcom_mode){
 
 	digitalWrite(PIN.BUZZER, LOW);		//ブザ停止
 	digitalWrite(PIN.LED, LOW);
-
+*/
 	return;
 
 }
