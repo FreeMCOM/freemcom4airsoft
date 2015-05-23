@@ -37,10 +37,7 @@ Copyright 2014 Kiyohito AOKI (sambar.fgfs@gmail.com)
 	struct LED_CYCLE{
 		const int NORM = 500;			//LED点滅(通常)
 		const int FRICK = NORM/2;			//LED点滅(高速)
-
 	}LED_CYCLE;
-
-	boolean firstrun = true;			//HWリセット直後の起動か否か。
 
 
 	struct PIN{
@@ -71,15 +68,14 @@ void setup( ) {
 
 int check_obliteration_mode (){
 //オブリタレーションモードか否かの判定及びキースイッチの状態をチェック
-
 	if (digitalRead(PIN.DIP_SW) == LOW){
 		return  0;
 	}else if (digitalRead(PIN.KEY_SW1) == digitalRead(PIN.KEY_SW2) ){
 		return 1;
 	}else if ( digitalRead(PIN.KEY_SW1) == HIGH && digitalRead(PIN.KEY_SW2) == LOW ){
-			return 2;
+		return 2;
 	}else if ( digitalRead(PIN.KEY_SW1) == LOW && digitalRead(PIN.KEY_SW2) == HIGH ) {
-			return 3;
+		return 3;
 	}else {
 	return 0;
 	}
@@ -336,25 +332,12 @@ void mcom_stage3(int obliteration_mode, int &mcom_mode){
 
 
 void loop( ) {
-	
-  
+	  
 	long push_time = 0	 ;		//ボタン押下開始した時間
 	long release_time = 0	 ;		//ボタンを離した時間
 	long pushing_time = 0	 ;		//ボタンを押していた時間
 	int mcom_mode = 0 ;			//0=待機中、 1=ステージ1(低速で点滅) , 2=ステージ2(早い点滅) , 3=破壊済み(無限ループになり解除不能になる)
-	int obliteration_mode ; 		//0=ラッシュ、1=オブリタレーション(この場合ボタン操作を無視) 2=キー1がオン 3=キー2がオン
-
-//MCOM初期化
-        if (firstrun == true){
-		push_time = 0;
-		release_time = 0;
-		pushing_time = 0;
-		reset (obliteration_mode, mcom_mode);
-        }
-
-
-	obliteration_mode = check_obliteration_mode ();
-
+	int obliteration_mode = check_obliteration_mode (); 		//0=ラッシュ、1=オブリタレーション(この場合ボタン操作を無視) 2=キー1がオン 3=キー2がオン
 
 	send_data(obliteration_mode, mcom_mode, false , 0 , FUSE.TIME * 1000 );
 	if (Serial.read() != -1 ){			//シリアル入力が空でなければリセット
@@ -376,18 +359,16 @@ void loop( ) {
 			delay (500);
 
 			if (pushing_time >= FUSE.TIME * 1000 ){
+  				push_time = 0;
+				release_time = 0;
 				pushing_time = mcom_stage1(obliteration_mode, mcom_mode , millis() );
 				if (pushing_time == 0 ){	//MCOMが途中で解除された場合、pushing_timeは0が帰ってくる
-  					push_time = 0;
-					release_time = 0;
-					pushing_time = 0;
 					break;
 				}
 
 			} else if (digitalRead(PIN.PUSH_SW) == LOW) {
-				push_time = 0;
-				release_time = 0;
 				pushing_time = 0;
+				break;
 			}
 
                         if (mcom_mode == 1){
@@ -396,11 +377,7 @@ void loop( ) {
 		}
 
 		if(mcom_mode == 1){
-			push_time = 0;
-			release_time = 0;
 			if (mcom_stage2(obliteration_mode,mcom_mode , millis() , pushing_time) == 0 ){	//MCOMが途中で解除された場合、0が帰ってくる。mcom_stage1と違って途中で解除されなかった場合には1を返す。
-  				push_time = 0;
-				release_time = 0;
 				pushing_time = 0;
 					}
 			
@@ -410,5 +387,4 @@ void loop( ) {
 			mcom_stage3(obliteration_mode,mcom_mode);
 		}
 	}
-	firstrun = false; 
 }
