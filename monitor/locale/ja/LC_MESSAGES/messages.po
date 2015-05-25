@@ -58,17 +58,17 @@ msgstr ""
 msgid ""
 "- Designated port was correctly ?\n"
 msgstr ""
-"正しいポートを指定しているか？\n"
+"・正しいポートを指定しているか？\n"
 
 #: monitor.py:103
 msgid ""
 "- MCOM power was turned on? \n"
-msgstr "MCOMの電源は入っているか？\n"
+msgstr "・MCOMの電源は入っているか？\n"
 
 #: monitor.py:104
 msgid ""
 "- Correctly connect between Arduino and XBee ?\n"
-msgstr "ArduinoとXBeeの接続は正しいか？\n"
+msgstr "・ArduinoとXBeeの接続は正しいか？\n"
 
 
 #: monitor.py:105
