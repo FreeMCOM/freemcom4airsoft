@@ -6,5 +6,3 @@ Arduinoを使用してサバゲ用にBattleField(R)に出てくるMCOM(のよう
 
 開発に参加したい方は・・・sambar-fgfsまで招待希望の旨連絡下さい。(過去のプルリク等を見て判断したいと思います。)
 
-一般ユーザー向け掲示板は、https://groups.google.com/forum/?hl=ja#!forum/freemcom-project です。
-
